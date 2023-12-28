@@ -23,8 +23,8 @@ mongoose
 app.use(express.json());
 
 // Routes
-app.use("/api", userRouter);
-app.use("/api", authRouter);
+app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 // Error handling
 app.use((err, req, res, next) => {
