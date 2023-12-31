@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice.js";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { error, loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   // Handler functions
   const handleChange = (e) => {
@@ -21,10 +27,10 @@ export default function SignIn() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
     try {
+      dispatch(signInStart());
+
       const res = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
@@ -32,19 +38,17 @@ export default function SignIn() {
         },
         body: JSON.stringify(formData),
       });
-
-      setLoading(false);
+      const data = await res.json();
 
       if (res.ok) {
+        dispatch(signInSuccess(data));
         navigate("/");
         return;
       } else {
-        const data = await res.json();
-        setError(data.message);
+        dispatch(signInFailure(data.message));
       }
     } catch (err) {
-      setError("Failed to handle submit for sign in");
-      setLoading(false);
+      dispatch(signInFailure("Failed to handle submit for sign in"));
     }
   };
 
