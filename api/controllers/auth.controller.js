@@ -4,13 +4,13 @@ import { generateError } from "../utils/error.js";
 import {
   generateDefaultPassword,
   generateUniqueUsername,
+  generateHashedPassword,
+  generateJwtToken,
 } from "../utils/utilities.js";
-import jwt from "jsonwebtoken";
 
 export const handleSignUp = async (req, res, next) => {
   const { username, email, password } = req.body;
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(password, salt);
+  const hashedPassword = generateHashedPassword(password);
   const newUser = new User({
     username,
     email,
@@ -39,7 +39,7 @@ export const handleSignIn = async (req, res, next) => {
 
     if (!passwordIsValid) return next(generateError(401, "Wrong Credentials!"));
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = generateJwtToken(user._id);
     const { password: pass, ...rest } = user._doc;
 
     res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
@@ -55,14 +55,13 @@ export const handleGoogleSignIn = async (req, res, next) => {
     const user = await User.findOne({ email });
 
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = generateJwtToken(user._id);
       const { password: pass, ...rest } = user._doc;
 
       res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
     } else {
       const defaultPassword = generateDefaultPassword();
-      const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(defaultPassword, salt);
+      const hashedPassword = generateHashedPassword(defaultPassword);
       const uniqueUsername = generateUniqueUsername(username);
       const newUser = new User({
         username: uniqueUsername,
@@ -73,7 +72,7 @@ export const handleGoogleSignIn = async (req, res, next) => {
 
       await newUser.save();
 
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const token = generateJwtToken(newUser._id);
       const { password: pass, ...rest } = newUser._doc;
 
       res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
