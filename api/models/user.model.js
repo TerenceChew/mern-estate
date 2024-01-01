@@ -18,6 +18,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    photoURL: {
+      type: String,
+      default: "../public/default-profile-photo.png",
+    },
   },
   { timestamps: true }
 );
