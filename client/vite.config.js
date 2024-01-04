@@ -8,6 +8,9 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:3000",
       },
+      "/default-profile-photo.png": {
+        target: "http://localhost:3000",
+      },
     },
   },
   plugins: [react()],

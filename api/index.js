@@ -23,7 +23,7 @@ mongoose
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static("public"));
+app.use(express.static("api/public"));
 
 // Routes
 app.use("/api/user", userRouter);
