@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
   getDownloadURL,
@@ -8,19 +8,21 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { generateUniqueFileName } from "../utils/utilities.js";
+import {
+  updateStart,
+  updateSuccess,
+  updateFailure,
+} from "../redux/user/userSlice";
 
 export default function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const fileInputRef = useRef();
   const [imageFile, setImageFile] = useState(undefined);
   const [fileUploadPercentage, setFileUploadPercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
-  const [formData, setFormData] = useState({
-    photoURL: "",
-    username: currentUser.username,
-    email: currentUser.email,
-    password: "",
-  });
+  const [formData, setFormData] = useState({});
+  const [updateIsSuccessful, setUpdateIsSuccessful] = useState(false);
 
   // Handler functions
   const handleImgClick = () => {
@@ -36,6 +38,34 @@ export default function Profile() {
   };
   const handleFileInputChange = (e) => {
     setImageFile(e.target.files[0]);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      dispatch(updateStart());
+
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(updateSuccess(data));
+        setUpdateIsSuccessful(true);
+        return;
+      } else {
+        dispatch(updateFailure(data.message));
+        setUpdateIsSuccessful(false);
+      }
+    } catch (err) {
+      dispatch(updateFailure("Failed to handle submit for update"));
+      setUpdateIsSuccessful(false);
+    }
   };
 
   // For uploading image file
@@ -95,11 +125,14 @@ export default function Profile() {
   }, [imageFile]);
 
   return (
-    <main className="flex justify-center pt-10 ">
-      <article className="flex flex-col items-center gap-8 ">
+    <main className="flex justify-center pt-10">
+      <article className="max-w-64 xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
         <h1 className="font-semibold text-2xl sm:text-3xl">Profile</h1>
 
-        <form className="w-64 xs:w-72 sm:w-96 flex flex-col gap-4 ">
+        <form
+          className="w-64 xs:w-72 sm:w-96 flex flex-col gap-4"
+          onSubmit={handleSubmit}
+        >
           <input
             type="file"
             id="imageFile"
@@ -143,7 +176,7 @@ export default function Profile() {
             placeholder="Username"
             aria-label="Username"
             onChange={handleChange}
-            value={formData.username}
+            defaultValue={currentUser.username}
           />
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
@@ -152,7 +185,7 @@ export default function Profile() {
             placeholder="Email"
             aria-label="Email"
             onChange={handleChange}
-            value={formData.email}
+            defaultValue={currentUser.email}
           />
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
@@ -161,18 +194,34 @@ export default function Profile() {
             placeholder="Password"
             aria-label="Password"
             onChange={handleChange}
-            value={formData.password}
           />
 
-          <button className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none">
-            UPDATE
+          <button
+            disabled={loading}
+            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+          >
+            {loading ? "LOADING..." : "UPDATE"}
           </button>
         </form>
 
-        <div className="w-full flex justify-between ">
-          <span className="text-red-600 cursor-pointer">Delete Account</span>
-          <span className="text-red-600 cursor-pointer">Sign Out</span>
+        <div className="w-full flex justify-between">
+          <span className="text-red-600 cursor-pointer hover:underline">
+            Delete Account
+          </span>
+          <span className="text-red-600 cursor-pointer hover:underline">
+            Sign Out
+          </span>
         </div>
+
+        {error && (
+          <p className="text-red-600 text-center" aria-label="Error message">
+            {error}
+          </p>
+        )}
+
+        {updateIsSuccessful && (
+          <p className="text-green-600 text-center">Update success!</p>
+        )}
       </article>
     </main>
   );
