@@ -99,7 +99,7 @@ export default function SignIn() {
         </div>
 
         {error && (
-          <p className="text-red-600" aria-label="Error message">
+          <p className="text-red-600 text-center" aria-label="Error message">
             {error}
           </p>
         )}
