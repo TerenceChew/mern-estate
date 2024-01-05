@@ -35,3 +35,18 @@ export const handleUserUpdate = async (req, res, next) => {
     next(err);
   }
 };
+
+export const handleUserDelete = async (req, res, next) => {
+  const { decodedUser, params } = req;
+
+  if (decodedUser.id !== params.id)
+    return next(generateError(401, "You can only delete your own account!"));
+
+  try {
+    await User.deleteOne({ _id: params.id });
+
+    res.status(200).json("Account deleted successfully!");
+  } catch (err) {
+    next(err);
+  }
+};
