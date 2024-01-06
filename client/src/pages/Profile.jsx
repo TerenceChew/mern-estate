@@ -176,7 +176,7 @@ export default function Profile() {
   return (
     <>
       <main
-        className={`flex justify-center pt-10 ${
+        className={`flex justify-center pt-10 pb-5 ${
           deleteRequested ? "pointer-events-none brightness-75 blur-sm" : ""
         }`}
       >

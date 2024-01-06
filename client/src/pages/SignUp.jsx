@@ -65,7 +65,7 @@ export default function SignUp() {
   }, []);
 
   return (
-    <main className="flex justify-center pt-10">
+    <main className="flex justify-center pt-10 pb-5">
       <article className="flex flex-col items-center gap-8">
         <h1 className="font-semibold text-2xl sm:text-3xl">Sign Up</h1>
 
