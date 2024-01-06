@@ -25,7 +25,8 @@ export default function Profile() {
   const [fileUploadPercentage, setFileUploadPercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [formData, setFormData] = useState({});
-  const [updateIsSuccessful, setUpdateIsSuccessful] = useState(false);
+  const [showUpdateSuccessMessage, setShowUpdateSuccessMessage] =
+    useState(false);
   const [deleteRequested, setDeleteRequested] = useState(false);
 
   // Handler functions
@@ -61,15 +62,15 @@ export default function Profile() {
 
       if (res.ok) {
         dispatch(updateUserSuccess(data));
-        setUpdateIsSuccessful(true);
+        setShowUpdateSuccessMessage(true);
         return;
       } else {
         dispatch(updateUserFailure(data.message));
-        setUpdateIsSuccessful(false);
+        setShowUpdateSuccessMessage(false);
       }
     } catch (err) {
       dispatch(updateUserFailure("Failed to handle submit for update"));
-      setUpdateIsSuccessful(false);
+      setShowUpdateSuccessMessage(false);
     }
   };
   const handleDeleteAccountClick = () => {
@@ -154,7 +155,7 @@ export default function Profile() {
   }, [imageFile]);
 
   useEffect(() => {
-    setUpdateIsSuccessful(false);
+    setShowUpdateSuccessMessage(false);
   }, [error, deleteRequested]);
 
   return (
@@ -260,7 +261,7 @@ export default function Profile() {
             </p>
           )}
 
-          {updateIsSuccessful && (
+          {showUpdateSuccessMessage && (
             <p className="text-green-600 text-center">Update success!</p>
           )}
         </article>
