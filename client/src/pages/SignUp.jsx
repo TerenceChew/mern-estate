@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  signUpStart,
+  signUpSuccess,
+  signUpFailure,
+} from "../redux/user/userSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -7,9 +13,9 @@ export default function SignUp() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { error, loading } = useSelector((state) => state.user);
 
   // Handler functions
   const handleChange = (e) => {
@@ -22,10 +28,10 @@ export default function SignUp() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
     try {
+      dispatch(signUpStart());
+
       const res = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: {
@@ -34,22 +40,21 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       });
 
-      setLoading(false);
-
       if (res.ok) {
+        dispatch(signUpSuccess());
         navigate("/sign-in");
         return;
       } else {
         if (res.status === 500) {
           const data = await res.json();
-          setError(data.message);
+
+          dispatch(signUpFailure(data.message));
         } else {
-          setError(res.statusText);
+          dispatch(signUpFailure(res.statusText));
         }
       }
     } catch (err) {
-      setError("Failed to handle submit for sign up");
-      setLoading(false);
+      dispatch(signUpFailure("Failed to handle submit for sign up"));
     }
   };
 
