@@ -14,6 +14,8 @@ import {
   updateUserFailure,
   deleteUserSuccess,
   deleteUserFailure,
+  signOutSuccess,
+  signOutFailure,
 } from "../redux/user/userSlice";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 
@@ -91,11 +93,28 @@ export default function Profile() {
         dispatch(deleteUserFailure(data.message));
       }
     } catch (err) {
-      dispatch(deleteUserFailure("Failed to delete account"));
+      dispatch(deleteUserFailure("Failed to handle delete account"));
     }
   };
   const handleCancelDelete = () => {
     setDeleteRequested(false);
+  };
+  const handleSignOut = async () => {
+    try {
+      const res = await fetch("/api/auth/sign-out", {
+        method: "POST",
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(signOutSuccess());
+        return;
+      } else {
+        dispatch(signOutFailure(data.message));
+      }
+    } catch (err) {
+      dispatch(signOutFailure("Failed to handle sign out"));
+    }
   };
 
   // For uploading image file
@@ -250,7 +269,10 @@ export default function Profile() {
             >
               Delete Account
             </span>
-            <span className="text-red-600 cursor-pointer hover:underline">
+            <span
+              className="text-red-600 cursor-pointer hover:underline"
+              onClick={handleSignOut}
+            >
               Sign Out
             </span>
           </div>
