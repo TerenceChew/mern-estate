@@ -12,7 +12,10 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteSuccess,
+  deleteFailure,
 } from "../redux/user/userSlice";
+import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -23,6 +26,7 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [updateIsSuccessful, setUpdateIsSuccessful] = useState(false);
+  const [deleteRequested, setDeleteRequested] = useState(false);
 
   // Handler functions
   const handleImgClick = () => {
@@ -41,6 +45,7 @@ export default function Profile() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setDeleteRequested(false);
 
     try {
       dispatch(updateStart());
@@ -66,6 +71,30 @@ export default function Profile() {
       dispatch(updateFailure("Failed to handle submit for update"));
       setUpdateIsSuccessful(false);
     }
+  };
+  const handleDeleteAccountClick = () => {
+    setDeleteRequested(true);
+  };
+  const handleConfirmDelete = async () => {
+    try {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(deleteSuccess());
+        return;
+      } else {
+        dispatch(deleteFailure(data.message));
+      }
+    } catch (err) {
+      dispatch(deleteFailure("Failed to delete account"));
+    }
+  };
+  const handleCancelDelete = () => {
+    setDeleteRequested(false);
   };
 
   // For uploading image file
@@ -124,105 +153,124 @@ export default function Profile() {
     }
   }, [imageFile]);
 
+  useEffect(() => {
+    setUpdateIsSuccessful(false);
+  }, [error, deleteRequested]);
+
   return (
-    <main className="flex justify-center pt-10">
-      <article className="max-w-64 xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
-        <h1 className="font-semibold text-2xl sm:text-3xl">Profile</h1>
+    <>
+      <main
+        className={`flex justify-center pt-10 ${
+          deleteRequested ? "pointer-events-none brightness-75 blur-sm" : ""
+        }`}
+      >
+        <article className="max-w-64 xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
+          <h1 className="font-semibold text-2xl sm:text-3xl">Profile</h1>
 
-        <form
-          className="w-64 xs:w-72 sm:w-96 flex flex-col gap-4"
-          onSubmit={handleSubmit}
-        >
-          <input
-            type="file"
-            id="imageFile"
-            aria-label="Upload image file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileInputChange}
-            hidden
-          />
-
-          <img
-            className="w-24 h-24 rounded-full object-cover self-center cursor-pointer"
-            src={formData.photoURL || currentUser.photoURL}
-            alt="Profile photo"
-            onClick={handleImgClick}
-          />
-
-          <p
-            className={`self-center text-center ${
-              fileUploadError
-                ? "text-red-600"
-                : fileUploadPercentage === 100
-                ? "text-green-600"
-                : "text-black"
-            }`}
-            aria-label="Image upload status"
+          <form
+            className="w-64 xs:w-72 sm:w-96 flex flex-col gap-4"
+            onSubmit={handleSubmit}
           >
-            {fileUploadError
-              ? fileUploadError
-              : fileUploadPercentage > 0 && fileUploadPercentage < 100
-              ? `Uploading ${fileUploadPercentage}%`
-              : formData.photoURL
-              ? "Image uploaded successfully!"
-              : ""}
-          </p>
+            <input
+              type="file"
+              id="imageFile"
+              aria-label="Upload image file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleFileInputChange}
+              hidden
+            />
 
-          <input
-            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
-            type="text"
-            id="username"
-            placeholder="Username"
-            aria-label="Username"
-            onChange={handleChange}
-            defaultValue={currentUser.username}
-          />
-          <input
-            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
-            type="email"
-            id="email"
-            placeholder="Email"
-            aria-label="Email"
-            onChange={handleChange}
-            defaultValue={currentUser.email}
-          />
-          <input
-            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
-            type="password"
-            id="password"
-            placeholder="Password"
-            aria-label="Password"
-            onChange={handleChange}
-          />
+            <img
+              className="w-24 h-24 rounded-full object-cover self-center cursor-pointer"
+              src={formData.photoURL || currentUser.photoURL}
+              alt="Profile photo"
+              onClick={handleImgClick}
+            />
 
-          <button
-            disabled={loading}
-            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
-          >
-            {loading ? "LOADING..." : "UPDATE"}
-          </button>
-        </form>
+            <p
+              className={`self-center text-center ${
+                fileUploadError
+                  ? "text-red-600"
+                  : fileUploadPercentage === 100
+                  ? "text-green-600"
+                  : "text-black"
+              }`}
+              aria-label="Image upload status"
+            >
+              {fileUploadError
+                ? fileUploadError
+                : fileUploadPercentage > 0 && fileUploadPercentage < 100
+                ? `Uploading ${fileUploadPercentage}%`
+                : formData.photoURL
+                ? "Image uploaded successfully!"
+                : ""}
+            </p>
 
-        <div className="w-full flex justify-between">
-          <span className="text-red-600 cursor-pointer hover:underline">
-            Delete Account
-          </span>
-          <span className="text-red-600 cursor-pointer hover:underline">
-            Sign Out
-          </span>
-        </div>
+            <input
+              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+              type="text"
+              id="username"
+              placeholder="Username"
+              aria-label="Username"
+              onChange={handleChange}
+              defaultValue={currentUser.username}
+            />
+            <input
+              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+              type="email"
+              id="email"
+              placeholder="Email"
+              aria-label="Email"
+              onChange={handleChange}
+              defaultValue={currentUser.email}
+            />
+            <input
+              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+              type="password"
+              id="password"
+              placeholder="Password"
+              aria-label="Password"
+              onChange={handleChange}
+            />
 
-        {error && (
-          <p className="text-red-600 text-center" aria-label="Error message">
-            {error}
-          </p>
-        )}
+            <button
+              disabled={loading}
+              className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+            >
+              {loading ? "LOADING..." : "UPDATE"}
+            </button>
+          </form>
 
-        {updateIsSuccessful && (
-          <p className="text-green-600 text-center">Update success!</p>
-        )}
-      </article>
-    </main>
+          <div className="w-full flex justify-between">
+            <span
+              className="text-red-600 cursor-pointer hover:underline"
+              onClick={handleDeleteAccountClick}
+            >
+              Delete Account
+            </span>
+            <span className="text-red-600 cursor-pointer hover:underline">
+              Sign Out
+            </span>
+          </div>
+
+          {error && (
+            <p className="text-red-600 text-center" aria-label="Error message">
+              {error}
+            </p>
+          )}
+
+          {updateIsSuccessful && (
+            <p className="text-green-600 text-center">Update success!</p>
+          )}
+        </article>
+      </main>
+      {deleteRequested && (
+        <DeleteConfirmationBox
+          deleteHandler={handleConfirmDelete}
+          cancelHandler={handleCancelDelete}
+        />
+      )}
+    </>
   );
 }
