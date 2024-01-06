@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  resetUser,
   signUpStart,
   signUpSuccess,
   signUpFailure,
@@ -57,6 +58,11 @@ export default function SignUp() {
       dispatch(signUpFailure("Failed to handle submit for sign up"));
     }
   };
+
+  // Side effects
+  useEffect(() => {
+    dispatch(resetUser());
+  }, []);
 
   return (
     <main className="flex justify-center pt-10">
