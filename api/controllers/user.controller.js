@@ -32,7 +32,13 @@ export const handleUserUpdate = async (req, res, next) => {
 
     res.status(200).json(rest);
   } catch (err) {
-    next(err);
+    if (err.code === 11000) {
+      next(
+        generateError(500, "User with same username or email already exist")
+      );
+    } else {
+      next(err);
+    }
   }
 };
 
