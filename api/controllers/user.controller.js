@@ -45,7 +45,7 @@ export const handleUserDelete = async (req, res, next) => {
   try {
     await User.deleteOne({ _id: params.id });
 
-    res.status(200).json("Account deleted successfully!");
+    res.clearCookie("jwt").status(200).json("Account deleted successfully!");
   } catch (err) {
     next(err);
   }
