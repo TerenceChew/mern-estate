@@ -9,11 +9,11 @@ import {
 import { app } from "../firebase";
 import { generateUniqueFileName } from "../utils/utilities.js";
 import {
-  updateStart,
-  updateSuccess,
-  updateFailure,
-  deleteSuccess,
-  deleteFailure,
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 
@@ -48,7 +48,7 @@ export default function Profile() {
     setDeleteRequested(false);
 
     try {
-      dispatch(updateStart());
+      dispatch(updateUserStart());
 
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: "PATCH",
@@ -60,15 +60,15 @@ export default function Profile() {
       const data = await res.json();
 
       if (res.ok) {
-        dispatch(updateSuccess(data));
+        dispatch(updateUserSuccess(data));
         setUpdateIsSuccessful(true);
         return;
       } else {
-        dispatch(updateFailure(data.message));
+        dispatch(updateUserFailure(data.message));
         setUpdateIsSuccessful(false);
       }
     } catch (err) {
-      dispatch(updateFailure("Failed to handle submit for update"));
+      dispatch(updateUserFailure("Failed to handle submit for update"));
       setUpdateIsSuccessful(false);
     }
   };
@@ -84,13 +84,13 @@ export default function Profile() {
       const data = await res.json();
 
       if (res.ok) {
-        dispatch(deleteSuccess());
+        dispatch(deleteUserSuccess());
         return;
       } else {
-        dispatch(deleteFailure(data.message));
+        dispatch(deleteUserFailure(data.message));
       }
     } catch (err) {
-      dispatch(deleteFailure("Failed to delete account"));
+      dispatch(deleteUserFailure("Failed to delete account"));
     }
   };
   const handleCancelDelete = () => {
