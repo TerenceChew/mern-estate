@@ -8,7 +8,7 @@ export const handleTest = (req, res) => {
   });
 };
 
-export const handleUserUpdate = async (req, res, next) => {
+export const handleUpdateUser = async (req, res, next) => {
   const { decodedUser, params } = req;
 
   if (decodedUser.id !== params.id)
@@ -42,7 +42,7 @@ export const handleUserUpdate = async (req, res, next) => {
   }
 };
 
-export const handleUserDelete = async (req, res, next) => {
+export const handleDeleteUser = async (req, res, next) => {
   const { decodedUser, params } = req;
 
   if (decodedUser.id !== params.id)

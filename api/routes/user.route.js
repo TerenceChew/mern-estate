@@ -1,15 +1,15 @@
 import express from "express";
 import {
   handleTest,
-  handleUserUpdate,
-  handleUserDelete,
+  handleUpdateUser,
+  handleDeleteUser,
 } from "../controllers/user.controller.js";
 import { verifyJwtToken } from "../utils/verifyUser.js";
 
 const router = express.Router();
 
 router.get("/test", handleTest);
-router.patch("/update/:id", verifyJwtToken, handleUserUpdate);
-router.delete("/delete/:id", verifyJwtToken, handleUserDelete);
+router.patch("/update/:id", verifyJwtToken, handleUpdateUser);
+router.delete("/delete/:id", verifyJwtToken, handleDeleteUser);
 
 export default router;
