@@ -60,14 +60,11 @@ export default function SignIn() {
   }, []);
 
   return (
-    <main className="flex justify-center pt-10 pb-5">
-      <article className="flex flex-col items-center gap-8">
+    <main className="flex justify-center py-10">
+      <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
         <h1 className="font-semibold text-2xl sm:text-3xl">Sign In</h1>
 
-        <form
-          className="w-64 xs:w-72 sm:w-96 flex flex-col gap-4"
-          onSubmit={handleSubmit}
-        >
+        <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="email"

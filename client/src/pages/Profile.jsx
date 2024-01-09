@@ -177,17 +177,14 @@ export default function Profile() {
   return (
     <>
       <main
-        className={`flex justify-center pt-10 pb-5 ${
+        className={`flex justify-center py-10 ${
           deleteRequested ? "pointer-events-none brightness-75 blur-sm" : ""
         }`}
       >
-        <article className="max-w-64 xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
+        <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
           <h1 className="font-semibold text-2xl sm:text-3xl">Profile</h1>
 
-          <form
-            className="w-64 xs:w-72 sm:w-96 flex flex-col gap-4"
-            onSubmit={handleSubmit}
-          >
+          <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
             <input
               type="file"
               id="imageFile"
