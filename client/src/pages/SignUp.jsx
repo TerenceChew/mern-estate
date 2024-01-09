@@ -74,6 +74,7 @@ export default function SignUp() {
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="text"
             id="username"
+            name="username"
             placeholder="Username"
             aria-label="Username"
             onChange={handleChange}
@@ -83,6 +84,7 @@ export default function SignUp() {
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="email"
             id="email"
+            name="email"
             placeholder="Email"
             aria-label="Email"
             onChange={handleChange}
@@ -92,6 +94,7 @@ export default function SignUp() {
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="password"
             id="password"
+            name="password"
             placeholder="Password"
             aria-label="Password"
             onChange={handleChange}
