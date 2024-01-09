@@ -18,6 +18,7 @@ import {
   signOutFailure,
 } from "../redux/user/userSlice";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -256,6 +257,16 @@ export default function Profile() {
             >
               {loading ? "LOADING..." : "UPDATE"}
             </button>
+
+            <Link to="/create-listing">
+              <button
+                type="button"
+                className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg p-2.5 sm:p-3"
+                aria-label="Go to create listing page"
+              >
+                CREATE LISTING
+              </button>
+            </Link>
           </form>
 
           <div className="w-full flex justify-between">
