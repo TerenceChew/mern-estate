@@ -323,7 +323,7 @@ export default function CreateListing() {
                     key={url}
                   >
                     <img
-                      className="w-full object-contain rounded-lg"
+                      className="w-full object-contain rounded-lg has-[+button:hover]:scale-95 duration-500"
                       src={url}
                       alt={`Listing image ${index + 1}`}
                     />
