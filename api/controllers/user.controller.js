@@ -1,3 +1,4 @@
+import Listing from "../models/listing.model.js";
 import User from "../models/user.model.js";
 import { generateError } from "../utils/error.js";
 import { generateHashedPassword } from "../utils/utilities.js";
@@ -52,6 +53,21 @@ export const handleDeleteUser = async (req, res, next) => {
     await User.deleteOne({ _id: params.id });
 
     res.clearCookie("jwt").status(200).json("Account deleted successfully!");
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const handleGetUserListings = async (req, res, next) => {
+  const { decodedUser, params } = req;
+
+  if (decodedUser.id !== params.id)
+    return next(generateError(401, "You can only view your own listings!"));
+
+  try {
+    const listings = await Listing.find({ userRef: params.id });
+
+    res.status(200).json(listings);
   } catch (err) {
     next(err);
   }
