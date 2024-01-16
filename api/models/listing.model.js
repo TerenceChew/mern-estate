@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const listingSchema = new Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
