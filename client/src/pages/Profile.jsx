@@ -306,6 +306,7 @@ export default function Profile() {
         <DeleteConfirmationBox
           deleteHandler={handleConfirmDelete}
           cancelHandler={handleCancelDelete}
+          type="account"
         />
       )}
     </>

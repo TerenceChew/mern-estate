@@ -5,7 +5,7 @@ import { FaBath } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
 import { MdAttachMoney } from "react-icons/md";
 
-export default function ListingCard({ listing }) {
+export default function ListingCard({ listing, handleDeleteListingClick }) {
   const {
     title,
     bedrooms,
@@ -77,6 +77,7 @@ export default function ListingCard({ listing }) {
         <button
           className="flex-1 border border-solid border-red-600 hover:bg-red-600 text-red-600 hover:text-white duration-500 rounded-lg py-1.5"
           aria-label="Delete listing"
+          onClick={handleDeleteListingClick}
         >
           DELETE
         </button>
@@ -87,4 +88,5 @@ export default function ListingCard({ listing }) {
 
 ListingCard.propTypes = {
   listing: PropTypes.object.isRequired,
+  handleDeleteListingClick: PropTypes.func.isRequired,
 };
