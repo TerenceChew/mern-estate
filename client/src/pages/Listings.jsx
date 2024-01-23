@@ -7,32 +7,54 @@ export default function Listings() {
   const { id } = useParams();
   const [listings, setListings] = useState([]);
   const [error, setError] = useState(null);
-  const [deleteRequested, setDeleteRequested] = useState(false);
+  const [deleteRequest, setDeleteRequest] = useState({
+    deleteRequested: false,
+    listingId: null,
+  });
 
   // Handler functions
-  const handleDeleteListingClick = () => {
-    setDeleteRequested(true);
+  const handleDeleteListingClick = (listingId) => {
+    setDeleteRequest({
+      deleteRequested: true,
+      listingId,
+    });
   };
   const handleConfirmDelete = async () => {
     try {
-      // const res = await fetch(`/api/user/delete/${currentUser._id}`, {
-      //   method: "DELETE",
-      // });
-      // const data = await res.json();
-      // if (res.ok) {
-      //   dispatch(deleteUserSuccess());
-      //   return;
-      // } else {
-      //   dispatch(deleteUserFailure(data.message));
-      // }
+      const res = await fetch(
+        `/api/listing/delete/${deleteRequest.listingId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        setListings(data);
+      } else {
+        setError(data.message);
+      }
     } catch (err) {
-      // dispatch(deleteUserFailure("Failed to handle delete account"));
+      setError("Failed to handle delete listing");
     }
+
+    setDeleteRequest({
+      deleteRequested: false,
+      listingId: null,
+    });
   };
   const handleCancelDelete = () => {
-    setDeleteRequested(false);
+    setDeleteRequest({
+      deleteRequested: false,
+      listingId: null,
+    });
   };
 
+  // Side effects
   useEffect(() => {
     const getListingsData = async () => {
       setError(null);
@@ -60,7 +82,9 @@ export default function Listings() {
     <>
       <main
         className={`flex justify-center py-10 ${
-          deleteRequested ? "pointer-events-none brightness-75 blur-sm" : ""
+          deleteRequest.deleteRequested
+            ? "pointer-events-none brightness-75 blur-sm"
+            : ""
         }`}
       >
         <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-xl lg:max-w-4xl xl:max-w-6xl 2xl:max-w-screen-2xl flex flex-col items-center gap-8">
@@ -95,7 +119,7 @@ export default function Listings() {
           )}
         </article>
       </main>
-      {deleteRequested && (
+      {deleteRequest.deleteRequested && (
         <DeleteConfirmationBox
           deleteHandler={handleConfirmDelete}
           cancelHandler={handleCancelDelete}

@@ -77,7 +77,7 @@ export default function ListingCard({ listing, handleDeleteListingClick }) {
         <button
           className="flex-1 border border-solid border-red-600 hover:bg-red-600 text-red-600 hover:text-white duration-500 rounded-lg py-1.5"
           aria-label="Delete listing"
-          onClick={handleDeleteListingClick}
+          onClick={() => handleDeleteListingClick(_id)}
         >
           DELETE
         </button>
