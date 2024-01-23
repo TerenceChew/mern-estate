@@ -372,7 +372,7 @@ export default function CreateListing() {
                     name="discountPrice"
                     type="number"
                     min="0"
-                    max="100000000"
+                    max={(formData.regularPrice - 1).toString()}
                     value={formData.discountPrice.toString()} // A trick to remove leading 0
                     onChange={handleChange}
                   />
