@@ -59,13 +59,9 @@ export const handleUpdateListing = async (req, res, next) => {
       listingToUpdate[prop] = body[prop];
     }
 
-    await listingToUpdate.save();
+    const updatedListing = await listingToUpdate.save();
 
-    const updatedListings = await Listing.find({
-      userRef: listingToUpdate.userRef,
-    }).sort({ updatedAt: "desc" });
-
-    res.status(200).json(updatedListings);
+    res.status(200).json(updatedListing);
   } catch (err) {
     next(err);
   }
