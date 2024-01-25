@@ -37,3 +37,34 @@ export const handleDeleteListing = async (req, res, next) => {
     next(err);
   }
 };
+
+export const handleUpdateListing = async (req, res, next) => {
+  const { decodedUser, params, body } = req;
+  const listingId = params.id;
+
+  try {
+    const listingToUpdate = await Listing.findOne({ _id: listingId });
+
+    if (!listingToUpdate)
+      return next(
+        generateError(404, "Can't update. Listing with given ID not found!")
+      );
+
+    if (decodedUser.id !== listingToUpdate.userRef)
+      return next(generateError(401, "You can only update your own listing!"));
+
+    for (const prop in body) {
+      listingToUpdate[prop] = body[prop];
+    }
+
+    await listingToUpdate.save();
+
+    const updatedListings = await Listing.find({
+      userRef: listingToUpdate.userRef,
+    }).sort({ updatedAt: "desc" });
+
+    res.status(200).json(updatedListings);
+  } catch (err) {
+    next(err);
+  }
+};
