@@ -4,7 +4,7 @@ import {
   handleCreateListing,
   handleDeleteListing,
   handleUpdateListing,
-  handleGetListing
+  handleGetListing,
 } from "../controllers/listing.controller.js";
 
 const router = express.Router();
@@ -12,6 +12,6 @@ const router = express.Router();
 router.post("/create", verifyJwtToken, handleCreateListing);
 router.delete("/delete/:id", verifyJwtToken, handleDeleteListing);
 router.patch("/update/:id", verifyJwtToken, handleUpdateListing);
-router.get("/get/:id", verifyJwtToken, handleGetListing);
+router.get("/get/:id", handleGetListing);
 
 export default router;
