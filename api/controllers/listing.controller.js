@@ -14,12 +14,8 @@ export const handleCreateListing = async (req, res, next) => {
 };
 
 export const handleDeleteListing = async (req, res, next) => {
-  const { decodedUser, params, body } = req;
-  const currentUserId = body.id;
+  const { decodedUser, params } = req;
   const listingId = params.id;
-
-  if (decodedUser.id !== currentUserId)
-    return next(generateError(401, "You can only delete your own listing!"));
 
   try {
     const listingToDelete = await Listing.findOne({ _id: listingId });
@@ -29,8 +25,14 @@ export const handleDeleteListing = async (req, res, next) => {
         generateError(404, "Can't delete. Listing with given ID not found!")
       );
 
+    if (decodedUser.id !== listingToDelete.userRef)
+      return next(generateError(401, "You can only delete your own listing!"));
+
     await Listing.deleteOne({ _id: listingId });
-    const remainingListings = await Listing.find({ userRef: currentUserId });
+
+    const remainingListings = await Listing.find({
+      userRef: listingToDelete.userRef,
+    });
 
     res.status(200).json(remainingListings);
   } catch (err) {

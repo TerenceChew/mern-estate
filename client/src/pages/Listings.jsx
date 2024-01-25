@@ -23,13 +23,7 @@ export default function Listings() {
     try {
       const res = await fetch(
         `/api/listing/delete/${deleteRequest.listingId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
+        { method: "DELETE" }
       );
       const data = await res.json();
 
