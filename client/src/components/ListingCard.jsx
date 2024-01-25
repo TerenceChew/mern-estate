@@ -68,12 +68,14 @@ export default function ListingCard({ listing, handleDeleteListingClick }) {
       </div>
 
       <div className="w-5/6 flex gap-5">
-        <button
+        <Link
+          to={`/update-listing/${_id}`}
           className="flex-1 border border-solid border-green-600 hover:bg-green-600 text-green-600 hover:text-white duration-500 rounded-lg py-1.5"
-          aria-label="Edit listing"
         >
-          EDIT
-        </button>
+          <button className="w-full" aria-label="Edit listing">
+            EDIT
+          </button>
+        </Link>
         <button
           className="flex-1 border border-solid border-red-600 hover:bg-red-600 text-red-600 hover:text-white duration-500 rounded-lg py-1.5"
           aria-label="Delete listing"
