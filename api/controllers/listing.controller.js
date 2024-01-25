@@ -70,3 +70,24 @@ export const handleUpdateListing = async (req, res, next) => {
     next(err);
   }
 };
+
+export const handleGetListing = async (req, res, next) => {
+  const { decodedUser, params } = req;
+  const listingId = params.id;
+
+  try {
+    const listingToGet = await Listing.findOne({ _id: listingId });
+
+    if (!listingToGet)
+      return next(
+        generateError(404, "Can't get. Listing with given ID not found!")
+      );
+
+    if (decodedUser.id !== listingToGet.userRef)
+      return next(generateError(401, "You can only get your own listing!"));
+
+    res.status(200).json(listingToGet);
+  } catch (err) {
+    next(err);
+  }
+};
