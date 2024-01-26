@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ListingCard from "../components/ListingCard";
+import UserListingCard from "../components/UserListingCard";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 
 export default function Listings() {
@@ -92,7 +92,7 @@ export default function Listings() {
             <div className="flex flex-wrap justify-center gap-7">
               {listings.length > 0 ? (
                 listings.map((listing) => (
-                  <ListingCard
+                  <UserListingCard
                     key={listing._id}
                     listing={listing}
                     handleDeleteListingClick={handleDeleteListingClick}

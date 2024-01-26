@@ -6,7 +6,7 @@ import { LuDot } from "react-icons/lu";
 import { MdAttachMoney } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-export default function ListingCard({ listing, handleDeleteListingClick }) {
+export default function UserListingCard({ listing, handleDeleteListingClick }) {
   const {
     title,
     bedrooms,
@@ -96,7 +96,7 @@ export default function ListingCard({ listing, handleDeleteListingClick }) {
   );
 }
 
-ListingCard.propTypes = {
+UserListingCard.propTypes = {
   listing: PropTypes.object.isRequired,
   handleDeleteListingClick: PropTypes.func.isRequired,
 };
