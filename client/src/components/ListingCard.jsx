@@ -4,6 +4,7 @@ import { FaBed } from "react-icons/fa6";
 import { FaBath } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
 import { MdAttachMoney } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export default function ListingCard({ listing, handleDeleteListingClick }) {
   const {
@@ -18,73 +19,80 @@ export default function ListingCard({ listing, handleDeleteListingClick }) {
     discountPrice,
     _id,
   } = listing;
+  const navigate = useNavigate();
 
   return (
-    <div className="w-64 bg-slate-200 flex flex-col items-center justify-end  gap-5 py-5 rounded-lg shadow-lg shadow-slate-300 text-slate-700">
-      <div className="w-5/6 h-5 flex">
-        <span className="flex justify-center items-center gap-0.5">
-          <MdAttachMoney className="text-xl" />
-          <span className={`mr-1.5 ${discountPrice ? "line-through" : ""}`}>
-            {regularPrice}
+    <Link to={`/listing/${_id}`}>
+      <div className="w-64 xs:w-72 sm:w-80 bg-white flex flex-col items-center gap-5 pb-5 rounded-lg shadow-lg shadow-slate-300 text-slate-700">
+        <div className="w-full h-60 xs:h-64 sm:h-72 rounded-tl-lg rounded-tr-lg shadow-md shadow-slate-400 overflow-hidden">
+          <img
+            className="h-full w-full object-cover rounded-tl-lg rounded-tr-lg hover:scale-105 duration-300"
+            src={imageUrls[0]}
+            alt="Listing cover image"
+          />
+        </div>
+
+        <h1 className="w-full h-20 flex justify-center items-center px-4 text-lg font-semibold break-all">
+          {title}
+        </h1>
+
+        <div className="w-5/6 h-5 flex flex-wrap justify-center gap-4">
+          <span className="h-5 flex justify-center items-center gap-2">
+            {bedrooms}
+            <FaBed className="text-lg" />
           </span>
-          {discountPrice ? discountPrice : ""}
-        </span>
-      </div>
+          <span className="h-5 flex justify-center items-center gap-1.5">
+            {bathrooms}
+            <FaBath className="text-base" />
+          </span>
+        </div>
 
-      <div className="w-5/6 h-56 flex justify-center items-end">
-        <img
-          className="max-h-full object-contain shadow-md shadow-slate-400"
-          src={imageUrls[0]}
-          alt="Listing cover image"
-        />
-      </div>
+        <div className="w-full h-5 flex justify-center items-center px-2">
+          <span className="flex justify-center items-center gap-1 text-sm">
+            {type === "rent" ? "Rent" : "Sale"}
+            <LuDot />
+            {furnished ? "Furnished" : "Unfurnished"}
+            <LuDot />
+            {parking ? "Parking" : "No Parking"}
+          </span>
+        </div>
 
-      <Link
-        to={`/listing/${_id}`}
-        className="w-5/6 h-16 flex justify-center items-center hover:underline"
-      >
-        <h1 className="text-center">{title}</h1>
-      </Link>
+        <div className="w-5/6 h-5 flex justify-center">
+          <span className="flex justify-center items-center gap-0.5 font-semibold text-slate-500">
+            <MdAttachMoney className="text-xl" />
+            <span className={`mr-1.5 ${discountPrice ? "line-through" : ""}`}>
+              {regularPrice}
+            </span>
+            {discountPrice ? discountPrice : ""}
+            {type === "rent" ? " / month" : ""}
+          </span>
+        </div>
 
-      <div className="w-5/6 h-5 flex flex-wrap justify-center gap-4">
-        <span className="h-5 flex justify-center items-center gap-2">
-          {bedrooms}
-          <FaBed className="text-lg" />
-        </span>
-        <span className="h-5 flex justify-center items-center gap-1.5">
-          {bathrooms}
-          <FaBath className="text-base" />
-        </span>
-      </div>
-
-      <div className="w-5/6 h-5 flex justify-center items-center">
-        <span className="flex justify-center items-center gap-1 text-sm">
-          {type === "rent" ? "Rent" : "Sale"}
-          <LuDot />
-          {furnished ? "Furnished" : "Unfurnished"}
-          <LuDot />
-          {parking ? "Parking" : "No Parking"}
-        </span>
-      </div>
-
-      <div className="w-5/6 flex gap-5">
-        <Link
-          to={`/update-listing/${_id}`}
-          className="flex-1 border border-solid border-green-600 hover:bg-green-600 text-green-600 hover:text-white duration-500 rounded-lg py-1.5"
-        >
-          <button className="w-full" aria-label="Edit listing">
+        <div className="w-5/6 flex gap-5 mt-2">
+          <button
+            className="flex-1 border border-solid border-green-600 hover:bg-green-600 text-green-600 hover:text-white duration-500 rounded-lg py-1.5"
+            aria-label="Edit listing"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/update-listing/${_id}`);
+            }}
+          >
             EDIT
           </button>
-        </Link>
-        <button
-          className="flex-1 border border-solid border-red-600 hover:bg-red-600 text-red-600 hover:text-white duration-500 rounded-lg py-1.5"
-          aria-label="Delete listing"
-          onClick={() => handleDeleteListingClick(_id)}
-        >
-          DELETE
-        </button>
+
+          <button
+            className="flex-1 border border-solid border-red-600 hover:bg-red-600 text-red-600 hover:text-white duration-500 rounded-lg py-1.5"
+            aria-label="Delete listing"
+            onClick={(e) => {
+              e.preventDefault();
+              handleDeleteListingClick(_id);
+            }}
+          >
+            DELETE
+          </button>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
