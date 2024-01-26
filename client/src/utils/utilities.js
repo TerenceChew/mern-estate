@@ -1,3 +1,5 @@
 const generateUniqueFileName = (fileName) => new Date().getTime() + fileName;
 
-export { generateUniqueFileName };
+const formatNumberWithCommas = (num) => num.toLocaleString("en-US");
+
+export { generateUniqueFileName, formatNumberWithCommas };

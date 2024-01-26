@@ -5,6 +5,7 @@ import { FaBath } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
 import { MdAttachMoney } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { formatNumberWithCommas } from "../utils/utilities";
 
 export default function UserListingCard({ listing, handleDeleteListingClick }) {
   const {
@@ -61,9 +62,9 @@ export default function UserListingCard({ listing, handleDeleteListingClick }) {
           <span className="flex justify-center items-center gap-0.5 font-semibold text-slate-500">
             <MdAttachMoney className="text-xl" />
             <span className={`mr-1.5 ${discountPrice ? "line-through" : ""}`}>
-              {regularPrice}
+              {formatNumberWithCommas(regularPrice)}
             </span>
-            {discountPrice ? discountPrice : ""}
+            {discountPrice ? formatNumberWithCommas(discountPrice) : ""}
             {type === "rent" ? " / month" : ""}
           </span>
         </div>
