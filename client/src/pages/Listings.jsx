@@ -75,13 +75,13 @@ export default function Listings() {
   return (
     <>
       <main
-        className={`flex justify-center py-10 ${
+        className={`flex justify-center py-10 px-5 md:px-8 ${
           deleteRequest.deleteRequested
             ? "pointer-events-none brightness-75 blur-sm"
             : ""
         }`}
       >
-        <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-xl lg:max-w-4xl xl:max-w-6xl 2xl:max-w-screen-2xl flex flex-col items-center gap-8">
+        <article className="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl flex flex-col items-center gap-8">
           <h1 className="font-semibold text-2xl sm:text-3xl">Your Listings</h1>
 
           {error ? (
