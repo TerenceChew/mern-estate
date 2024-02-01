@@ -5,12 +5,25 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { FaShare } from "react-icons/fa6";
 
 export default function Listing() {
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  // Handler functions
+  const handleShareListingClick = () => {
+    navigator.clipboard.writeText(window.location.href);
+
+    setLinkCopied(true);
+
+    setTimeout(() => {
+      setLinkCopied(false);
+    }, 2500);
+  };
 
   // Side effects
   useEffect(() => {
@@ -64,7 +77,24 @@ export default function Listing() {
             {error}
           </p>
         ) : listing ? (
-          <div className="w-full max-w-screen-2xl flex flex-wrap justify-center">
+          <div className="w-full max-w-screen-2xl flex flex-wrap justify-center relative">
+            <button
+              className="w-9 sm:w-10 md:w-11 h-9 sm:h-10 md:h-11 flex justify-center items-center absolute top-5 sm:top-7 lg:top-9 right-5 sm:right-7 lg:right-9 z-10 border-none rounded-full bg-slate-200 bg-opacity-80 cursor-pointer hover:-translate-y-1 duration-300"
+              aria-label="Share listing"
+              title="Share listing"
+              onClick={handleShareListingClick}
+            >
+              <FaShare className="text-slate-700 text-sm md:text-base" />
+            </button>
+
+            <span
+              className={`absolute z-10 border rounded-md px-3 sm:px-[1.15rem] py-1.5 sm:py-2 sm:text-lg bg-slate-200 text-slate-700 duration-700 transition-transform -translate-y-full ${
+                linkCopied ? "translate-y-2/4" : ""
+              }`}
+            >
+              Link Copied!
+            </span>
+
             <Swiper
               modules={[Navigation, Pagination]}
               slidesPerView={1}
@@ -84,7 +114,6 @@ export default function Listing() {
                 </SwiperSlide>
               ))}
             </Swiper>
-
             <h1>{listing.title}</h1>
           </div>
         ) : (
