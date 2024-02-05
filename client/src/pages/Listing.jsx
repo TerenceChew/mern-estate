@@ -5,7 +5,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { FaShare } from "react-icons/fa6";
+import { FaBath, FaBed, FaShare } from "react-icons/fa6";
+import { IoLocationSharp } from "react-icons/io5";
+import { LuParkingCircle, LuParkingCircleOff } from "react-icons/lu";
+import { GiSofa } from "react-icons/gi";
+import { formatNumberWithCommas } from "../utils/utilities";
 
 export default function Listing() {
   const { id } = useParams();
@@ -36,15 +40,12 @@ export default function Listing() {
         const data = await res.json();
 
         if (res.ok) {
-          console.log(data);
           setListing(data);
         } else {
-          console.log(data.message);
           setError(data.message);
           setListing(null);
         }
       } catch (err) {
-        console.log(err);
         setError("Failed to get listing data");
         setListing(null);
       }
@@ -77,7 +78,7 @@ export default function Listing() {
             {error}
           </p>
         ) : listing ? (
-          <div className="w-full max-w-screen-2xl flex flex-col items-center relative">
+          <div className="w-full max-w-screen-xl flex flex-col items-center relative">
             <button
               className="w-9 sm:w-10 md:w-11 h-9 sm:h-10 md:h-11 flex justify-center items-center absolute top-5 sm:top-7 lg:top-9 right-5 sm:right-7 lg:right-9 z-10 border-none rounded-full bg-slate-200 bg-opacity-80 cursor-pointer hover:-translate-y-1 duration-300 outline-none"
               aria-label="Share listing"
@@ -101,21 +102,76 @@ export default function Listing() {
               slidesPerView={1}
               navigation
               pagination={{ clickable: true }}
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log("slide change")}
               style={swiperStyle}
             >
               {listing.imageUrls.map((url) => (
                 <SwiperSlide key={url}>
-                  <img
-                    className="w-full h-[265px] xs:h-[345px] sm:h-[425px] md:h-[540px] lg:h-[625px] xl:h-[740px] object-cover"
-                    src={url}
-                    alt="Listing image"
-                  />
+                  <a href={url} target="_blank">
+                    <img
+                      className="w-full h-[265px] xs:h-[345px] sm:h-[425px] md:h-[550px] object-cover"
+                      src={url}
+                      alt="Listing image"
+                    />
+                  </a>
                 </SwiperSlide>
               ))}
             </Swiper>
-            <h1>{listing.title}</h1>
+
+            <div className="w-full max-w-5xl flex flex-col gap-5 pt-6 pb-8 px-5 xs:px-7 md:px-9">
+              <h1 className="text-2xl font-semibold">
+                {listing.title} - $
+                {formatNumberWithCommas(listing.discountPrice)}{" "}
+                {listing.type === "rent" ? "/ month" : ""}
+              </h1>
+
+              <div className="w-full flex items-center gap-1.5">
+                <IoLocationSharp className="text-2xl shrink-0 text-green-700" />
+                <p className="text-sm sm:text-base font-semibold text-slate-700 line-clamp-2">
+                  {listing.address}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4 text-white">
+                <span className="bg-red-700 rounded-md px-4 py-1.5">
+                  {listing.type === "rent" ? "For Rent" : "For Sale"}
+                </span>
+                <span className="bg-green-700 rounded-md px-4 py-1.5">
+                  Discount ${listing.regularPrice - listing.discountPrice}
+                </span>
+              </div>
+
+              <p>
+                <span className="font-semibold">Description - </span>
+                <span className="text-slate-700">{listing.description}</span>
+              </p>
+
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5 text-green-700">
+                <div className="flex items-center gap-1.5">
+                  <FaBed className="text-xl" />
+                  <p className="font-semibold">{listing.bedrooms} Beds</p>
+                </div>
+                <div className="flex items-center gap-1.5 ">
+                  <FaBath className="text-lg" />
+                  <p className="font-semibold">{listing.bathrooms} Baths</p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {listing.parking ? (
+                    <LuParkingCircle className="text-xl" />
+                  ) : (
+                    <LuParkingCircleOff className="text-xl" />
+                  )}
+                  <p className="font-semibold">
+                    {listing.parking ? "Parking" : "No Parking"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <GiSofa className="text-xl" />
+                  <p className="font-semibold">
+                    {listing.furnished ? "Furnished" : "Unfurnished"}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <p>This is a fallback. Listing can't be loaded!</p>
