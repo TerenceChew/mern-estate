@@ -77,9 +77,9 @@ export default function Listing() {
             {error}
           </p>
         ) : listing ? (
-          <div className="w-full max-w-screen-2xl flex flex-wrap justify-center relative">
+          <div className="w-full max-w-screen-2xl flex flex-col items-center relative">
             <button
-              className="w-9 sm:w-10 md:w-11 h-9 sm:h-10 md:h-11 flex justify-center items-center absolute top-5 sm:top-7 lg:top-9 right-5 sm:right-7 lg:right-9 z-10 border-none rounded-full bg-slate-200 bg-opacity-80 cursor-pointer hover:-translate-y-1 duration-300"
+              className="w-9 sm:w-10 md:w-11 h-9 sm:h-10 md:h-11 flex justify-center items-center absolute top-5 sm:top-7 lg:top-9 right-5 sm:right-7 lg:right-9 z-10 border-none rounded-full bg-slate-200 bg-opacity-80 cursor-pointer hover:-translate-y-1 duration-300 outline-none"
               aria-label="Share listing"
               title="Share listing"
               onClick={handleShareListingClick}
@@ -96,6 +96,7 @@ export default function Listing() {
             </span>
 
             <Swiper
+              className="w-full"
               modules={[Navigation, Pagination]}
               slidesPerView={1}
               navigation
