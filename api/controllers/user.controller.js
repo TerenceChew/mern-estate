@@ -74,3 +74,19 @@ export const handleGetUserListings = async (req, res, next) => {
     next(err);
   }
 };
+
+export const handleGetUser = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id);
+
+    if (!user) return next(generateError(404, "User not found!"));
+
+    const { password, ...rest } = user._doc;
+
+    res.status(200).json(rest);
+  } catch (err) {
+    next(err);
+  }
+};
