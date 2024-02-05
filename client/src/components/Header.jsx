@@ -6,7 +6,7 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <header className="h-32 sm:h-20 flex flex-col sm:flex-row justify-between items-center px-3 sm:px-4 lg:px-8 py-3 bg-slate-200 shadow-md relative z-20">
+    <header className="h-[140px] sm:h-20 flex flex-col sm:flex-row justify-between items-center px-3 sm:px-4 lg:px-8 py-3 bg-slate-200 shadow-md relative z-20">
       <Link to="/">
         <h1 className="font-bold text-xl">
           <span className="text-slate-500">Mern</span>
