@@ -10,6 +10,8 @@ import { IoLocationSharp } from "react-icons/io5";
 import { LuParkingCircle, LuParkingCircleOff } from "react-icons/lu";
 import { GiSofa } from "react-icons/gi";
 import { formatNumberWithCommas } from "../utils/utilities";
+import { useSelector } from "react-redux";
+import ContactLandlord from "../components/ContactLandlord";
 
 export default function Listing() {
   const { id } = useParams();
@@ -17,6 +19,8 @@ export default function Listing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [linkCopied, setLinkCopied] = useState(false);
+  const [contactLandlord, setContactLandlord] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   // Handler functions
   const handleShareListingClick = () => {
@@ -27,6 +31,9 @@ export default function Listing() {
     setTimeout(() => {
       setLinkCopied(false);
     }, 2500);
+  };
+  const handleContactLandlordClick = () => {
+    setContactLandlord(true);
   };
 
   // Side effects
@@ -171,6 +178,19 @@ export default function Listing() {
                   </p>
                 </div>
               </div>
+
+              {currentUser &&
+                listing.userRef !== currentUser._id &&
+                !contactLandlord && (
+                  <button
+                    className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 mt-1.5"
+                    onClick={handleContactLandlordClick}
+                  >
+                    CONTACT LANDLORD
+                  </button>
+                )}
+
+              {contactLandlord && <ContactLandlord listing={listing} />}
             </div>
           </div>
         ) : (
