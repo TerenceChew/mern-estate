@@ -81,3 +81,46 @@ export const handleGetListing = async (req, res, next) => {
     next(err);
   }
 };
+
+export const handleSearchListings = async (req, res, next) => {
+  const { searchTerm, type, parking, furnished, offer, sort, order } =
+    req.query;
+  const filterObj = {};
+
+  // prettier-ignore
+  filterObj.type =
+    type === undefined || type === "all" 
+      ? { $in: ["sale", "rent"] }
+      : type;
+
+  filterObj.parking =
+    parking === undefined || parking === "false"
+      ? { $in: [true, false] }
+      : parking;
+
+  filterObj.furnished =
+    furnished === undefined || furnished === "false"
+      ? { $in: [true, false] }
+      : furnished;
+
+  // prettier-ignore
+  filterObj.offer =
+    offer === undefined || offer === "false"
+      ? { $in: [true, false] }
+      : offer;
+
+  filterObj.title = {
+    $regex: searchTerm || "",
+    $options: "i",
+  };
+
+  try {
+    const listings = await Listing.find(filterObj).sort({
+      [sort || "createdAt"]: order || "desc",
+    });
+
+    res.status(200).json(listings);
+  } catch (err) {
+    next(err);
+  }
+};
