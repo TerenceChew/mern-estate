@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PublicListingCard from "../components/PublicListingCard";
 
 export default function SearchListings() {
   const [formData, setFormData] = useState({
@@ -255,9 +256,7 @@ export default function SearchListings() {
             <div className="flex flex-wrap gap-7">
               {listings.length > 0 ? (
                 listings.map((listing) => (
-                  <div key={listing._id} listing={listing}>
-                    {listing.title}
-                  </div>
+                  <PublicListingCard key={listing._id} listing={listing} />
                 ))
               ) : (
                 <p>No listings found!</p>
