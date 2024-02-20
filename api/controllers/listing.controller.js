@@ -83,8 +83,18 @@ export const handleGetListing = async (req, res, next) => {
 };
 
 export const handleSearchListings = async (req, res, next) => {
-  const { searchTerm, type, parking, furnished, offer, sort, order } =
-    req.query;
+  const {
+    searchTerm,
+    type,
+    parking,
+    furnished,
+    offer,
+    sort,
+    order,
+    startIndex,
+  } = req.query;
+  const limit = 9;
+  const startIdx = startIndex || 0;
   const filterObj = {};
 
   // prettier-ignore
@@ -115,9 +125,12 @@ export const handleSearchListings = async (req, res, next) => {
   };
 
   try {
-    const listings = await Listing.find(filterObj).sort({
-      [sort || "createdAt"]: order || "desc",
-    });
+    const listings = await Listing.find(filterObj)
+      .sort({
+        [sort || "createdAt"]: order || "desc",
+      })
+      .limit(limit)
+      .skip(startIdx);
 
     res.status(200).json(listings);
   } catch (err) {
