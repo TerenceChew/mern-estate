@@ -66,7 +66,7 @@ export default function SignIn() {
 
         <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
-            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
             type="email"
             id="email"
             name="email"

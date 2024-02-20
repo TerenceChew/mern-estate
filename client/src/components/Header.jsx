@@ -43,7 +43,7 @@ export default function Header() {
         onSubmit={handleSubmit}
       >
         <input
-          className="bg-transparent w-10/12 focus:outline-none"
+          className="bg-transparent autofill:shadow-[inset_0_0_0px_1000px_rgb(248,250,252)] w-10/12 focus:outline-none"
           type="text"
           placeholder="Search listings"
           aria-label="Search listings"

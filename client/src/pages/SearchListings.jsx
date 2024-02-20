@@ -115,7 +115,7 @@ export default function SearchListings() {
                 Search:
               </label>
               <input
-                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
                 id="searchTerm"
                 name="searchTerm"
                 type="text"
