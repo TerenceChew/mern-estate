@@ -16,6 +16,7 @@ export default function Header() {
     e.preventDefault();
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("searchTerm", searchTerm);
+    searchParams.set("startIndex", 0);
     const newQueryString = searchParams.toString();
 
     navigate(`/search?${newQueryString}`);

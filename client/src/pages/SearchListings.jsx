@@ -15,6 +15,7 @@ export default function SearchListings() {
   const [listings, setListings] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
   // Handler functions
@@ -54,6 +55,15 @@ export default function SearchListings() {
     for (const prop in formData) {
       searchParams.set(prop, formData[prop]);
     }
+    searchParams.set("startIndex", 0);
+    const newQueryString = searchParams.toString();
+
+    navigate(`/search?${newQueryString}`);
+  };
+  const handleShowMoreClick = () => {
+    const newStartIndex = listings.length;
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("startIndex", newStartIndex);
     const newQueryString = searchParams.toString();
 
     navigate(`/search?${newQueryString}`);
@@ -89,7 +99,8 @@ export default function SearchListings() {
         const data = await res.json();
 
         if (res.ok) {
-          setListings(data);
+          setListings([...listings, ...data.listings]);
+          setShowMore(data.remainingListings > 0);
         } else {
           setError(data.message);
           setListings([]);
@@ -262,6 +273,15 @@ export default function SearchListings() {
                 <p>No listings found!</p>
               )}
             </div>
+          )}
+
+          {showMore && (
+            <button
+              className="text-center text-green-600 hover:underline"
+              onClick={handleShowMoreClick}
+            >
+              Show more listings
+            </button>
           )}
         </div>
       </article>
