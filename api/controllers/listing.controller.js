@@ -133,7 +133,7 @@ export const handleSearchListings = async (req, res, next) => {
       .limit(limit)
       .skip(startIdx);
     const remainingListings =
-      totalFilteredListings.length - listingsToDisplay.length;
+      totalFilteredListings.length - listingsToDisplay.length - startIdx;
 
     res.status(200).json({ listings: listingsToDisplay, remainingListings });
   } catch (err) {
