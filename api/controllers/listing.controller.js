@@ -125,14 +125,17 @@ export const handleSearchListings = async (req, res, next) => {
   };
 
   try {
-    const listings = await Listing.find(filterObj)
+    const totalFilteredListings = await Listing.find(filterObj);
+    const listingsToDisplay = await Listing.find(filterObj)
       .sort({
         [sort || "createdAt"]: order || "desc",
       })
       .limit(limit)
       .skip(startIdx);
+    const remainingListings =
+      totalFilteredListings.length - listingsToDisplay.length;
 
-    res.status(200).json(listings);
+    res.status(200).json({ listings: listingsToDisplay, remainingListings });
   } catch (err) {
     next(err);
   }
