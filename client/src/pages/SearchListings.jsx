@@ -66,7 +66,27 @@ export default function SearchListings() {
     searchParams.set("startIndex", newStartIndex);
     const newQueryString = searchParams.toString();
 
-    navigate(`/search?${newQueryString}`);
+    const getListingsData = async () => {
+      setError(null);
+
+      try {
+        const res = await fetch(`/api/listing/search?${newQueryString}`);
+        const data = await res.json();
+
+        if (res.ok) {
+          setListings([...listings, ...data.listings]);
+          setShowMore(data.remainingListings > 0);
+        } else {
+          setError(data.message);
+          setListings([]);
+        }
+      } catch (err) {
+        setError("Failed to get listings data");
+        setListings([]);
+      }
+    };
+
+    getListingsData();
   };
 
   // Side effects
@@ -99,7 +119,7 @@ export default function SearchListings() {
         const data = await res.json();
 
         if (res.ok) {
-          setListings([...listings, ...data.listings]);
+          setListings(data.listings);
           setShowMore(data.remainingListings > 0);
         } else {
           setError(data.message);
