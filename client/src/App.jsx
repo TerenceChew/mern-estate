@@ -11,6 +11,7 @@ import UpdateListing from "./pages/UpdateListing";
 import Listings from "./pages/Listings";
 import Listing from "./pages/Listing";
 import SearchListings from "./pages/SearchListings";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/listings/:id" element={<Listings />} />
         </Route>
       </Routes>
+      <ScrollToTop />
     </>
   );
 }
