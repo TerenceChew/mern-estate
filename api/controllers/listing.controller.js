@@ -93,7 +93,7 @@ export const handleSearchListings = async (req, res, next) => {
     order,
     startIndex,
   } = req.query;
-  const limit = 9;
+  const limit = req.query.limit || 9;
   const startIdx = startIndex || 0;
   const filterObj = {};
 
