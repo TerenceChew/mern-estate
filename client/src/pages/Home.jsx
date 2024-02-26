@@ -103,7 +103,7 @@ export default function Home() {
 
   return (
     <main>
-      <article>
+      <article className="flex flex-col">
         <section className="max-w-4xl mx-auto flex flex-col gap-4 px-3.5 sm:px-7 py-14 sm:py-24">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-slate-700">
             Find your next <span className="text-slate-500">perfect</span>
@@ -124,7 +124,6 @@ export default function Home() {
 
         <section>
           <Swiper
-            className="bg-blue-300"
             modules={[Navigation, Pagination]}
             slidesPerView={1}
             navigation
@@ -153,7 +152,7 @@ export default function Home() {
           </Swiper>
         </section>
 
-        <section className="max-w-7xl mx-auto flex flex-col gap-5 px-3.5 sm:px-6 pt-14">
+        <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
           <div>
             <h2 className="text-slate-700 font-semibold text-2xl">
               Recent offers
@@ -166,7 +165,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-6">
+          <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
             {error.listingsWithOffer ? (
               <p className="text-red-600" aria-label="Error message">
                 {error.listingsWithOffer}
@@ -181,7 +180,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto flex flex-col gap-5 px-3.5 sm:px-6 pt-14">
+        <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
           <div>
             <h2 className="text-slate-700 font-semibold text-2xl">
               Recent places for rent
@@ -194,7 +193,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-6">
+          <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
             {error.listingsForRent ? (
               <p className="text-red-600" aria-label="Error message">
                 {error.listingsForRent}
@@ -209,7 +208,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto flex flex-col gap-5 px-3.5 sm:px-6 py-14">
+        <section className="mx-auto flex flex-col gap-5 px-3.5 py-14">
           <div>
             <h2 className="text-slate-700 font-semibold text-2xl">
               Recent places for sale
@@ -222,7 +221,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-6">
+          <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
             {error.listingsForSale ? (
               <p className="text-red-600" aria-label="Error message">
                 {error.listingsForSale}
