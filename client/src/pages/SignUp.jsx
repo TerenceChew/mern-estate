@@ -125,6 +125,7 @@ export default function SignUp() {
             value={formData.username}
             minLength="5"
             maxLength="20"
+            required
           />
           <p className="text-center text-red-600">
             {validationErrors.username}
@@ -138,6 +139,7 @@ export default function SignUp() {
             aria-label="Email"
             onChange={handleChange}
             value={formData.email}
+            required
           />
           <p className="text-center text-red-600">{validationErrors.email}</p>
           <input
@@ -151,6 +153,7 @@ export default function SignUp() {
             value={formData.password}
             minLength="8"
             maxLength="16"
+            required
           />
           <p className="text-center text-red-600">
             {validationErrors.password}
