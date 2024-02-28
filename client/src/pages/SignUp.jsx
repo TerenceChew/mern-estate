@@ -17,6 +17,40 @@ export default function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.user);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
+
+  // Validation
+  const validate = (formData) => {
+    const errors = {};
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
+
+    if (!formData.username) {
+      errors.username = "Please enter a valid username!";
+    } else if (formData.username.length < 5) {
+      errors.username = "Username must be at least 5 characters!";
+    } else if (formData.username.length > 20) {
+      errors.username = "Username cannot be more than 20 characters!";
+    }
+
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      errors.email = "Please enter a valid email!";
+    }
+
+    if (!formData.password) {
+      errors.password = "Please enter a valid password!";
+    } else if (formData.password.length < 8) {
+      errors.password = "Password must be at least 8 characters!";
+    } else if (formData.password.length > 16) {
+      errors.password = "Password cannot be more than 16 characters!";
+    } else if (!passwordRegex.test(formData.password)) {
+      errors.password =
+        "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!";
+    }
+
+    return errors;
+  };
 
   // Handler functions
   const handleChange = (e) => {
@@ -30,9 +64,17 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      dispatch(signUpStart());
+    setValidationErrors(validate(formData));
+    setSubmitRequested(true);
+  };
 
+  // Side effects
+  useEffect(() => {
+    dispatch(resetUser());
+  }, []);
+
+  useEffect(() => {
+    const makeSignUpRequest = async () => {
       const res = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: {
@@ -54,22 +96,24 @@ export default function SignUp() {
           dispatch(signUpFailure(res.statusText));
         }
       }
-    } catch (err) {
-      dispatch(signUpFailure("Failed to handle submit for sign up"));
-    }
-  };
+    };
 
-  // Side effects
-  useEffect(() => {
-    dispatch(resetUser());
-  }, []);
+    if (submitRequested && !Object.keys(validationErrors).length) {
+      try {
+        dispatch(signUpStart());
+        makeSignUpRequest();
+      } catch (err) {
+        dispatch(signUpFailure("Failed to handle submit for sign up"));
+      }
+    }
+  }, [validationErrors]);
 
   return (
     <main className="flex justify-center py-10">
       <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
         <h1 className="font-semibold text-2xl sm:text-3xl">Sign Up</h1>
 
-        <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="w-full flex flex-col gap-2" onSubmit={handleSubmit}>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
             type="text"
@@ -79,7 +123,12 @@ export default function SignUp() {
             aria-label="Username"
             onChange={handleChange}
             value={formData.username}
+            minLength="5"
+            maxLength="20"
           />
+          <p className="text-center text-red-600">
+            {validationErrors.username}
+          </p>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
             type="email"
@@ -90,6 +139,7 @@ export default function SignUp() {
             onChange={handleChange}
             value={formData.email}
           />
+          <p className="text-center text-red-600">{validationErrors.email}</p>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="password"
@@ -99,7 +149,12 @@ export default function SignUp() {
             aria-label="Password"
             onChange={handleChange}
             value={formData.password}
+            minLength="8"
+            maxLength="16"
           />
+          <p className="text-center text-red-600">
+            {validationErrors.password}
+          </p>
           <button
             disabled={loading}
             className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
