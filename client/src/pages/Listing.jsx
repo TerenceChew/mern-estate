@@ -96,8 +96,8 @@ export default function Listing() {
             </button>
 
             <span
-              className={`absolute z-10 border rounded-md px-3 sm:px-[1.15rem] py-1.5 sm:py-2 sm:text-lg bg-slate-200 text-slate-700 duration-700 transition-transform -translate-y-full ${
-                linkCopied ? "translate-y-2/4" : ""
+              className={`absolute z-10 border rounded-md px-3 sm:px-[1.15rem] py-1.5 sm:py-2 sm:text-lg bg-slate-200 text-slate-700 duration-700 transition-all opacity-0 ${
+                linkCopied ? "translate-y-2/4 opacity-100" : ""
               }`}
             >
               Link Copied!
