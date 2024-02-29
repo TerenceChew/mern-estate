@@ -14,9 +14,27 @@ export default function SignIn() {
     email: "",
     password: "",
   });
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  // Validation
+  const validate = () => {
+    const errors = {};
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      errors.email = "Please enter a valid email!";
+    }
+
+    if (!formData.password) {
+      errors.password = "Please enter your password!";
+    }
+
+    return errors;
+  };
 
   // Handler functions
   const handleChange = (e) => {
@@ -30,9 +48,17 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      dispatch(signInStart());
+    setValidationErrors(validate(formData));
+    setSubmitRequested(true);
+  };
 
+  // Side effects
+  useEffect(() => {
+    dispatch(resetUser());
+  }, []);
+
+  useEffect(() => {
+    const makeSignInRequest = async () => {
       const res = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
@@ -49,22 +75,24 @@ export default function SignIn() {
       } else {
         dispatch(signInFailure(data.message));
       }
-    } catch (err) {
-      dispatch(signInFailure("Failed to handle submit for sign in"));
-    }
-  };
+    };
 
-  // Side effects
-  useEffect(() => {
-    dispatch(resetUser());
-  }, []);
+    if (submitRequested && !Object.keys(validationErrors).length) {
+      try {
+        dispatch(signInStart());
+        makeSignInRequest();
+      } catch (err) {
+        dispatch(signInFailure("Failed to handle submit for sign in"));
+      }
+    }
+  }, [validationErrors]);
 
   return (
     <main className="flex justify-center py-10">
       <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
         <h1 className="font-semibold text-2xl sm:text-3xl">Sign In</h1>
 
-        <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="w-full flex flex-col gap-2" onSubmit={handleSubmit}>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
             type="email"
@@ -74,7 +102,9 @@ export default function SignIn() {
             aria-label="Email"
             onChange={handleChange}
             value={formData.email}
+            required
           />
+          <p className="text-center text-red-600">{validationErrors.email}</p>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="password"
@@ -84,10 +114,11 @@ export default function SignIn() {
             aria-label="Password"
             onChange={handleChange}
             value={formData.password}
+            required
           />
           <button
             disabled={loading}
-            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none my-2"
           >
             {loading ? "LOADING..." : "SIGN IN"}
           </button>
