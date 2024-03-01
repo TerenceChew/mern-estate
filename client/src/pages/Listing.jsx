@@ -127,7 +127,9 @@ export default function Listing() {
             <div className="w-full max-w-5xl flex flex-col gap-5 pt-6 pb-8 px-5 xs:px-7 md:px-9">
               <h1 className="text-2xl font-semibold">
                 {listing.title} - $
-                {formatNumberWithCommas(listing.discountPrice)}{" "}
+                {listing.discountPrice
+                  ? formatNumberWithCommas(listing.discountPrice)
+                  : formatNumberWithCommas(listing.regularPrice)}{" "}
                 {listing.type === "rent" ? "/ month" : ""}
               </h1>
 
@@ -139,12 +141,14 @@ export default function Listing() {
               </div>
 
               <div className="flex items-center gap-4 text-white">
-                <span className="bg-red-700 rounded-md px-4 py-1.5">
+                <span className="bg-slate-700 rounded-md px-4 py-1.5">
                   {listing.type === "rent" ? "For Rent" : "For Sale"}
                 </span>
-                <span className="bg-green-700 rounded-md px-4 py-1.5">
-                  Discount ${listing.regularPrice - listing.discountPrice}
-                </span>
+                {!!listing.discountPrice && (
+                  <span className="bg-green-700 rounded-md px-4 py-1.5">
+                    ${listing.regularPrice - listing.discountPrice} Discount
+                  </span>
+                )}
               </div>
 
               <p>
