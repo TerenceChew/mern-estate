@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import About from "./pages/About";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
@@ -21,7 +20,6 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/about" element={<About />} />
         <Route path="/listing/:id" element={<Listing />} />
         <Route path="/search" element={<SearchListings />} />
         <Route element={<PrivateRoute />}>
