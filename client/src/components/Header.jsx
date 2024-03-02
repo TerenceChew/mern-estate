@@ -31,7 +31,7 @@ export default function Header() {
   }, [location.search]);
 
   return (
-    <header className="h-[140px] sm:h-20 flex flex-col sm:flex-row justify-between items-center px-3 sm:px-4 lg:px-8 py-3 bg-slate-200 shadow-md relative z-20">
+    <header className="h-[145px] sm:h-[90px] flex flex-col sm:flex-row justify-between items-center px-3 sm:px-4 lg:px-8 py-3 bg-slate-200 shadow-md relative z-20">
       <Link to="/">
         <h1 className="font-bold text-xl">
           <span className="text-slate-500">Mern</span>
@@ -40,7 +40,7 @@ export default function Header() {
       </Link>
 
       <form
-        className="w-64 sm:w-56 md:w-72 2xl:w-96 flex justify-between items-center bg-slate-50 rounded-lg px-3 py-1.5 sm:py-2.5"
+        className="w-64 sm:w-[220px] md:w-72 2xl:w-96 flex justify-between items-center bg-slate-50 rounded-lg px-3 py-1.5 sm:py-2.5"
         onSubmit={handleSubmit}
       >
         <input
@@ -57,12 +57,14 @@ export default function Header() {
         </button>
       </form>
 
-      <nav className="w-48 sm:w-44 md:w-48 lg:w-52 2xl:w-56 flex justify-between items-center text-sm sm:text-base">
+      <nav className="w-[200px] sm:w-[210px] 2xl:w-56 flex justify-between items-center text-sm sm:text-base">
         <Link to="/">
           <button className="text-slate-700 hover:underline">Home</button>
         </Link>
-        <Link to="/about">
-          <button className="text-slate-700 hover:underline">About</button>
+        <Link to={`/listings/${currentUser._id}`}>
+          <button className="text-slate-700 hover:underline">
+            My Listings
+          </button>
         </Link>
 
         {currentUser ? (

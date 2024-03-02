@@ -377,14 +377,9 @@ export default function Profile() {
           {showUpdateSuccessMessage && (
             <p className="text-green-600 text-center">Update success!</p>
           )}
-
-          <Link to={`/listings/${currentUser._id}`}>
-            <span className="text-green-600 cursor-pointer hover:underline">
-              VIEW LISTINGS
-            </span>
-          </Link>
         </article>
       </main>
+
       {deleteRequested && (
         <DeleteConfirmationBox
           deleteHandler={handleConfirmDelete}
