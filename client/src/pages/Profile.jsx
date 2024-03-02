@@ -27,10 +27,48 @@ export default function Profile() {
   const [imageFile, setImageFile] = useState(undefined);
   const [fileUploadPercentage, setFileUploadPercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+    password: "",
+  });
   const [showUpdateSuccessMessage, setShowUpdateSuccessMessage] =
     useState(false);
   const [deleteRequested, setDeleteRequested] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
+
+  // Validation
+  const validate = (formData) => {
+    const errors = {};
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
+
+    if (!formData.username) {
+      errors.username = "Please enter a valid username!";
+    } else if (formData.username.length < 5) {
+      errors.username = "Username must be at least 5 characters!";
+    } else if (formData.username.length > 20) {
+      errors.username = "Username cannot be more than 20 characters!";
+    }
+
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      errors.email = "Please enter a valid email!";
+    }
+
+    if (!formData.password) {
+      errors.password = "Please enter your current or new password!";
+    } else if (formData.password.length < 8) {
+      errors.password = "Password must be at least 8 characters!";
+    } else if (formData.password.length > 16) {
+      errors.password = "Password cannot be more than 16 characters!";
+    } else if (!passwordRegex.test(formData.password)) {
+      errors.password =
+        "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!";
+    }
+
+    return errors;
+  };
 
   // Handler functions
   const handleImgClick = () => {
@@ -39,42 +77,36 @@ export default function Profile() {
   const handleChange = (e) => {
     const { id, value } = e.target;
 
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData({
+      ...formData,
       [id]: value,
-    }));
+    });
   };
   const handleFileInputChange = (e) => {
-    setImageFile(e.target.files[0]);
+    const { type } = e.target.files[0];
+    const imageFileTypeRegex = /^image\/[A-z]*$/;
+
+    if (imageFileTypeRegex.test(type)) {
+      setImageFile(e.target.files[0]);
+
+      const { imageFile, ...otherErrors } = validationErrors;
+
+      setValidationErrors(otherErrors);
+    } else {
+      setValidationErrors({
+        ...validationErrors,
+        imageFile: "Invalid file type. Only images are allowed!",
+      });
+    }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    fileInputRef.current.value = "";
+
     setDeleteRequested(false);
-
-    try {
-      dispatch(updateUserStart());
-
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        dispatch(updateUserSuccess(data));
-        setShowUpdateSuccessMessage(true);
-        return;
-      } else {
-        dispatch(updateUserFailure(data.message));
-        setShowUpdateSuccessMessage(false);
-      }
-    } catch (err) {
-      dispatch(updateUserFailure("Failed to handle submit for update"));
-      setShowUpdateSuccessMessage(false);
-    }
+    setValidationErrors(validate(formData));
+    setSubmitRequested(true);
   };
   const handleDeleteAccountClick = () => {
     setDeleteRequested(true);
@@ -156,10 +188,10 @@ export default function Profile() {
         try {
           const downloadURL = await getDownloadURL(newImageFileRef);
 
-          setFormData((prevState) => ({
-            ...prevState,
+          setFormData({
+            ...formData,
             photoURL: downloadURL,
-          }));
+          });
         } catch (err) {
           console.log(err);
         }
@@ -174,6 +206,38 @@ export default function Profile() {
     }
   }, [imageFile]);
 
+  useEffect(() => {
+    const makeUpdateUserRequest = async () => {
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        dispatch(updateUserSuccess(data));
+        setShowUpdateSuccessMessage(true);
+        return;
+      } else {
+        dispatch(updateUserFailure(data.message));
+        setShowUpdateSuccessMessage(false);
+      }
+    };
+
+    if (submitRequested && !Object.keys(validationErrors).length) {
+      try {
+        dispatch(updateUserStart());
+        makeUpdateUserRequest();
+      } catch (err) {
+        dispatch(updateUserFailure("Failed to handle submit for update"));
+        setShowUpdateSuccessMessage(false);
+      }
+    }
+  }, [validationErrors]);
+
   return (
     <>
       <main
@@ -184,7 +248,7 @@ export default function Profile() {
         <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">
           <h1 className="font-semibold text-2xl sm:text-3xl">Profile</h1>
 
-          <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
+          <form className="w-full flex flex-col gap-2" onSubmit={handleSubmit}>
             <input
               type="file"
               id="imageFile"
@@ -203,24 +267,30 @@ export default function Profile() {
               onClick={handleImgClick}
             />
 
-            <p
-              className={`self-center text-center ${
-                fileUploadError
-                  ? "text-red-600"
-                  : fileUploadPercentage === 100
-                  ? "text-green-600"
-                  : "text-black"
-              }`}
-              aria-label="Image upload status"
-            >
-              {fileUploadError
-                ? fileUploadError
-                : fileUploadPercentage > 0 && fileUploadPercentage < 100
-                ? `Uploading ${fileUploadPercentage}%`
-                : formData.photoURL
-                ? "Image uploaded successfully!"
-                : ""}
+            <p className="text-center text-red-600">
+              {validationErrors.imageFile}
             </p>
+
+            {!validationErrors.imageFile && (
+              <p
+                className={`self-center text-center ${
+                  fileUploadError
+                    ? "text-red-600"
+                    : fileUploadPercentage === 100
+                    ? "text-green-600"
+                    : "text-black"
+                }`}
+                aria-label="Image upload status"
+              >
+                {fileUploadError
+                  ? fileUploadError
+                  : fileUploadPercentage > 0 && fileUploadPercentage < 100
+                  ? `Uploading ${fileUploadPercentage}%`
+                  : formData.photoURL
+                  ? "Image uploaded successfully!"
+                  : ""}
+              </p>
+            )}
 
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
@@ -231,7 +301,13 @@ export default function Profile() {
               aria-label="Username"
               onChange={handleChange}
               defaultValue={currentUser.username}
+              minLength="5"
+              maxLength="20"
+              required
             />
+            <p className="text-center text-red-600">
+              {validationErrors.username}
+            </p>
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="email"
@@ -241,7 +317,9 @@ export default function Profile() {
               aria-label="Email"
               onChange={handleChange}
               defaultValue={currentUser.email}
+              required
             />
+            <p className="text-center text-red-600">{validationErrors.email}</p>
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
               type="password"
@@ -250,11 +328,16 @@ export default function Profile() {
               placeholder="Password"
               aria-label="Password"
               onChange={handleChange}
+              minLength="8"
+              maxLength="16"
             />
+            <p className="text-center text-red-600">
+              {validationErrors.password}
+            </p>
 
             <button
               disabled={loading}
-              className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+              className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none mb-2"
             >
               {loading ? "LOADING..." : "UPDATE"}
             </button>
