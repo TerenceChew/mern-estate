@@ -16,6 +16,7 @@ export default function SignIn() {
   });
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const [serverValidationErrors, setServerValidationErrors] = useState({});
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setServerValidationErrors({});
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
@@ -72,6 +74,15 @@ export default function SignIn() {
         dispatch(signInSuccess(data));
         navigate("/");
         return;
+      } else if (res.status === 422) {
+        const errors = {};
+
+        data.errors.forEach((error) => {
+          errors[error.path] = error.msg;
+        });
+
+        setServerValidationErrors(errors);
+        dispatch(signInFailure(""));
       } else {
         dispatch(signInFailure(data.message));
       }
@@ -104,7 +115,9 @@ export default function SignIn() {
             value={formData.email}
             required
           />
-          <p className="text-center text-red-600">{validationErrors.email}</p>
+          <p className="text-center text-red-600">
+            {validationErrors.email || serverValidationErrors.email}
+          </p>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="password"
@@ -116,9 +129,12 @@ export default function SignIn() {
             value={formData.password}
             required
           />
+          <p className="text-center text-red-600">
+            {validationErrors.password || serverValidationErrors.password}
+          </p>
           <button
             disabled={loading}
-            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none my-2"
+            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none mb-2"
           >
             {loading ? "LOADING..." : "SIGN IN"}
           </button>
