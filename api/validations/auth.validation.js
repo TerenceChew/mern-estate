@@ -46,3 +46,28 @@ export const validateSignUp = [
     next();
   },
 ];
+
+export const validateSignIn = [
+  body("email")
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Email cannot be empty!")
+    .bail()
+    .isEmail()
+    .withMessage("Please enter a valid email!"),
+  body("password")
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Password cannot be empty!"),
+  (req, res, next) => {
+    const result = validationResult(req);
+
+    if (!result.isEmpty()) {
+      return res.status(422).json({ errors: result.array() });
+    }
+
+    next();
+  },
+];
