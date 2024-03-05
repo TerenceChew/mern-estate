@@ -19,6 +19,7 @@ export default function SignUp() {
   const { error, loading } = useSelector((state) => state.user);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const [serverValidationErrors, setServerValidationErrors] = useState({});
 
   // Validation
   const validate = (formData) => {
@@ -64,6 +65,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setServerValidationErrors({});
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
@@ -88,10 +90,19 @@ export default function SignUp() {
         navigate("/sign-in");
         return;
       } else {
-        if (res.status === 500) {
-          const data = await res.json();
+        const data = await res.json();
 
+        if (res.status === 500) {
           dispatch(signUpFailure(data.message));
+        } else if (res.status === 422) {
+          const errors = {};
+
+          data.errors.forEach((error) => {
+            errors[error.path] = error.msg;
+          });
+
+          setServerValidationErrors(errors);
+          dispatch(signUpFailure(""));
         } else {
           dispatch(signUpFailure(res.statusText));
         }
@@ -128,7 +139,7 @@ export default function SignUp() {
             required
           />
           <p className="text-center text-red-600">
-            {validationErrors.username}
+            {validationErrors.username || serverValidationErrors.username}
           </p>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
@@ -141,7 +152,9 @@ export default function SignUp() {
             value={formData.email}
             required
           />
-          <p className="text-center text-red-600">{validationErrors.email}</p>
+          <p className="text-center text-red-600">
+            {validationErrors.email || serverValidationErrors.email}
+          </p>
           <input
             className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
             type="password"
@@ -156,7 +169,7 @@ export default function SignUp() {
             required
           />
           <p className="text-center text-red-600">
-            {validationErrors.password}
+            {validationErrors.password || serverValidationErrors.password}
           </p>
           <button
             disabled={loading}
