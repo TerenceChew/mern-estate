@@ -37,6 +37,7 @@ export default function Profile() {
   const [deleteRequested, setDeleteRequested] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const [serverValidationErrors, setServerValidationErrors] = useState({});
 
   // Validation
   const validate = (formData) => {
@@ -104,6 +105,7 @@ export default function Profile() {
     e.preventDefault();
     fileInputRef.current.value = "";
 
+    setServerValidationErrors({});
     setDeleteRequested(false);
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
@@ -221,6 +223,15 @@ export default function Profile() {
         dispatch(updateUserSuccess(data));
         setShowUpdateSuccessMessage(true);
         return;
+      } else if (res.status === 422) {
+        const errors = {};
+
+        data.errors.forEach((error) => {
+          errors[error.path] = error.msg;
+        });
+
+        setServerValidationErrors(errors);
+        dispatch(updateUserFailure(""));
       } else {
         dispatch(updateUserFailure(data.message));
         setShowUpdateSuccessMessage(false);
@@ -306,7 +317,7 @@ export default function Profile() {
               required
             />
             <p className="text-center text-red-600">
-              {validationErrors.username}
+              {validationErrors.username || serverValidationErrors.username}
             </p>
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
@@ -319,7 +330,9 @@ export default function Profile() {
               defaultValue={currentUser.email}
               required
             />
-            <p className="text-center text-red-600">{validationErrors.email}</p>
+            <p className="text-center text-red-600">
+              {validationErrors.email || serverValidationErrors.email}
+            </p>
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
               type="password"
@@ -332,7 +345,7 @@ export default function Profile() {
               maxLength="16"
             />
             <p className="text-center text-red-600">
-              {validationErrors.password}
+              {validationErrors.password || serverValidationErrors.password}
             </p>
 
             <button
