@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -31,16 +31,118 @@ export default function CreateListing() {
   const [fileUploadError, setFileUploadError] = useState(null);
   const [submitError, setSubmitError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
+
+  // Validation
+  const validate = () => {
+    const errors = {};
+    const urlRegex =
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+    const {
+      title,
+      description,
+      address,
+      type,
+      parking,
+      furnished,
+      offer,
+      bedrooms,
+      bathrooms,
+      regularPrice,
+      discountPrice,
+      imageUrls,
+    } = formData;
+
+    if (!title) {
+      errors.title = "Title cannot be empty!";
+    } else if (title.length < 20) {
+      errors.title = "Title must be at least 20 characters!";
+    } else if (title.length > 60) {
+      errors.title = "Title cannot be more than 60 characters!";
+    }
+
+    if (!description) {
+      errors.description = "Description cannot be empty!";
+    } else if (description.length < 50) {
+      errors.description = "Description must be at least 50 characters!";
+    }
+
+    if (!address) {
+      errors.address = "Address cannot be empty!";
+    } else if (address.length < 15) {
+      errors.address = "Address must be at least 15 characters!";
+    } else if (address.length > 60) {
+      errors.address = "Address cannot be more than 60 characters!";
+    }
+
+    if (!type) {
+      errors.type = "Please choose sale or rent!";
+    } else if (!["rent", "sale"].includes(type)) {
+      errors.type = "Type must be sale or rent!";
+    }
+
+    if (typeof parking !== "boolean") {
+      errors.parking =
+        "Invalid parking value. Parking can only be checked or unchecked!";
+    }
+
+    if (typeof furnished !== "boolean") {
+      errors.furnished =
+        "Invalid furnished value. Furnished can only be checked or unchecked!";
+    }
+
+    if (typeof offer !== "boolean") {
+      errors.offer =
+        "Invalid offer value. Offer can only be checked or unchecked!";
+    }
+
+    if (!bedrooms || bedrooms < 1) {
+      errors.bedrooms = "There must be at least 1 bedroom!";
+    } else if (bedrooms > 20) {
+      errors.bedrooms = "There cannot be more than 20 bedrooms!";
+    }
+
+    if (!bathrooms || bathrooms < 1) {
+      errors.bathrooms = "There must be at least 1 bathroom!";
+    } else if (bathrooms > 20) {
+      errors.bathrooms = "There cannot be more than 20 bathrooms!";
+    }
+
+    if (!regularPrice) {
+      errors.regularPrice = "Please enter a regular price!";
+    } else if (regularPrice < 50) {
+      errors.regularPrice = "Regular price must be at least 50!";
+    } else if (regularPrice > 100000000) {
+      errors.regularPrice = "Regular price cannot be more than 100,000,000!";
+    }
+
+    if (offer) {
+      if (typeof discountPrice !== "number") {
+        errors.discountPrice = "Please enter a discount price for your offer!";
+      } else if (discountPrice < 0) {
+        errors.discountPrice = "Discount price cannot be less than 0!";
+      } else if (discountPrice >= regularPrice) {
+        errors.discountPrice =
+          "Discount price must be less than the regular price!";
+      }
+    }
+
+    if (!imageUrls.length) {
+      errors.imageUrls = "A listing must have at least 1 image!";
+    } else if (!imageUrls.every((url) => urlRegex.test(url))) {
+      errors.imageUrls = "Invalid image URL(s) found!";
+    }
+
+    return errors;
+  };
 
   // For managing image file input
   const resetImageFileInput = () => {
     imageFileInputRef.current.value = null;
   };
-
-  // Validations
-  const isImageUrlsEmpty = () => !formData.imageUrls.length;
 
   // Handler functions
   const handleFileInputChange = (e) => {
@@ -73,14 +175,14 @@ export default function CreateListing() {
         setFileUploadError(null);
       } catch (err) {
         setFileUploadError(
-          "Failed to upload! Make sure each image is less than 2MB"
+          "Failed to upload! Make sure each image is less than 2MB!"
         );
       }
     } else {
       setFileUploadError(
         imageFiles.length === 0
-          ? "Please choose an image to upload"
-          : "You can only upload 6 images per listing"
+          ? "Please choose an image to upload!"
+          : "You can only upload 6 images per listing!"
       );
     }
 
@@ -132,31 +234,8 @@ export default function CreateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isImageUrlsEmpty())
-      return setSubmitError("A listing must have at least one image");
-
-    try {
-      setLoading(true);
-      const res = await fetch("/api/listing/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, userRef: currentUser._id }),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        setSubmitError(null);
-        navigate(`/listing/${data._id}`);
-      } else {
-        setSubmitError(data.message);
-      }
-    } catch (err) {
-      setSubmitError("Failed to handle submit for create listing");
-    }
-
-    setLoading(false);
+    setValidationErrors(validate(formData));
+    setSubmitRequested(true);
   };
 
   // For uploading image file
@@ -191,6 +270,38 @@ export default function CreateListing() {
     });
   };
 
+  // Side effects
+  useEffect(() => {
+    const makeCreateListingRequest = async () => {
+      const res = await fetch("/api/listing/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitError(null);
+        navigate(`/listing/${data._id}`);
+      } else {
+        setSubmitError(data.message);
+      }
+    };
+
+    if (submitRequested && !Object.keys(validationErrors).length) {
+      try {
+        setLoading(true);
+        makeCreateListingRequest();
+      } catch (err) {
+        setSubmitError("Failed to handle submit for create listing");
+      }
+    }
+
+    setLoading(false);
+  }, [validationErrors]);
+
   return (
     <main className="flex justify-center py-10">
       <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-md xl:max-w-5xl flex flex-col items-center gap-8">
@@ -200,7 +311,7 @@ export default function CreateListing() {
           className="w-full flex flex-col xl:flex-row xl:flex-wrap gap-4 xl:gap-6"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-col flex-1 gap-4">
+          <div className="flex flex-col flex-1 gap-2">
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="text"
@@ -208,12 +319,13 @@ export default function CreateListing() {
               name="title"
               aria-label="Title"
               placeholder="Title"
-              minLength="10"
+              minLength="20"
               maxLength="60"
               value={formData.title}
               onChange={handleChange}
               required
             />
+            <p className="text-center text-red-600">{validationErrors.title}</p>
             <textarea
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
               id="description"
@@ -224,6 +336,9 @@ export default function CreateListing() {
               onChange={handleChange}
               required
             />
+            <p className="text-center text-red-600">
+              {validationErrors.description}
+            </p>
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="text"
@@ -231,12 +346,15 @@ export default function CreateListing() {
               name="address"
               aria-label="Address"
               placeholder="Address"
-              minLength="10"
+              minLength="15"
               maxLength="60"
               value={formData.address}
               onChange={handleChange}
               required
             />
+            <p className="text-center text-red-600">
+              {validationErrors.address}
+            </p>
 
             <div className="flex flex-wrap items-center gap-3.5 xl:gap-5">
               <div className="flex items-center gap-2">
@@ -310,6 +428,15 @@ export default function CreateListing() {
               </div>
             </div>
 
+            <div className="w-full flex flex-col gap-2 text-center text-red-600">
+              {validationErrors.type && <p>{validationErrors.type}</p>}
+              {validationErrors.parking && <p>{validationErrors.parking}</p>}
+              {validationErrors.furnished && (
+                <p>{validationErrors.furnished}</p>
+              )}
+              {validationErrors.offer && <p>{validationErrors.offer}</p>}
+            </div>
+
             <div className="flex flex-wrap items-center gap-5">
               <div className="flex items-center gap-2.5">
                 <input
@@ -344,7 +471,16 @@ export default function CreateListing() {
                   Baths
                 </label>
               </div>
+            </div>
 
+            <div className="w-full flex flex-col gap-2 text-center text-red-600">
+              {validationErrors.bedrooms && <p>{validationErrors.bedrooms}</p>}
+              {validationErrors.bathrooms && (
+                <p>{validationErrors.bathrooms}</p>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-5">
               <div className="flex items-center gap-2.5">
                 <input
                   className="w-24 p-2 rounded-lg focus:outline-gray-300"
@@ -384,13 +520,22 @@ export default function CreateListing() {
                 </div>
               )}
             </div>
+
+            <div className="w-full flex flex-col gap-2 text-center text-red-600">
+              {validationErrors.regularPrice && (
+                <p>{validationErrors.regularPrice}</p>
+              )}
+              {validationErrors.discountPrice && (
+                <p>{validationErrors.discountPrice}</p>
+              )}
+            </div>
           </div>
 
-          <div className="flex flex-col flex-1 gap-4">
+          <div className="flex flex-col flex-1 gap-2">
             <label htmlFor="images">
               <strong>Images:</strong> The first image will be the cover (max 6)
             </label>
-            <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mt-2">
               <input
                 className="flex-1 border border-solid border-gray-300 rounded-lg p-2.5"
                 id="images"
@@ -402,6 +547,7 @@ export default function CreateListing() {
                 onChange={handleFileInputChange}
                 ref={imageFileInputRef}
               />
+
               <button
                 className={`w-28 self-center sm:self-stretch border border-solid border-green-600 text-green-600 hover:bg-green-600 hover:text-white duration-500 rounded-lg p-2.5 ${
                   isUploadingFiles
@@ -416,17 +562,18 @@ export default function CreateListing() {
               </button>
             </div>
 
-            {fileUploadError && (
-              <p
-                className="text-red-600 text-center"
-                aria-label="Error message"
-              >
-                {fileUploadError}
-              </p>
-            )}
+            <div className="w-full flex flex-col gap-2 text-center text-red-600">
+              {validationErrors.imageUrls && (
+                <p>{validationErrors.imageUrls}</p>
+              )}
+
+              {fileUploadError && (
+                <p aria-label="Error message">{fileUploadError}</p>
+              )}
+            </div>
 
             {formData.imageUrls.length > 0 && (
-              <div className="flex sm:grid flex-col sm:grid-cols-2 gap-6 my-3">
+              <div className="flex sm:grid flex-col sm:grid-cols-2 gap-6 mb-2">
                 {formData.imageUrls.map((url, index) => (
                   <div
                     className="flex flex-col items-center justify-end gap-4"
