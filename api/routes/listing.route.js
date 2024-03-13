@@ -7,10 +7,16 @@ import {
   handleGetListing,
   handleSearchListings,
 } from "../controllers/listing.controller.js";
+import { validateCreateListing } from "../validations/listing.validation.js";
 
 const router = express.Router();
 
-router.post("/create", verifyJwtToken, handleCreateListing);
+router.post(
+  "/create",
+  validateCreateListing,
+  verifyJwtToken,
+  handleCreateListing
+);
 router.delete("/delete/:id", verifyJwtToken, handleDeleteListing);
 router.patch("/update/:id", verifyJwtToken, handleUpdateListing);
 router.get("/get/:id", handleGetListing);
