@@ -33,6 +33,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const [serverValidationErrors, setServerValidationErrors] = useState({});
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
 
@@ -234,6 +235,7 @@ export default function CreateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setServerValidationErrors({});
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
@@ -285,6 +287,14 @@ export default function CreateListing() {
       if (res.ok) {
         setSubmitError(null);
         navigate(`/listing/${data._id}`);
+      } else if (res.status === 422) {
+        const errors = {};
+
+        data.errors.forEach((error) => {
+          errors[error.path] = error.msg;
+        });
+
+        setServerValidationErrors(errors);
       } else {
         setSubmitError(data.message);
       }
@@ -308,7 +318,7 @@ export default function CreateListing() {
         <h1 className="font-semibold text-2xl sm:text-3xl">Create a Listing</h1>
 
         <form
-          className="w-full flex flex-col xl:flex-row xl:flex-wrap gap-4 xl:gap-6"
+          className="w-full flex flex-col xl:flex-row xl:flex-wrap gap-2 xl:gap-6"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col flex-1 gap-2">
@@ -325,7 +335,9 @@ export default function CreateListing() {
               onChange={handleChange}
               required
             />
-            <p className="text-center text-red-600">{validationErrors.title}</p>
+            <p className="text-center text-red-600">
+              {validationErrors.title || serverValidationErrors.title}
+            </p>
             <textarea
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
               id="description"
@@ -337,7 +349,8 @@ export default function CreateListing() {
               required
             />
             <p className="text-center text-red-600">
-              {validationErrors.description}
+              {validationErrors.description ||
+                serverValidationErrors.description}
             </p>
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
@@ -353,7 +366,7 @@ export default function CreateListing() {
               required
             />
             <p className="text-center text-red-600">
-              {validationErrors.address}
+              {validationErrors.address || serverValidationErrors.address}
             </p>
 
             <div className="flex flex-wrap items-center gap-3.5 xl:gap-5">
@@ -428,13 +441,15 @@ export default function CreateListing() {
               </div>
             </div>
 
-            <div className="w-full flex flex-col gap-2 text-center text-red-600">
-              {validationErrors.type && <p>{validationErrors.type}</p>}
-              {validationErrors.parking && <p>{validationErrors.parking}</p>}
-              {validationErrors.furnished && (
-                <p>{validationErrors.furnished}</p>
-              )}
-              {validationErrors.offer && <p>{validationErrors.offer}</p>}
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>{validationErrors.type || serverValidationErrors.type}</p>
+              <p>
+                {validationErrors.parking || serverValidationErrors.parking}
+              </p>
+              <p>
+                {validationErrors.furnished || serverValidationErrors.furnished}
+              </p>
+              <p>{validationErrors.offer || serverValidationErrors.offer}</p>
             </div>
 
             <div className="flex flex-wrap items-center gap-5">
@@ -473,11 +488,13 @@ export default function CreateListing() {
               </div>
             </div>
 
-            <div className="w-full flex flex-col gap-2 text-center text-red-600">
-              {validationErrors.bedrooms && <p>{validationErrors.bedrooms}</p>}
-              {validationErrors.bathrooms && (
-                <p>{validationErrors.bathrooms}</p>
-              )}
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>
+                {validationErrors.bedrooms || serverValidationErrors.bedrooms}
+              </p>
+              <p>
+                {validationErrors.bathrooms || serverValidationErrors.bathrooms}
+              </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-5">
@@ -521,13 +538,15 @@ export default function CreateListing() {
               )}
             </div>
 
-            <div className="w-full flex flex-col gap-2 text-center text-red-600">
-              {validationErrors.regularPrice && (
-                <p>{validationErrors.regularPrice}</p>
-              )}
-              {validationErrors.discountPrice && (
-                <p>{validationErrors.discountPrice}</p>
-              )}
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>
+                {validationErrors.regularPrice ||
+                  serverValidationErrors.regularPrice}
+              </p>
+              <p>
+                {validationErrors.discountPrice ||
+                  serverValidationErrors.discountPrice}
+              </p>
             </div>
           </div>
 
@@ -562,10 +581,10 @@ export default function CreateListing() {
               </button>
             </div>
 
-            <div className="w-full flex flex-col gap-2 text-center text-red-600">
-              {validationErrors.imageUrls && (
-                <p>{validationErrors.imageUrls}</p>
-              )}
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>
+                {validationErrors.imageUrls || serverValidationErrors.imageUrls}
+              </p>
 
               {fileUploadError && (
                 <p aria-label="Error message">{fileUploadError}</p>
