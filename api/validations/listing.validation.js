@@ -93,6 +93,11 @@ export const validateCreateListing = [
       } else if (value >= req.body.regularPrice) {
         throw new Error("Discount price must be less than the regular price!");
       }
+    } else {
+      if (value !== null)
+        throw new Error(
+          "Invalid discount price value. Discount price must be null if there is no offer!"
+        );
     }
 
     return true;
