@@ -24,7 +24,7 @@ export default function CreateListing() {
     bedrooms: 1,
     bathrooms: 1,
     regularPrice: 50,
-    discountPrice: 0,
+    discountPrice: null,
     imageUrls: [],
   });
   const [isUploadingFiles, setIsUploadingFiles] = useState(false);
@@ -112,7 +112,7 @@ export default function CreateListing() {
       errors.bathrooms = "There cannot be more than 20 bathrooms!";
     }
 
-    if (!regularPrice) {
+    if (!Number.isInteger(regularPrice)) {
       errors.regularPrice = "Please enter a regular price!";
     } else if (regularPrice < 50) {
       errors.regularPrice = "Regular price must be at least 50!";
@@ -121,7 +121,7 @@ export default function CreateListing() {
     }
 
     if (offer) {
-      if (typeof discountPrice !== "number") {
+      if (!Number.isInteger(discountPrice)) {
         errors.discountPrice = "Please enter a discount price for your offer!";
       } else if (discountPrice < 0) {
         errors.discountPrice = "Discount price cannot be less than 0!";
@@ -209,11 +209,11 @@ export default function CreateListing() {
         ...formData,
         type: name,
       });
-    } else if (name === "offer" && !checked) {
+    } else if (name === "offer") {
       setFormData({
         ...formData,
         [name]: checked,
-        discountPrice: 0,
+        discountPrice: checked ? 0 : null,
       });
     } else if (type === "number") {
       setFormData({
@@ -526,7 +526,11 @@ export default function CreateListing() {
                     type="number"
                     min="0"
                     max={(formData.regularPrice - 1).toString()}
-                    value={formData.discountPrice.toString()} // A trick to remove leading 0
+                    value={
+                      formData.discountPrice
+                        ? formData.discountPrice.toString()
+                        : "0"
+                    } // A trick to remove leading 0
                     onChange={handleChange}
                   />
                   <label className="font-semibold" htmlFor="discountPrice">
