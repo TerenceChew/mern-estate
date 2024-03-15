@@ -1,7 +1,17 @@
 import { body, validationResult } from "express-validator";
 import mongoose from "mongoose";
 
-export const validateCreateListing = [
+const validationResultHandler = (req, res, next) => {
+  const result = validationResult(req);
+
+  if (!result.isEmpty()) {
+    return res.status(422).json({ errors: result.array() });
+  }
+
+  next();
+};
+
+const validateCreateOrUpdateListing = [
   body("title")
     .trim()
     .escape()
@@ -120,6 +130,10 @@ export const validateCreateListing = [
 
       return true;
     }),
+];
+
+export const validateCreateListing = [
+  ...validateCreateOrUpdateListing,
   body("userRef")
     .trim()
     .escape()
@@ -135,13 +149,10 @@ export const validateCreateListing = [
 
       return true;
     }),
-  (req, res, next) => {
-    const result = validationResult(req);
+  validationResultHandler,
+];
 
-    if (!result.isEmpty()) {
-      return res.status(422).json({ errors: result.array() });
-    }
-
-    next();
-  },
+export const validateUpdateListing = [
+  ...validateCreateOrUpdateListing,
+  validationResultHandler,
 ];
