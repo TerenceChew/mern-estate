@@ -22,7 +22,7 @@ const listingSchema = new Schema(
     },
     discountPrice: {
       type: Number,
-      required: true,
+      default: null,
     },
     bathrooms: {
       type: Number,
