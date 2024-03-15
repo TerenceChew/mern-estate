@@ -1,5 +1,15 @@
 import { body, validationResult } from "express-validator";
 
+const validationResultHandler = (req, res, next) => {
+  const result = validationResult(req);
+
+  if (!result.isEmpty()) {
+    return res.status(422).json({ errors: result.array() });
+  }
+
+  next();
+};
+
 export const validateSignUp = [
   body("username")
     .trim()
@@ -36,15 +46,7 @@ export const validateSignUp = [
     .withMessage(
       "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!"
     ),
-  (req, res, next) => {
-    const result = validationResult(req);
-
-    if (!result.isEmpty()) {
-      return res.status(422).json({ errors: result.array() });
-    }
-
-    next();
-  },
+  validationResultHandler,
 ];
 
 export const validateSignIn = [
@@ -61,13 +63,5 @@ export const validateSignIn = [
     .escape()
     .notEmpty()
     .withMessage("Password cannot be empty!"),
-  (req, res, next) => {
-    const result = validationResult(req);
-
-    if (!result.isEmpty()) {
-      return res.status(422).json({ errors: result.array() });
-    }
-
-    next();
-  },
+  validationResultHandler,
 ];
