@@ -9,6 +9,7 @@ import { app } from "../firebase.js";
 import { generateUniqueFileName } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import { validate } from "../validations/listing.validation.js";
 
 export default function UpdateListing() {
   const { id } = useParams();
@@ -33,6 +34,8 @@ export default function UpdateListing() {
   const [submitError, setSubmitError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [getListingError, setGetListingError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
 
@@ -40,9 +43,6 @@ export default function UpdateListing() {
   const resetImageFileInput = () => {
     imageFileInputRef.current.value = null;
   };
-
-  // Validations
-  const isImageUrlsEmpty = () => !formData.imageUrls.length;
 
   // Handler functions
   const handleFileInputChange = (e) => {
@@ -75,14 +75,14 @@ export default function UpdateListing() {
         setFileUploadError(null);
       } catch (err) {
         setFileUploadError(
-          "Failed to upload! Make sure each image is less than 2MB"
+          "Failed to upload! Make sure each image is less than 2MB!"
         );
       }
     } else {
       setFileUploadError(
         imageFiles.length === 0
-          ? "Please choose an image to upload"
-          : "You can only upload 6 images per listing"
+          ? "Please choose an image to upload!"
+          : "You can only upload 6 images per listing!"
       );
     }
 
@@ -134,31 +134,8 @@ export default function UpdateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isImageUrlsEmpty())
-      return setSubmitError("A listing must have at least one image");
-
-    try {
-      setLoading(true);
-      const res = await fetch(`/api/listing/update/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        setSubmitError(null);
-        navigate(`/listing/${data._id}`);
-      } else {
-        setSubmitError(data.message);
-      }
-    } catch (err) {
-      setSubmitError("Failed to handle submit for update listing");
-    }
-
-    setLoading(false);
+    setValidationErrors(validate(formData));
+    setSubmitRequested(true);
   };
 
   // For uploading image file
@@ -216,6 +193,37 @@ export default function UpdateListing() {
     getListing();
   }, []);
 
+  useEffect(() => {
+    const makeUpdateListingRequest = async () => {
+      const res = await fetch(`/api/listing/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitError(null);
+        navigate(`/listing/${data._id}`);
+      } else {
+        setSubmitError(data.message);
+      }
+    };
+
+    if (submitRequested && !Object.keys(validationErrors).length) {
+      try {
+        setLoading(true);
+        makeUpdateListingRequest();
+      } catch (err) {
+        setSubmitError("Failed to handle submit for update listing");
+      }
+    }
+
+    setLoading(false);
+  }, [validationErrors]);
+
   return (
     <main className="flex justify-center py-10">
       <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-md xl:max-w-5xl flex flex-col items-center gap-8">
@@ -236,10 +244,10 @@ export default function UpdateListing() {
           </p>
         ) : (
           <form
-            className="w-full flex flex-col xl:flex-row xl:flex-wrap gap-4 xl:gap-6"
+            className="w-full flex flex-col xl:flex-row xl:flex-wrap gap-2 xl:gap-6"
             onSubmit={handleSubmit}
           >
-            <div className="flex flex-col flex-1 gap-4">
+            <div className="flex flex-col flex-1 gap-2">
               <input
                 className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
                 type="text"
@@ -247,12 +255,15 @@ export default function UpdateListing() {
                 name="title"
                 aria-label="Title"
                 placeholder="Title"
-                minLength="10"
+                minLength="20"
                 maxLength="60"
                 value={formData.title}
                 onChange={handleChange}
                 required
               />
+              <p className="text-center text-red-600">
+                {validationErrors.title}
+              </p>
               <textarea
                 className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
                 id="description"
@@ -263,6 +274,9 @@ export default function UpdateListing() {
                 onChange={handleChange}
                 required
               />
+              <p className="text-center text-red-600">
+                {validationErrors.description}
+              </p>
               <input
                 className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
                 type="text"
@@ -270,12 +284,15 @@ export default function UpdateListing() {
                 name="address"
                 aria-label="Address"
                 placeholder="Address"
-                minLength="10"
+                minLength="15"
                 maxLength="60"
                 value={formData.address}
                 onChange={handleChange}
                 required
               />
+              <p className="text-center text-red-600">
+                {validationErrors.address}
+              </p>
 
               <div className="flex flex-wrap items-center gap-3.5 xl:gap-5">
                 <div className="flex items-center gap-2">
@@ -349,6 +366,13 @@ export default function UpdateListing() {
                 </div>
               </div>
 
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>{validationErrors.type}</p>
+                <p>{validationErrors.parking}</p>
+                <p>{validationErrors.furnished}</p>
+                <p>{validationErrors.offer}</p>
+              </div>
+
               <div className="flex flex-wrap items-center gap-5">
                 <div className="flex items-center gap-2.5">
                   <input
@@ -383,7 +407,14 @@ export default function UpdateListing() {
                     Baths
                   </label>
                 </div>
+              </div>
 
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>{validationErrors.bedrooms}</p>
+                <p>{validationErrors.bathrooms}</p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-5">
                 <div className="flex items-center gap-2.5">
                   <input
                     className="w-24 p-2 rounded-lg focus:outline-gray-300"
@@ -423,14 +454,19 @@ export default function UpdateListing() {
                   </div>
                 )}
               </div>
+
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>{validationErrors.regularPrice}</p>
+                <p>{validationErrors.discountPrice}</p>
+              </div>
             </div>
 
-            <div className="flex flex-col flex-1 gap-4">
+            <div className="flex flex-col flex-1 gap-2">
               <label htmlFor="images">
                 <strong>Images:</strong> The first image will be the cover (max
                 6)
               </label>
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mt-2">
                 <input
                   className="flex-1 border border-solid border-gray-300 rounded-lg p-2.5"
                   id="images"
@@ -442,6 +478,7 @@ export default function UpdateListing() {
                   onChange={handleFileInputChange}
                   ref={imageFileInputRef}
                 />
+
                 <button
                   className={`w-28 self-center sm:self-stretch border border-solid border-green-600 text-green-600 hover:bg-green-600 hover:text-white duration-500 rounded-lg p-2.5 ${
                     isUploadingFiles
@@ -456,17 +493,16 @@ export default function UpdateListing() {
                 </button>
               </div>
 
-              {fileUploadError && (
-                <p
-                  className="text-red-600 text-center"
-                  aria-label="Error message"
-                >
-                  {fileUploadError}
-                </p>
-              )}
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>{validationErrors.imageUrls}</p>
+
+                {fileUploadError && (
+                  <p aria-label="Error message">{fileUploadError}</p>
+                )}
+              </div>
 
               {formData.imageUrls.length > 0 && (
-                <div className="flex sm:grid flex-col sm:grid-cols-2 gap-6 my-3">
+                <div className="flex sm:grid flex-col sm:grid-cols-2 gap-6 mb-2">
                   {formData.imageUrls.map((url, index) => (
                     <div
                       className="flex flex-col items-center justify-end gap-4"
