@@ -36,6 +36,7 @@ export default function UpdateListing() {
   const [getListingError, setGetListingError] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const [serverValidationErrors, setServerValidationErrors] = useState({});
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
 
@@ -134,6 +135,7 @@ export default function UpdateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setServerValidationErrors({});
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
@@ -207,6 +209,14 @@ export default function UpdateListing() {
       if (res.ok) {
         setSubmitError(null);
         navigate(`/listing/${data._id}`);
+      } else if (res.status === 422) {
+        const errors = {};
+
+        data.errors.forEach((error) => {
+          errors[error.path] = error.msg;
+        });
+
+        setServerValidationErrors(errors);
       } else {
         setSubmitError(data.message);
       }
@@ -262,7 +272,7 @@ export default function UpdateListing() {
                 required
               />
               <p className="text-center text-red-600">
-                {validationErrors.title}
+                {validationErrors.title || serverValidationErrors.title}
               </p>
               <textarea
                 className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
@@ -275,7 +285,8 @@ export default function UpdateListing() {
                 required
               />
               <p className="text-center text-red-600">
-                {validationErrors.description}
+                {validationErrors.description ||
+                  serverValidationErrors.description}
               </p>
               <input
                 className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
@@ -291,7 +302,7 @@ export default function UpdateListing() {
                 required
               />
               <p className="text-center text-red-600">
-                {validationErrors.address}
+                {validationErrors.address || serverValidationErrors.address}
               </p>
 
               <div className="flex flex-wrap items-center gap-3.5 xl:gap-5">
@@ -367,10 +378,15 @@ export default function UpdateListing() {
               </div>
 
               <div className="w-full flex flex-col text-center text-red-600">
-                <p>{validationErrors.type}</p>
-                <p>{validationErrors.parking}</p>
-                <p>{validationErrors.furnished}</p>
-                <p>{validationErrors.offer}</p>
+                <p>{validationErrors.type || serverValidationErrors.type}</p>
+                <p>
+                  {validationErrors.parking || serverValidationErrors.parking}
+                </p>
+                <p>
+                  {validationErrors.furnished ||
+                    serverValidationErrors.furnished}
+                </p>
+                <p>{validationErrors.offer || serverValidationErrors.offer}</p>
               </div>
 
               <div className="flex flex-wrap items-center gap-5">
@@ -410,8 +426,13 @@ export default function UpdateListing() {
               </div>
 
               <div className="w-full flex flex-col text-center text-red-600">
-                <p>{validationErrors.bedrooms}</p>
-                <p>{validationErrors.bathrooms}</p>
+                <p>
+                  {validationErrors.bedrooms || serverValidationErrors.bedrooms}
+                </p>
+                <p>
+                  {validationErrors.bathrooms ||
+                    serverValidationErrors.bathrooms}
+                </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-5">
@@ -456,8 +477,14 @@ export default function UpdateListing() {
               </div>
 
               <div className="w-full flex flex-col text-center text-red-600">
-                <p>{validationErrors.regularPrice}</p>
-                <p>{validationErrors.discountPrice}</p>
+                <p>
+                  {validationErrors.regularPrice ||
+                    serverValidationErrors.regularPrice}
+                </p>
+                <p>
+                  {validationErrors.discountPrice ||
+                    serverValidationErrors.discountPrice}
+                </p>
               </div>
             </div>
 
@@ -494,7 +521,10 @@ export default function UpdateListing() {
               </div>
 
               <div className="w-full flex flex-col text-center text-red-600">
-                <p>{validationErrors.imageUrls}</p>
+                <p>
+                  {validationErrors.imageUrls ||
+                    serverValidationErrors.imageUrls}
+                </p>
 
                 {fileUploadError && (
                   <p aria-label="Error message">{fileUploadError}</p>
