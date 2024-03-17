@@ -26,7 +26,7 @@ export default function UpdateListing() {
     bedrooms: 1,
     bathrooms: 1,
     regularPrice: 50,
-    discountPrice: 0,
+    discountPrice: null,
     imageUrls: [],
   });
   const [isUploadingFiles, setIsUploadingFiles] = useState(false);
@@ -109,11 +109,11 @@ export default function UpdateListing() {
         ...formData,
         type: name,
       });
-    } else if (name === "offer" && !checked) {
+    } else if (name === "offer") {
       setFormData({
         ...formData,
         [name]: checked,
-        discountPrice: 0,
+        discountPrice: checked ? 0 : null,
       });
     } else if (type === "number") {
       setFormData({
@@ -464,7 +464,11 @@ export default function UpdateListing() {
                       type="number"
                       min="0"
                       max={(formData.regularPrice - 1).toString()}
-                      value={formData.discountPrice.toString()} // A trick to remove leading 0
+                      value={
+                        formData.discountPrice
+                          ? formData.discountPrice.toString()
+                          : "0"
+                      } // A trick to remove leading 0
                       onChange={handleChange}
                     />
                     <label className="font-semibold" htmlFor="discountPrice">
