@@ -22,7 +22,7 @@ export default function SignIn() {
   const dispatch = useDispatch();
 
   // Validation
-  const validate = () => {
+  const validate = (formData) => {
     const errors = {};
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
