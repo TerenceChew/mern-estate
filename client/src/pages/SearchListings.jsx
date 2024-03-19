@@ -16,7 +16,52 @@ export default function SearchListings() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
   const navigate = useNavigate();
+
+  // Validation
+  const validate = (formData) => {
+    const errors = {};
+    const { searchTerm, type, offer, parking, furnished, sort, order } =
+      formData;
+
+    if (typeof searchTerm !== "string") {
+      errors.searchTerm = "Search term must be a string!";
+    }
+
+    if (!["all", "sale", "rent"].includes(type)) {
+      errors.type =
+        "Invalid type value. Valid type values are 'all', 'sale', and 'rent'!";
+    }
+
+    if (typeof offer !== "boolean") {
+      errors.offer =
+        "Invalid offer value. Offer can only be checked or unchecked!";
+    }
+
+    if (typeof parking !== "boolean") {
+      errors.parking =
+        "Invalid parking value. Parking can only be checked or unchecked!";
+    }
+
+    if (typeof furnished !== "boolean") {
+      errors.furnished =
+        "Invalid furnished value. Furnished can only be checked or unchecked!";
+    }
+
+    if (!["regularPrice", "createdAt"].includes(sort)) {
+      errors.sort =
+        "Invalid sort value. Valid sort values are 'regularPrice', and 'createdAt'!";
+    }
+
+    if (!["asc", "desc"].includes(order)) {
+      errors.order =
+        "Invalid order value. Valid order values are 'asc', and 'desc'!";
+    }
+
+    return errors;
+  };
 
   // Handler functions
   const handleChange = (e) => {
@@ -51,14 +96,8 @@ export default function SearchListings() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const searchParams = new URLSearchParams();
-    for (const prop in formData) {
-      searchParams.set(prop, formData[prop]);
-    }
-    searchParams.set("startIndex", 0);
-    const newQueryString = searchParams.toString();
-
-    navigate(`/search?${newQueryString}`);
+    setValidationErrors(validate(formData));
+    setSubmitRequested(true);
   };
   const handleShowMoreClick = () => {
     const newStartIndex = listings.length;
@@ -136,11 +175,24 @@ export default function SearchListings() {
     getListingsData();
   }, [location.search]);
 
+  useEffect(() => {
+    if (submitRequested && !Object.keys(validationErrors).length) {
+      const searchParams = new URLSearchParams();
+      for (const prop in formData) {
+        searchParams.set(prop, formData[prop]);
+      }
+      searchParams.set("startIndex", 0);
+      const newQueryString = searchParams.toString();
+
+      navigate(`/search?${newQueryString}`);
+    }
+  }, [validationErrors]);
+
   return (
     <main>
       <article className="md:min-h-screen flex flex-col md:flex-row">
         <div className="md:max-w-[415px] border-b md:border-b-0 md:border-r border-gray-300 px-5 xs:px-7 py-8">
-          <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="flex items-center gap-3.5">
               <label htmlFor="searchTerm" className="font-semibold">
                 Search:
@@ -155,6 +207,10 @@ export default function SearchListings() {
                 onChange={handleChange}
               />
             </div>
+
+            <p className="text-center text-red-600">
+              {validationErrors.searchTerm}
+            </p>
 
             <div className="flex gap-3.5">
               <span className="font-semibold">Type:</span>
@@ -214,6 +270,11 @@ export default function SearchListings() {
               </div>
             </div>
 
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>{validationErrors.type}</p>
+              <p>{validationErrors.offer}</p>
+            </div>
+
             <div className="flex gap-3.5">
               <span className="font-semibold">Amenities:</span>
 
@@ -246,6 +307,11 @@ export default function SearchListings() {
               </div>
             </div>
 
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>{validationErrors.parking}</p>
+              <p>{validationErrors.furnished}</p>
+            </div>
+
             <div className="flex items-center gap-3.5">
               <label htmlFor="sort" className="font-semibold">
                 Sort:
@@ -263,6 +329,11 @@ export default function SearchListings() {
                 <option value="createdAt_desc">Latest</option>
                 <option value="createdAt_asc">Oldest</option>
               </select>
+            </div>
+
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>{validationErrors.sort}</p>
+              <p>{validationErrors.order}</p>
             </div>
 
             <button
