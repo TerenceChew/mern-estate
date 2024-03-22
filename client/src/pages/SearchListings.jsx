@@ -18,6 +18,7 @@ export default function SearchListings() {
   const [showMore, setShowMore] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const [serverValidationErrors, setServerValidationErrors] = useState({});
   const navigate = useNavigate();
 
   // Validation
@@ -32,7 +33,7 @@ export default function SearchListings() {
 
     if (!["all", "sale", "rent"].includes(type)) {
       errors.type =
-        "Invalid type value. Valid type values are 'all', 'sale', and 'rent'!";
+        "Invalid type value. Type must be 'all', 'sale', or 'rent'!";
     }
 
     if (typeof offer !== "boolean") {
@@ -52,12 +53,11 @@ export default function SearchListings() {
 
     if (!["regularPrice", "createdAt"].includes(sort)) {
       errors.sort =
-        "Invalid sort value. Valid sort values are 'regularPrice', and 'createdAt'!";
+        "Invalid sort value. Sort must be 'regularPrice' or 'createdAt'!";
     }
 
     if (!["asc", "desc"].includes(order)) {
-      errors.order =
-        "Invalid order value. Valid order values are 'asc', and 'desc'!";
+      errors.order = "Invalid order value. Order must be 'asc' or 'desc'!";
     }
 
     return errors;
@@ -96,6 +96,7 @@ export default function SearchListings() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    setServerValidationErrors({});
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
@@ -160,6 +161,14 @@ export default function SearchListings() {
         if (res.ok) {
           setListings(data.listings);
           setShowMore(data.remainingListings > 0);
+        } else if (res.status === 422) {
+          const errors = {};
+
+          data.errors.forEach((error) => {
+            errors[error.path] = error.msg;
+          });
+
+          setServerValidationErrors(errors);
         } else {
           setError(data.message);
           setListings([]);
@@ -209,7 +218,7 @@ export default function SearchListings() {
             </div>
 
             <p className="text-center text-red-600">
-              {validationErrors.searchTerm}
+              {validationErrors.searchTerm || serverValidationErrors.searchTerm}
             </p>
 
             <div className="flex gap-3.5">
@@ -271,8 +280,8 @@ export default function SearchListings() {
             </div>
 
             <div className="w-full flex flex-col text-center text-red-600">
-              <p>{validationErrors.type}</p>
-              <p>{validationErrors.offer}</p>
+              <p>{validationErrors.type || serverValidationErrors.type}</p>
+              <p>{validationErrors.offer || serverValidationErrors.offer}</p>
             </div>
 
             <div className="flex gap-3.5">
@@ -308,8 +317,12 @@ export default function SearchListings() {
             </div>
 
             <div className="w-full flex flex-col text-center text-red-600">
-              <p>{validationErrors.parking}</p>
-              <p>{validationErrors.furnished}</p>
+              <p>
+                {validationErrors.parking || serverValidationErrors.parking}
+              </p>
+              <p>
+                {validationErrors.furnished || serverValidationErrors.furnished}
+              </p>
             </div>
 
             <div className="flex items-center gap-3.5">
@@ -332,8 +345,9 @@ export default function SearchListings() {
             </div>
 
             <div className="w-full flex flex-col text-center text-red-600">
-              <p>{validationErrors.sort}</p>
-              <p>{validationErrors.order}</p>
+              <p>{validationErrors.sort || serverValidationErrors.sort}</p>
+              <p>{validationErrors.order || serverValidationErrors.order}</p>
+              <p>{serverValidationErrors.startIndex}</p>
             </div>
 
             <button
