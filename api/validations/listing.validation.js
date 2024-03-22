@@ -13,6 +13,9 @@ const validationResultHandler = (req, res, next) => {
 
 const validateCreateOrUpdateListing = [
   body("title")
+    .isString()
+    .withMessage("Title must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -24,6 +27,9 @@ const validateCreateOrUpdateListing = [
     .isLength({ max: 60 })
     .withMessage("Title cannot be more than 60 characters!"),
   body("description")
+    .isString()
+    .withMessage("Description must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -32,6 +38,9 @@ const validateCreateOrUpdateListing = [
     .isLength({ min: 50 })
     .withMessage("Description must be at least 50 characters!"),
   body("address")
+    .isString()
+    .withMessage("Address must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -43,6 +52,9 @@ const validateCreateOrUpdateListing = [
     .isLength({ max: 60 })
     .withMessage("Address cannot be more than 60 characters!"),
   body("type")
+    .isString()
+    .withMessage("Type must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -135,6 +147,9 @@ const validateCreateOrUpdateListing = [
 export const validateCreateListing = [
   ...validateCreateOrUpdateListing,
   body("userRef")
+    .isString()
+    .withMessage("User ref must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
