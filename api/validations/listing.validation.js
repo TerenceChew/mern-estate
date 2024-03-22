@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body, query, validationResult } from "express-validator";
 import mongoose from "mongoose";
 
 const validationResultHandler = (req, res, next) => {
@@ -154,5 +154,110 @@ export const validateCreateListing = [
 
 export const validateUpdateListing = [
   ...validateCreateOrUpdateListing,
+  validationResultHandler,
+];
+
+export const validateSearchListings = [
+  query("searchTerm")
+    .optional()
+    .isString()
+    .withMessage("Search term must be a string!")
+    .bail()
+    .trim()
+    .escape(),
+  query("type")
+    .optional()
+    .isString()
+    .withMessage("Type must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Type cannot be empty!")
+    .bail()
+    .isIn(["all", "sale", "rent"])
+    .withMessage("Invalid type value. Type must be 'all', 'sale', or 'rent'!"),
+  query("parking")
+    .optional()
+    .isString()
+    .withMessage("Parking must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Parking cannot be empty!")
+    .bail()
+    .isIn(["true", "false"])
+    .withMessage(
+      "Invalid parking value. Parking can only be checked or unchecked!"
+    ),
+  query("furnished")
+    .optional()
+    .isString()
+    .withMessage("Furnished must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Furnished cannot be empty!")
+    .bail()
+    .isIn(["true", "false"])
+    .withMessage(
+      "Invalid furnished value. Furnished can only be checked or unchecked!"
+    ),
+  query("offer")
+    .optional()
+    .isString()
+    .withMessage("Offer must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Offer cannot be empty!")
+    .bail()
+    .isIn(["true", "false"])
+    .withMessage(
+      "Invalid offer value. Offer can only be checked or unchecked!"
+    ),
+  query("sort")
+    .optional()
+    .isString()
+    .withMessage("Sort must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Sort cannot be empty!")
+    .bail()
+    .isIn(["regularPrice", "createdAt"])
+    .withMessage(
+      "Invalid sort value. Sort must be 'regularPrice' or 'createdAt'!"
+    ),
+  query("order")
+    .optional()
+    .isString()
+    .withMessage("Order must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Order cannot be empty!")
+    .bail()
+    .isIn(["asc", "desc"])
+    .withMessage("Invalid order value. Order must be 'asc' or 'desc'!"),
+  query("startIndex")
+    .optional()
+    .isString()
+    .withMessage("Start index must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Start index cannot be empty!")
+    .bail()
+    .isInt()
+    .withMessage(
+      "Invalid start index value. Start index can only contain numbers!"
+    ),
   validationResultHandler,
 ];

@@ -10,6 +10,7 @@ import {
 import {
   validateCreateListing,
   validateUpdateListing,
+  validateSearchListings,
 } from "../validations/listing.validation.js";
 
 const router = express.Router();
@@ -28,6 +29,6 @@ router.patch(
   handleUpdateListing
 );
 router.get("/get/:id", handleGetListing);
-router.get("/search", handleSearchListings);
+router.get("/search", validateSearchListings, handleSearchListings);
 
 export default router;
