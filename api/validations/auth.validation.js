@@ -12,6 +12,9 @@ const validationResultHandler = (req, res, next) => {
 
 export const validateSignUp = [
   body("username")
+    .isString()
+    .withMessage("Username must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -23,6 +26,9 @@ export const validateSignUp = [
     .isLength({ max: 20 })
     .withMessage("Username cannot be more than 20 characters!"),
   body("email")
+    .isString()
+    .withMessage("Email must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -31,6 +37,9 @@ export const validateSignUp = [
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
+    .isString()
+    .withMessage("Password must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -51,6 +60,9 @@ export const validateSignUp = [
 
 export const validateSignIn = [
   body("email")
+    .isString()
+    .withMessage("Email must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
@@ -59,6 +71,9 @@ export const validateSignIn = [
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
+    .isString()
+    .withMessage("Password must be a string!")
+    .bail()
     .trim()
     .escape()
     .notEmpty()
