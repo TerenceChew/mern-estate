@@ -4,12 +4,13 @@ import {
   getStorage,
   ref,
   uploadBytesResumable,
+  deleteObject,
 } from "firebase/storage";
 import { app } from "../firebase.js";
 import { generateUniqueFileName } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { validate } from "../validations/listing.validation.js";
+import { validate, validateImages } from "../validations/listing.validation.js";
 
 export default function UpdateListing() {
   const { id } = useParams();
@@ -39,6 +40,10 @@ export default function UpdateListing() {
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
+  const [imageFileNames, setImageFileNames] = useState([]);
+  const [isValidatingImages, setIsValidatingImages] = useState(false);
+  const [imagesValidationError, setImagesValidationError] = useState(null);
+  const [shouldValidateImages, setShouldValidateImages] = useState(false);
 
   // For managing image file input
   const resetImageFileInput = () => {
@@ -60,11 +65,19 @@ export default function UpdateListing() {
       imageFiles.length > 0 &&
       imageFiles.length + formData.imageUrls.length < 7
     ) {
+      setShouldValidateImages(true);
+
       const promises = [];
+      const fileNames = [];
 
       imageFiles.forEach((file) => {
-        promises.push(uploadImageFile(file));
+        const uniqueFileName = generateUniqueFileName(file.name); // To prevent errors in case user uploads new file with same name
+
+        promises.push(uploadImageFile(file, uniqueFileName));
+        fileNames.push(uniqueFileName);
       });
+
+      setImageFileNames([...imageFileNames, ...fileNames]);
 
       try {
         const imageUrls = await Promise.all(promises);
@@ -141,10 +154,9 @@ export default function UpdateListing() {
   };
 
   // For uploading image file
-  const uploadImageFile = (imageFile) => {
+  const uploadImageFile = (imageFile, uniqueFileName) => {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app);
-      const uniqueFileName = generateUniqueFileName(imageFile.name); // To prevent errors in case user uploads new file with same name
       const newImageFileRef = ref(storage, uniqueFileName);
       const uploadTask = uploadBytesResumable(newImageFileRef, imageFile);
 
@@ -233,6 +245,47 @@ export default function UpdateListing() {
 
     setLoading(false);
   }, [validationErrors]);
+
+  useEffect(() => {
+    const checkAndHandleImagesValidity = async () => {
+      setIsValidatingImages(true);
+      setImagesValidationError(null);
+
+      try {
+        const result = await validateImages(formData.imageUrls);
+
+        if (result === "Invalid") {
+          const storage = getStorage(app);
+
+          imageFileNames.forEach((fileName) => {
+            const imgRef = ref(storage, fileName);
+
+            deleteObject(imgRef)
+              .then(() => {
+                console.log("Image file deleted successfully!");
+              })
+              .catch((err) => {
+                console.log("Failed to delete image file!");
+              });
+          });
+
+          setImagesValidationError(
+            "Failed to upload! Make sure each file is an appropriate property image!"
+          );
+          setFormData({ ...formData, imageUrls: [] });
+        }
+      } catch (err) {
+        console.log("Failed to check and handle images validity!");
+      }
+
+      setIsValidatingImages(false);
+      setShouldValidateImages(false);
+    };
+
+    if (shouldValidateImages && formData.imageUrls.length) {
+      checkAndHandleImagesValidity();
+    }
+  }, [formData.imageUrls]);
 
   return (
     <main className="flex justify-center py-10">
@@ -530,6 +583,10 @@ export default function UpdateListing() {
                     serverValidationErrors.imageUrls}
                 </p>
 
+                {imagesValidationError && (
+                  <p aria-label="Error message">{imagesValidationError}</p>
+                )}
+
                 {fileUploadError && (
                   <p aria-label="Error message">{fileUploadError}</p>
                 )}
@@ -561,7 +618,7 @@ export default function UpdateListing() {
 
               <button
                 className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
-                disabled={loading}
+                disabled={loading || isValidatingImages}
               >
                 UPDATE LISTING
               </button>
