@@ -64,6 +64,7 @@ export default function CreateListing() {
       imageFiles.length + formData.imageUrls.length < 7
     ) {
       setShouldValidateImages(true);
+
       const promises = [];
       const fileNames = [];
 
@@ -101,47 +102,6 @@ export default function CreateListing() {
     setIsUploadingFiles(false);
     resetImageFileInput();
   };
-
-  useEffect(() => {
-    const checkAndHandleImagesValidity = async () => {
-      setIsValidatingImages(true);
-      setImagesValidationError(null);
-
-      try {
-        const result = await validateImages(formData.imageUrls);
-
-        if (result === "Invalid") {
-          const storage = getStorage(app);
-
-          imageFileNames.forEach((fileName) => {
-            const imgRef = ref(storage, fileName);
-
-            deleteObject(imgRef)
-              .then(() => {
-                console.log("Image file deleted successfully!");
-              })
-              .catch((err) => {
-                console.log("Failed to delete image file!");
-              });
-          });
-
-          setImagesValidationError(
-            "Failed to upload! Make sure each file is an appropriate property image!"
-          );
-          setFormData({ ...formData, imageUrls: [] });
-        }
-      } catch (err) {
-        console.log("Failed to check and handle images validity!");
-      }
-
-      setIsValidatingImages(false);
-      setShouldValidateImages(false);
-    };
-
-    if (shouldValidateImages && formData.imageUrls.length) {
-      checkAndHandleImagesValidity();
-    }
-  }, [formData.imageUrls]);
 
   const handleDeleteImage = (imageIndex) => {
     const updatedImageUrls = formData.imageUrls.filter(
@@ -262,6 +222,47 @@ export default function CreateListing() {
 
     setLoading(false);
   }, [validationErrors]);
+
+  useEffect(() => {
+    const checkAndHandleImagesValidity = async () => {
+      setIsValidatingImages(true);
+      setImagesValidationError(null);
+
+      try {
+        const result = await validateImages(formData.imageUrls);
+
+        if (result === "Invalid") {
+          const storage = getStorage(app);
+
+          imageFileNames.forEach((fileName) => {
+            const imgRef = ref(storage, fileName);
+
+            deleteObject(imgRef)
+              .then(() => {
+                console.log("Image file deleted successfully!");
+              })
+              .catch((err) => {
+                console.log("Failed to delete image file!");
+              });
+          });
+
+          setImagesValidationError(
+            "Failed to upload! Make sure each file is an appropriate property image!"
+          );
+          setFormData({ ...formData, imageUrls: [] });
+        }
+      } catch (err) {
+        console.log("Failed to check and handle images validity!");
+      }
+
+      setIsValidatingImages(false);
+      setShouldValidateImages(false);
+    };
+
+    if (shouldValidateImages && formData.imageUrls.length) {
+      checkAndHandleImagesValidity();
+    }
+  }, [formData.imageUrls]);
 
   return (
     <main className="flex justify-center py-10">
