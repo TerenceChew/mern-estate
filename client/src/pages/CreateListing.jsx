@@ -11,6 +11,7 @@ import { generateUniqueFileName } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { validate, validateImages } from "../validations/listing.validation.js";
+import { deleteImageFileFromFirebase } from "../utils/firebase.js";
 
 export default function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -187,21 +188,6 @@ export default function CreateListing() {
     });
   };
 
-  // For deleting image file
-  const deleteImageFileFromFirebase = (fileName) => {
-    const storage = getStorage(app);
-
-    const imgRef = ref(storage, fileName);
-
-    deleteObject(imgRef)
-      .then(() => {
-        console.log("Image file deleted successfully!");
-      })
-      .catch((err) => {
-        console.log("Failed to delete image file!");
-      });
-  };
-
   // Side effects
   useEffect(() => {
     const makeCreateListingRequest = async () => {
@@ -251,18 +237,8 @@ export default function CreateListing() {
         const result = await validateImages(formData.imageUrls);
 
         if (result === "Invalid") {
-          const storage = getStorage(app);
-
           imageFileNames.forEach((fileName) => {
-            const imgRef = ref(storage, fileName);
-
-            deleteObject(imgRef)
-              .then(() => {
-                console.log("Image file deleted successfully!");
-              })
-              .catch((err) => {
-                console.log("Failed to delete image file!");
-              });
+            deleteImageFileFromFirebase(fileName);
           });
 
           setImagesValidationError(
