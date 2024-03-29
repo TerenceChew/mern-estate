@@ -75,8 +75,6 @@ export default function CreateListing() {
         fileNames.push(uniqueFileName);
       });
 
-      setImageFileNames([...imageFileNames, ...fileNames]);
-
       try {
         const imageUrls = await Promise.all(promises);
 
@@ -84,6 +82,7 @@ export default function CreateListing() {
           ...formData,
           imageUrls: formData.imageUrls.concat(imageUrls),
         });
+        setImageFileNames([...imageFileNames, ...fileNames]);
         setFileUploadError(null);
       } catch (err) {
         setFileUploadError(
@@ -102,9 +101,13 @@ export default function CreateListing() {
     setIsUploadingFiles(false);
     resetImageFileInput();
   };
-
   const handleDeleteImage = (imageIndex) => {
+    deleteImageFileFromFirebase(imageFileNames[imageIndex]);
+
     const updatedImageUrls = formData.imageUrls.filter(
+      (_, idx) => idx !== imageIndex
+    );
+    const updatedImageFileNames = imageFileNames.filter(
       (_, idx) => idx !== imageIndex
     );
 
@@ -112,6 +115,7 @@ export default function CreateListing() {
       ...formData,
       imageUrls: updatedImageUrls,
     });
+    setImageFileNames(updatedImageFileNames);
   };
   const handleChange = (e) => {
     const { value, checked, type, name } = e.target;
@@ -183,6 +187,21 @@ export default function CreateListing() {
     });
   };
 
+  // For deleting image file
+  const deleteImageFileFromFirebase = (fileName) => {
+    const storage = getStorage(app);
+
+    const imgRef = ref(storage, fileName);
+
+    deleteObject(imgRef)
+      .then(() => {
+        console.log("Image file deleted successfully!");
+      })
+      .catch((err) => {
+        console.log("Failed to delete image file!");
+      });
+  };
+
   // Side effects
   useEffect(() => {
     const makeCreateListingRequest = async () => {
@@ -250,6 +269,7 @@ export default function CreateListing() {
             "Failed to upload! Make sure each file is an appropriate property image!"
           );
           setFormData({ ...formData, imageUrls: [] });
+          setImageFileNames([]);
         }
       } catch (err) {
         console.log("Failed to check and handle images validity!");
