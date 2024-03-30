@@ -6,7 +6,7 @@ import { validate, validateImages } from "../validations/listing.validation.js";
 import {
   uploadImageFileToFirebase,
   deleteImageFileFromFirebase,
-} from "../utils/firebase.js";
+} from "../utils/firebase.storage.js";
 
 export default function UpdateListing() {
   const { id } = useParams();
