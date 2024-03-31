@@ -8,4 +8,15 @@ const generateEmailHref = (email, subject, message) => {
   )}&body=${encodeURIComponent(message)}`;
 };
 
-export { generateUniqueFileName, formatNumberWithCommas, generateEmailHref };
+const extractImageFileNameFromUrl = (url) => {
+  const fileNameRegex = /[^\/]+(?=\?[^\/]*$)/;
+
+  return url.match(fileNameRegex)[0];
+};
+
+export {
+  generateUniqueFileName,
+  formatNumberWithCommas,
+  generateEmailHref,
+  extractImageFileNameFromUrl,
+};

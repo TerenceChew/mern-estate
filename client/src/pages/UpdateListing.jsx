@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { generateUniqueFileName } from "../utils/utilities";
+import {
+  generateUniqueFileName,
+  extractImageFileNameFromUrl,
+} from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { validate, validateImages } from "../validations/listing.validation.js";
@@ -40,6 +43,7 @@ export default function UpdateListing() {
   const [isValidatingImages, setIsValidatingImages] = useState(false);
   const [imagesValidationError, setImagesValidationError] = useState(null);
   const [shouldValidateImages, setShouldValidateImages] = useState(false);
+  const [deletedImageFileNames, setDeletedImageFileNames] = useState([]);
 
   // For managing image file input
   const resetImageFileInput = () => {
@@ -104,7 +108,10 @@ export default function UpdateListing() {
     const updatedImageUrls = formData.imageUrls.filter(
       (_, idx) => idx !== imageIndex
     );
+    const deletedImageUrl = formData.imageUrls[imageIndex];
+    const deletedImageFileName = extractImageFileNameFromUrl(deletedImageUrl);
 
+    setDeletedImageFileNames([...deletedImageFileNames, deletedImageFileName]);
     setFormData({
       ...formData,
       imageUrls: updatedImageUrls,
@@ -185,6 +192,13 @@ export default function UpdateListing() {
 
       if (res.ok) {
         setSubmitError(null);
+
+        deletedImageFileNames.forEach((fileName) => {
+          deleteImageFileFromFirebase(fileName);
+        });
+
+        setDeletedImageFileNames([]);
+
         navigate(`/listing/${data._id}`);
       } else if (res.status === 422) {
         const errors = {};
@@ -249,7 +263,8 @@ export default function UpdateListing() {
 
         {getListingError ? (
           <p className="text-red-600 text-center" aria-label="Error message">
-            {getListingError}{" "}
+            {getListingError}
+            {". "}
             <span className="text-black">
               Back to{" "}
               <Link
