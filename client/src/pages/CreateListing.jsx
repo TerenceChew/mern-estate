@@ -178,6 +178,8 @@ export default function CreateListing() {
       } else {
         setSubmitError(data.message);
       }
+
+      setLoading(false);
     };
 
     if (submitRequested && !Object.keys(validationErrors).length) {
@@ -188,8 +190,6 @@ export default function CreateListing() {
         setSubmitError("Failed to handle submit for create listing");
       }
     }
-
-    setLoading(false);
   }, [validationErrors]);
 
   useEffect(() => {

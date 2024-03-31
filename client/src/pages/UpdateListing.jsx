@@ -211,6 +211,8 @@ export default function UpdateListing() {
       } else {
         setSubmitError(data.message);
       }
+
+      setLoading(false);
     };
 
     if (submitRequested && !Object.keys(validationErrors).length) {
@@ -221,8 +223,6 @@ export default function UpdateListing() {
         setSubmitError("Failed to handle submit for update listing");
       }
     }
-
-    setLoading(false);
   }, [validationErrors]);
 
   useEffect(() => {
