@@ -175,7 +175,7 @@ export default function Home() {
                 <PublicListingCard listing={listing} key={listing._id} />
               ))
             ) : (
-              <p>No listings with offer at the moment!</p>
+              <p className="w-[265px]">No listings with offer at the moment!</p>
             )}
           </div>
         </section>
@@ -203,7 +203,7 @@ export default function Home() {
                 <PublicListingCard listing={listing} key={listing._id} />
               ))
             ) : (
-              <p>No listings for rent at the moment!</p>
+              <p className="w-[265px]">No listings for rent at the moment!</p>
             )}
           </div>
         </section>
@@ -231,7 +231,7 @@ export default function Home() {
                 <PublicListingCard listing={listing} key={listing._id} />
               ))
             ) : (
-              <p>No listings for sale at the moment!</p>
+              <p className="w-[265px]">No listings for sale at the moment!</p>
             )}
           </div>
         </section>
