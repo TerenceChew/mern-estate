@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UserListingCard from "../components/UserListingCard";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
+import { extractImageFileNameFromUrl } from "../utils/utilities";
+import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 
 export default function Listings() {
   const { id } = useParams();
@@ -11,9 +13,18 @@ export default function Listings() {
     deleteRequested: false,
     listingId: null,
   });
+  const [deletedImageFileNames, setDeletedImageFileNames] = useState([]);
 
   // Handler functions
   const handleDeleteListingClick = (listingId) => {
+    const deletedImageUrls = listings.filter(
+      (listing) => listing._id === listingId
+    )[0].imageUrls;
+    const deletedImageFileNames = deletedImageUrls.map((url) =>
+      extractImageFileNameFromUrl(url)
+    );
+
+    setDeletedImageFileNames(deletedImageFileNames);
     setDeleteRequest({
       deleteRequested: true,
       listingId,
@@ -28,6 +39,10 @@ export default function Listings() {
       const data = await res.json();
 
       if (res.ok) {
+        deletedImageFileNames.forEach((fileName) => {
+          deleteImageFileFromFirebase(fileName);
+        });
+
         setListings(data);
       } else {
         setError(data.message);
