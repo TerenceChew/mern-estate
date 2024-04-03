@@ -7,7 +7,7 @@ export default function DeleteConfirmationBox({
 }) {
   return (
     <div
-      className="w-[265px] xs:w-[365px] h-48 flex flex-col bg-white px-4 xs:px-5 py-4 rounded-md shadow-sm shadow-gray-300 fixed top-1/2 left-1/2	-translate-x-2/4 -translate-y-2/4"
+      className="w-[280px] xs:w-[365px] h-48 flex flex-col bg-white px-4 xs:px-5 py-4 rounded-md shadow-sm shadow-gray-300 fixed top-1/2 left-1/2	-translate-x-2/4 -translate-y-2/4"
       aria-label={`Delete ${type} confirmation box`}
     >
       <h1 className="w-full font-semibold text-xl xs:text-2xl border-b pb-4">
