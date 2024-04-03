@@ -253,7 +253,7 @@ export default function Profile() {
     <>
       <main
         className={`bg-[#ebf0eb] h-dvh flex justify-center py-10 ${
-          deleteRequested ? "pointer-events-none brightness-[.7] blur-sm" : ""
+          deleteRequested ? "pointer-events-none brightness-[.65] blur-sm" : ""
         }`}
       >
         <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-sm flex flex-col items-center gap-8">

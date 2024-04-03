@@ -77,7 +77,7 @@ export default function Listings() {
       <main
         className={`bg-[#ebf0eb] h-dvh flex justify-center py-10 px-5 md:px-8 ${
           deleteRequest.deleteRequested
-            ? "pointer-events-none brightness-[.7] blur-sm"
+            ? "pointer-events-none brightness-[.65] blur-sm"
             : ""
         }`}
       >
