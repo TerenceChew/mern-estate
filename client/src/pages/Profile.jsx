@@ -19,6 +19,8 @@ import {
 } from "../redux/user/userSlice";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 import { Link } from "react-router-dom";
+import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
+import { extractImageFileNameFromUrl } from "../utils/utilities.js";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -122,6 +124,15 @@ export default function Profile() {
       const data = await res.json();
 
       if (res.ok) {
+        const { imageUrlsToDelete } = data;
+        const imageFileNamesToDelete = imageUrlsToDelete.map((url) =>
+          extractImageFileNameFromUrl(url)
+        );
+
+        imageFileNamesToDelete.forEach((fileName) => {
+          deleteImageFileFromFirebase(fileName);
+        });
+
         dispatch(deleteUserSuccess());
         return;
       } else {

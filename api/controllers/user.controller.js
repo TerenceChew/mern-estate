@@ -52,7 +52,17 @@ export const handleDeleteUser = async (req, res, next) => {
   try {
     await User.deleteOne({ _id: params.id });
 
-    res.clearCookie("jwt").status(200).json("Account deleted successfully!");
+    const listings = await Listing.find({ userRef: params.id });
+    const imageUrlsToDelete = listings
+      .map((listing) => listing.imageUrls)
+      .flat(Infinity);
+
+    await Listing.deleteMany({ userRef: params.id });
+
+    res.clearCookie("jwt").status(200).json({
+      imageUrlsToDelete,
+      message: "Account deleted successfully!",
+    });
   } catch (err) {
     next(err);
   }
