@@ -2,6 +2,7 @@ import Listing from "../models/listing.model.js";
 import User from "../models/user.model.js";
 import { generateError } from "../utils/error.js";
 import { generateHashedPassword } from "../utils/utilities.js";
+import mongoose from "mongoose";
 
 export const handleTest = (req, res) => {
   res.json({
@@ -50,14 +51,19 @@ export const handleDeleteUser = async (req, res, next) => {
     return next(generateError(401, "You can only delete your own account!"));
 
   try {
-    await User.deleteOne({ _id: params.id });
-
     const listings = await Listing.find({ userRef: params.id });
     const imageUrlsToDelete = listings
       .map((listing) => listing.imageUrls)
       .flat(Infinity);
+    const connection = await mongoose.connect(process.env.DATABASE_URI);
+    const session = await connection.startSession();
 
-    await Listing.deleteMany({ userRef: params.id });
+    session.startTransaction();
+
+    await User.deleteOne({ _id: params.id }, { session });
+    await Listing.deleteMany({ userRef: params.id }, { session });
+    await session.commitTransaction();
+    await session.endSession();
 
     res.clearCookie("jwt").status(200).json({
       imageUrlsToDelete,
