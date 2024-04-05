@@ -7,9 +7,11 @@ export default defineConfig({
     proxy: {
       "/api": {
         target: "https://mern-estate-server-wf9f.onrender.com",
+        changeOrigin: true,
       },
       "/default-profile-photo.png": {
         target: "https://mern-estate-server-wf9f.onrender.com",
+        changeOrigin: true,
       },
     },
   },
