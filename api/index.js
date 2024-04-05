@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 // Set up port
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);
