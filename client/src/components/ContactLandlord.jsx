@@ -16,7 +16,9 @@ export default function ContactLandlord({ listing }) {
   useEffect(() => {
     const getLandlord = async () => {
       try {
-        const res = await fetch(`/api/user/${userRef}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/${userRef}`
+        );
         const data = await res.json();
 
         if (res.ok) {

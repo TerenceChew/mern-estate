@@ -77,13 +77,16 @@ export default function SignUp() {
 
   useEffect(() => {
     const makeSignUpRequest = async () => {
-      const res = await fetch("/api/auth/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/sign-up`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (res.ok) {
         dispatch(signUpSuccess());

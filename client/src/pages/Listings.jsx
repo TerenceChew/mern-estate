@@ -33,7 +33,9 @@ export default function Listings() {
   const handleConfirmDelete = async () => {
     try {
       const res = await fetch(
-        `/api/listing/delete/${deleteRequest.listingId}`,
+        `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/delete/${
+          deleteRequest.listingId
+        }`,
         { method: "DELETE" }
       );
       const data = await res.json();
@@ -69,7 +71,9 @@ export default function Listings() {
       setError(null);
 
       try {
-        const res = await fetch(`/api/user/listings/${id}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/listings/${id}`
+        );
         const data = await res.json();
 
         if (res.ok) {

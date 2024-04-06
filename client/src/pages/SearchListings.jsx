@@ -110,7 +110,11 @@ export default function SearchListings() {
       setError(null);
 
       try {
-        const res = await fetch(`/api/listing/search?${newQueryString}`);
+        const res = await fetch(
+          `${
+            import.meta.env.VITE_SERVER_BASE_URL
+          }/api/listing/search?${newQueryString}`
+        );
         const data = await res.json();
 
         if (res.ok) {
@@ -155,7 +159,11 @@ export default function SearchListings() {
       setLoading(true);
 
       try {
-        const res = await fetch(`/api/listing/search${location.search}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/search${
+            location.search
+          }`
+        );
         const data = await res.json();
 
         if (res.ok) {
