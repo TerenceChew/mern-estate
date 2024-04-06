@@ -294,18 +294,22 @@ export default function Profile() {
               onChange={handleFileInputChange}
               hidden
             />
-
             <img
               className="w-24 h-24 rounded-full object-cover self-center cursor-pointer"
-              src={formData.photoURL || currentUser.photoURL}
+              src={
+                formData.photoURL ||
+                currentUser.photoURL === "/default-profile-photo.png"
+                  ? `${
+                      import.meta.env.VITE_SERVER_BASE_URL
+                    }/default-profile-photo.png`
+                  : currentUser.photoURL
+              }
               alt="Profile photo"
               onClick={handleImgClick}
             />
-
             <p className="text-center text-red-600">
               {validationErrors.imageFile}
             </p>
-
             {!validationErrors.imageFile && (
               <p
                 className={`self-center text-center ${
@@ -326,7 +330,6 @@ export default function Profile() {
                   : ""}
               </p>
             )}
-
             <input
               className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="text"
@@ -371,14 +374,12 @@ export default function Profile() {
             <p className="text-center text-red-600">
               {validationErrors.password || serverValidationErrors.password}
             </p>
-
             <button
               disabled={loading}
               className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none mb-2"
             >
               {loading ? "LOADING..." : "UPDATE"}
             </button>
-
             <Link to="/create-listing">
               <button
                 type="button"

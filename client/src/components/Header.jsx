@@ -74,7 +74,13 @@ export default function Header() {
           <Link to="/profile">
             <img
               className="w-7 sm:w-8 lg:w-9 h-7 sm:h-8 lg:h-9 rounded-full object-cover"
-              src={currentUser.photoURL}
+              src={
+                currentUser.photoURL === "/default-profile-photo.png"
+                  ? `${
+                      import.meta.env.VITE_SERVER_BASE_URL
+                    }/default-profile-photo.png`
+                  : currentUser.photoURL
+              }
               alt="Profile photo"
             />
           </Link>
