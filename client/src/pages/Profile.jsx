@@ -117,7 +117,7 @@ export default function Profile() {
   };
   const handleConfirmDelete = async () => {
     try {
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
 
@@ -147,7 +147,7 @@ export default function Profile() {
   };
   const handleSignOut = async () => {
     try {
-      const res = await fetch("/api/auth/sign-out", {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/sign-out`, {
         method: "POST",
       });
       const data = await res.json();
@@ -221,7 +221,7 @@ export default function Profile() {
 
   useEffect(() => {
     const makeUpdateUserRequest = async () => {
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/api/user/update/${currentUser._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
