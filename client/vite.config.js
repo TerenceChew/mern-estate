@@ -6,12 +6,10 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://mern-estate-server-wf9f.onrender.com",
-        changeOrigin: true,
+        target: "http://localhost:3000",
       },
       "/default-profile-photo.png": {
-        target: "https://mern-estate-server-wf9f.onrender.com",
-        changeOrigin: true,
+        target: "http://localhost:3000",
       },
     },
   },
