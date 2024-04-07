@@ -28,6 +28,7 @@ export default function OAuth() {
             email,
             photoURL,
           }),
+          credentials: "include",
         }
       );
       const data = await res.json();

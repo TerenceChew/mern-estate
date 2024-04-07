@@ -17,7 +17,8 @@ export default function ContactLandlord({ listing }) {
     const getLandlord = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/${userRef}`
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/${userRef}`,
+          { credentials: "include" }
         );
         const data = await res.json();
 
