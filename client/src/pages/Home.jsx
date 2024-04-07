@@ -24,7 +24,8 @@ export default function Home() {
         const res = await fetch(
           `${
             import.meta.env.VITE_SERVER_BASE_URL
-          }/api/listing/search?offer=true&limit=4`
+          }/api/listing/search?offer=true&limit=4`,
+          { credentials: "include" }
         );
         const data = await res.json();
 
@@ -52,7 +53,8 @@ export default function Home() {
         const res = await fetch(
           `${
             import.meta.env.VITE_SERVER_BASE_URL
-          }/api/listing/search?type=rent&limit=4`
+          }/api/listing/search?type=rent&limit=4`,
+          { credentials: "include" }
         );
         const data = await res.json();
 
@@ -76,7 +78,8 @@ export default function Home() {
         const res = await fetch(
           `${
             import.meta.env.VITE_SERVER_BASE_URL
-          }/api/listing/search?type=sale&limit=4`
+          }/api/listing/search?type=sale&limit=4`,
+          { credentials: "include" }
         );
         const data = await res.json();
 

@@ -36,7 +36,7 @@ export default function Listings() {
         `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/delete/${
           deleteRequest.listingId
         }`,
-        { method: "DELETE" }
+        { method: "DELETE", credentials: "include" }
       );
       const data = await res.json();
 
@@ -72,7 +72,10 @@ export default function Listings() {
 
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/listings/${id}`
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/listings/${id}`,
+          {
+            credentials: "include",
+          }
         );
         const data = await res.json();
 

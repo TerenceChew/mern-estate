@@ -113,7 +113,8 @@ export default function SearchListings() {
         const res = await fetch(
           `${
             import.meta.env.VITE_SERVER_BASE_URL
-          }/api/listing/search?${newQueryString}`
+          }/api/listing/search?${newQueryString}`,
+          { credentials: "include" }
         );
         const data = await res.json();
 
@@ -162,7 +163,8 @@ export default function SearchListings() {
         const res = await fetch(
           `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/search${
             location.search
-          }`
+          }`,
+          { credentials: "include" }
         );
         const data = await res.json();
 

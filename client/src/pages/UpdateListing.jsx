@@ -161,7 +161,8 @@ export default function UpdateListing() {
     const getListing = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/get/${id}`
+          `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/get/${id}`,
+          { credentials: "include" }
         );
         const data = await res.json();
 
@@ -191,6 +192,7 @@ export default function UpdateListing() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
+          credentials: "include",
         }
       );
       const data = await res.json();
