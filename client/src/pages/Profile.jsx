@@ -301,11 +301,11 @@ export default function Profile() {
               className="w-24 h-24 rounded-full object-cover self-center cursor-pointer"
               src={
                 formData.photoURL ||
-                currentUser.photoURL === "/default-profile-photo.png"
+                (currentUser.photoURL === "/default-profile-photo.png"
                   ? `${
                       import.meta.env.VITE_SERVER_BASE_URL
                     }/default-profile-photo.png`
-                  : currentUser.photoURL
+                  : currentUser.photoURL)
               }
               alt="Profile photo"
               onClick={handleImgClick}
