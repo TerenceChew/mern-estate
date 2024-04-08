@@ -65,10 +65,13 @@ export const handleDeleteUser = async (req, res, next) => {
     await session.commitTransaction();
     await session.endSession();
 
-    res.clearCookie("jwt").status(200).json({
-      imageUrlsToDelete,
-      message: "Account deleted successfully!",
-    });
+    res
+      .clearCookie("jwt", { sameSite: "none", secure: true })
+      .status(200)
+      .json({
+        imageUrlsToDelete,
+        message: "Account deleted successfully!",
+      });
   } catch (err) {
     next(err);
   }
