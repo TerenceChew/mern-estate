@@ -107,7 +107,10 @@ export const handleGoogleSignIn = async (req, res, next) => {
 
 export const handleSignOut = (req, res, next) => {
   try {
-    res.clearCookie("jwt").status(200).json("User has been logged out!");
+    res
+      .clearCookie("jwt", { sameSite: "none", secure: true })
+      .status(200)
+      .json("User has been logged out!");
   } catch (err) {
     next(err);
   }
