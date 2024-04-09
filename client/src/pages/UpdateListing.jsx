@@ -160,10 +160,9 @@ export default function UpdateListing() {
   useEffect(() => {
     const getListing = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/get/${id}`,
-          { credentials: "include" }
-        );
+        const res = await fetch(`/api/listing/get/${id}`, {
+          credentials: "include",
+        });
         const data = await res.json();
 
         if (res.ok) {
@@ -184,17 +183,14 @@ export default function UpdateListing() {
 
   useEffect(() => {
     const makeUpdateListingRequest = async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/update/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`/api/listing/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (res.ok) {

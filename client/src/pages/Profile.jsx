@@ -117,15 +117,10 @@ export default function Profile() {
   };
   const handleConfirmDelete = async () => {
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/delete/${
-          currentUser._id
-        }`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
 
       const data = await res.json();
 
@@ -153,13 +148,10 @@ export default function Profile() {
   };
   const handleSignOut = async () => {
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/auth/sign-out`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      const res = await fetch("/api/auth/sign-out", {
+        method: "POST",
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (res.ok) {
@@ -231,19 +223,14 @@ export default function Profile() {
 
   useEffect(() => {
     const makeUpdateUserRequest = async () => {
-      const res = await fetch(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/api/user/update/${
-          currentUser._id
-        }`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-          credentials: "include",
-        }
-      );
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
       const data = await res.json();
 
       if (res.ok) {
@@ -299,14 +286,7 @@ export default function Profile() {
             />
             <img
               className="w-24 h-24 rounded-full object-cover self-center cursor-pointer"
-              src={
-                formData.photoURL ||
-                (currentUser.photoURL === "/default-profile-photo.png"
-                  ? `${
-                      import.meta.env.VITE_SERVER_BASE_URL
-                    }/default-profile-photo.png`
-                  : currentUser.photoURL)
-              }
+              src={formData.photoURL || currentUser.photoURL}
               alt="Profile photo"
               onClick={handleImgClick}
             />

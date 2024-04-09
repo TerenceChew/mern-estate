@@ -43,10 +43,9 @@ export default function Listing() {
       setLoading(true);
 
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/api/listing/get/${id}`,
-          { credentials: "include" }
-        );
+        const res = await fetch("/api/listing/get/${id}", {
+          credentials: "include",
+        });
         const data = await res.json();
 
         if (res.ok) {

@@ -20,7 +20,7 @@ const userSchema = new Schema(
     },
     photoURL: {
       type: String,
-      default: "/default-profile-photo.png",
+      default: "/api/static/default-profile-photo.png",
     },
   },
   { timestamps: true }
