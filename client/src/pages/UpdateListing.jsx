@@ -40,6 +40,7 @@ export default function UpdateListing() {
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
   const [imageFileNames, setImageFileNames] = useState([]);
+  const [newImageUrls, setNewImageUrls] = useState([]);
   const [isValidatingImages, setIsValidatingImages] = useState(false);
   const [imagesValidationError, setImagesValidationError] = useState(null);
   const [shouldValidateImages, setShouldValidateImages] = useState(false);
@@ -82,6 +83,7 @@ export default function UpdateListing() {
       try {
         const imageUrls = await Promise.all(promises);
 
+        setNewImageUrls(imageUrls);
         setFormData({
           ...formData,
           imageUrls: formData.imageUrls.concat(imageUrls),
@@ -234,7 +236,7 @@ export default function UpdateListing() {
       setImagesValidationError(null);
 
       try {
-        const result = await validateImages(formData.imageUrls);
+        const result = await validateImages(newImageUrls);
 
         if (result === "Invalid") {
           imageFileNames.forEach((fileName) => {
@@ -244,8 +246,16 @@ export default function UpdateListing() {
           setImagesValidationError(
             "Failed to upload! Make sure each file is an appropriate property image!"
           );
-          setFormData({ ...formData, imageUrls: [] });
+
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.filter(
+              (url) => !newImageUrls.includes(url)
+            ),
+          });
+          setNewImageUrls([]);
         }
+        setImageFileNames([]);
       } catch (err) {
         console.log("Failed to check and handle images validity!");
       }
