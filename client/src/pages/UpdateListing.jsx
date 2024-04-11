@@ -78,8 +78,6 @@ export default function UpdateListing() {
         fileNames.push(uniqueFileName);
       });
 
-      setImageFileNames([...imageFileNames, ...fileNames]);
-
       try {
         const imageUrls = await Promise.all(promises);
 
@@ -88,6 +86,7 @@ export default function UpdateListing() {
           ...formData,
           imageUrls: formData.imageUrls.concat(imageUrls),
         });
+        setImageFileNames([...imageFileNames, ...fileNames]);
         setFileUploadError(null);
       } catch (err) {
         setFileUploadError(
@@ -118,6 +117,9 @@ export default function UpdateListing() {
       ...formData,
       imageUrls: updatedImageUrls,
     });
+    setImageFileNames(
+      updatedImageUrls.map((url) => extractImageFileNameFromUrl(url))
+    );
   };
   const handleChange = (e) => {
     const { value, checked, type, name } = e.target;
@@ -172,6 +174,11 @@ export default function UpdateListing() {
           const processedListing = rest;
 
           setFormData(processedListing);
+          setImageFileNames(
+            processedListing.imageUrls.map((url) =>
+              extractImageFileNameFromUrl(url)
+            )
+          ); // To make sure it's in sync with formData.imageUrls
         } else {
           setGetListingError(data.message);
         }
@@ -238,24 +245,37 @@ export default function UpdateListing() {
       try {
         const result = await validateImages(newImageUrls);
 
-        if (result === "Invalid") {
-          imageFileNames.forEach((fileName) => {
-            deleteImageFileFromFirebase(fileName);
+        if (result.includes("Invalid")) {
+          const validImagesLength = formData.imageUrls.length - result.length;
+
+          result.forEach((res, idx) => {
+            if (res === "Invalid") {
+              deleteImageFileFromFirebase(
+                imageFileNames[validImagesLength + idx]
+              );
+            }
           });
 
           setImagesValidationError(
             "Failed to upload! Make sure each file is an appropriate property image!"
           );
-
           setFormData({
             ...formData,
             imageUrls: formData.imageUrls.filter(
-              (url) => !newImageUrls.includes(url)
+              (_, idx) =>
+                idx < validImagesLength ||
+                result[idx - validImagesLength] === "Valid"
             ),
           });
-          setNewImageUrls([]);
+          setImageFileNames(
+            imageFileNames.filter(
+              (_, idx) =>
+                idx < validImagesLength ||
+                result[idx - validImagesLength] === "Valid"
+            )
+          );
         }
-        setImageFileNames([]);
+        setNewImageUrls([]);
       } catch (err) {
         console.log("Failed to check and handle images validity!");
       }
