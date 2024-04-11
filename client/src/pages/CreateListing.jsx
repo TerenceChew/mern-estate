@@ -35,6 +35,7 @@ export default function CreateListing() {
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
   const [imageFileNames, setImageFileNames] = useState([]);
+  const [newImageUrls, setNewImageUrls] = useState([]);
   const [isValidatingImages, setIsValidatingImages] = useState(false);
   const [imagesValidationError, setImagesValidationError] = useState(null);
   const [shouldValidateImages, setShouldValidateImages] = useState(false);
@@ -74,6 +75,7 @@ export default function CreateListing() {
       try {
         const imageUrls = await Promise.all(promises);
 
+        setNewImageUrls(imageUrls);
         setFormData({
           ...formData,
           imageUrls: formData.imageUrls.concat(imageUrls),
@@ -199,19 +201,40 @@ export default function CreateListing() {
       setImagesValidationError(null);
 
       try {
-        const result = await validateImages(formData.imageUrls);
+        const result = await validateImages(newImageUrls);
 
-        if (result === "Invalid") {
-          imageFileNames.forEach((fileName) => {
-            deleteImageFileFromFirebase(fileName);
+        if (result.includes("Invalid")) {
+          const validImagesLength = formData.imageUrls.length - result.length;
+
+          result.forEach((res, idx) => {
+            if (res === "Invalid") {
+              deleteImageFileFromFirebase(
+                imageFileNames[validImagesLength + idx]
+              );
+            }
           });
 
           setImagesValidationError(
             "Failed to upload! Make sure each file is an appropriate property image!"
           );
-          setFormData({ ...formData, imageUrls: [] });
-          setImageFileNames([]);
+
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.filter(
+              (_, idx) =>
+                idx < validImagesLength ||
+                result[idx - validImagesLength] === "Valid"
+            ),
+          });
+          setImageFileNames(
+            imageFileNames.filter(
+              (_, idx) =>
+                idx < validImagesLength ||
+                result[idx - validImagesLength] === "Valid"
+            )
+          );
         }
+        setNewImageUrls([]);
       } catch (err) {
         console.log("Failed to check and handle images validity!");
       }

@@ -178,7 +178,5 @@ export const validateImages = (imgUrlsArr) => {
     validatedImgUrls.push(makeClarifaiApiCall(imgUrl));
   });
 
-  return Promise.all(validatedImgUrls).then((results) => {
-    return results.every((result) => result === "Valid") ? "Valid" : "Invalid";
-  });
+  return Promise.all(validatedImgUrls).then((results) => results);
 };
