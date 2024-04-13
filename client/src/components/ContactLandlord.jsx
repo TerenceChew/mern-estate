@@ -16,9 +16,7 @@ export default function ContactLandlord({ listing }) {
   useEffect(() => {
     const getLandlord = async () => {
       try {
-        const res = await fetch(`/api/user/${userRef}`, {
-          credentials: "include",
-        });
+        const res = await fetch(`/api/user/${userRef}`);
         const data = await res.json();
 
         if (res.ok) {

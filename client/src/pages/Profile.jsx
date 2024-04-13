@@ -119,7 +119,6 @@ export default function Profile() {
     try {
       const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: "DELETE",
-        credentials: "include",
       });
 
       const data = await res.json();
@@ -150,7 +149,6 @@ export default function Profile() {
     try {
       const res = await fetch("/api/auth/sign-out", {
         method: "POST",
-        credentials: "include",
       });
       const data = await res.json();
 
@@ -229,7 +227,6 @@ export default function Profile() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials: "include",
       });
       const data = await res.json();
 

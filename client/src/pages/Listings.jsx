@@ -34,7 +34,7 @@ export default function Listings() {
     try {
       const res = await fetch(
         `/api/listing/delete/${deleteRequest.listingId}`,
-        { method: "DELETE", credentials: "include" }
+        { method: "DELETE" }
       );
       const data = await res.json();
 
@@ -69,9 +69,7 @@ export default function Listings() {
       setError(null);
 
       try {
-        const res = await fetch(`/api/user/listings/${id}`, {
-          credentials: "include",
-        });
+        const res = await fetch(`/api/user/listings/${id}`);
         const data = await res.json();
 
         if (res.ok) {

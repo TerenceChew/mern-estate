@@ -164,9 +164,7 @@ export default function UpdateListing() {
   useEffect(() => {
     const getListing = async () => {
       try {
-        const res = await fetch(`/api/listing/get/${id}`, {
-          credentials: "include",
-        });
+        const res = await fetch(`/api/listing/get/${id}`);
         const data = await res.json();
 
         if (res.ok) {
@@ -198,7 +196,6 @@ export default function UpdateListing() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-        credentials: "include",
       });
       const data = await res.json();
 
