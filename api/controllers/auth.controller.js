@@ -48,10 +48,7 @@ export const handleSignIn = async (req, res, next) => {
     const token = generateJwtToken(user._id);
     const { password: pass, ...rest } = user._doc;
 
-    res
-      .cookie("jwt", token, { httpOnly: true, sameSite: "none", secure: true })
-      .status(200)
-      .json(rest);
+    res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
   } catch (err) {
     next(err);
   }
@@ -67,14 +64,7 @@ export const handleGoogleSignIn = async (req, res, next) => {
       const token = generateJwtToken(user._id);
       const { password: pass, ...rest } = user._doc;
 
-      res
-        .cookie("jwt", token, {
-          httpOnly: true,
-          sameSite: "none",
-          secure: true,
-        })
-        .status(200)
-        .json(rest);
+      res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
     } else {
       const defaultPassword = generateDefaultPassword();
       const hashedPassword = generateHashedPassword(defaultPassword);
@@ -91,14 +81,7 @@ export const handleGoogleSignIn = async (req, res, next) => {
       const token = generateJwtToken(newUser._id);
       const { password: pass, ...rest } = newUser._doc;
 
-      res
-        .cookie("jwt", token, {
-          httpOnly: true,
-          sameSite: "none",
-          secure: true,
-        })
-        .status(200)
-        .json(rest);
+      res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
     }
   } catch (err) {
     next(err);
@@ -107,10 +90,7 @@ export const handleGoogleSignIn = async (req, res, next) => {
 
 export const handleSignOut = (req, res, next) => {
   try {
-    res
-      .clearCookie("jwt", { sameSite: "none", secure: true })
-      .status(200)
-      .json("User has been logged out!");
+    res.clearCookie("jwt").status(200).json("User has been logged out!");
   } catch (err) {
     next(err);
   }
