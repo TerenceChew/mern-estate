@@ -5,7 +5,6 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
-import cors from "cors";
 import path from "path";
 
 const app = express();
@@ -25,12 +24,6 @@ mongoose
   .catch(console.log);
 
 // Middlewares
-app.use(
-  cors({
-    credentials: true,
-    origin: ["https://mern-estate-4xgb.onrender.com"],
-  })
-);
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/static", express.static("api/public"));
