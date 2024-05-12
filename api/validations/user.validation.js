@@ -45,6 +45,24 @@ export const validateUpdateUser = [
     .withMessage(
       "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!"
     ),
+  body("passwordConfirmation")
+    .isString()
+    .withMessage("Password confirmation must be a string!")
+    .bail()
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage("Password confirmation cannot be empty!")
+    .bail()
+    .custom((value, { req }) => {
+      const { password } = req.body;
+
+      if (value !== password) {
+        throw new Error("Does not match password!");
+      }
+
+      return true;
+    }),
   (req, res, next) => {
     const result = validationResult(req);
 
