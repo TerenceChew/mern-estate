@@ -21,6 +21,7 @@ import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 import { Link } from "react-router-dom";
 import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 import { extractImageFileNameFromUrl } from "../utils/utilities.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -41,6 +42,12 @@ export default function Profile() {
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
+  const passwordInputRef = useRef();
+  const passwordConfirmationInputRef = useRef();
+  const [eye, setEye] = useState({
+    password: "password",
+    passwordConfirmation: "password",
+  });
 
   // Validation
   const validate = (formData) => {
@@ -110,7 +117,6 @@ export default function Profile() {
       });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     fileInputRef.current.value = "";
@@ -168,6 +174,18 @@ export default function Profile() {
       }
     } catch (err) {
       dispatch(signOutFailure("Failed to handle sign out"));
+    }
+  };
+  const handleEyeClick = (inputRef) => {
+    const input = inputRef.current;
+    const { name, type } = input;
+
+    if (type === "password") {
+      input.type = "text";
+      setEye({ ...eye, [name]: "text" });
+    } else {
+      input.type = "password";
+      setEye({ ...eye, [name]: "password" });
     }
   };
 
@@ -348,29 +366,61 @@ export default function Profile() {
             <p className="text-center text-red-600">
               {validationErrors.email || serverValidationErrors.email}
             </p>
-            <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              aria-label="Password"
-              onChange={handleChange}
-              minLength="8"
-              maxLength="16"
-            />
+            <div className="relative">
+              <input
+                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                aria-label="Password"
+                onChange={handleChange}
+                minLength="8"
+                maxLength="16"
+                ref={passwordInputRef}
+              />
+              {eye.password === "password" ? (
+                <FaEye
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordInputRef)}
+                  title="Show password"
+                />
+              ) : (
+                <FaEyeSlash
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordInputRef)}
+                  title="Hide password"
+                />
+              )}
+            </div>
             <p className="text-center text-red-600">
               {validationErrors.password || serverValidationErrors.password}
             </p>
-            <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
-              type="password"
-              id="passwordConfirmation"
-              name="passwordConfirmation"
-              placeholder="Password confirmation"
-              aria-label="Password confirmation"
-              onChange={handleChange}
-            />
+            <div className="relative">
+              <input
+                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                type="password"
+                id="passwordConfirmation"
+                name="passwordConfirmation"
+                placeholder="Password confirmation"
+                aria-label="Password confirmation"
+                onChange={handleChange}
+                ref={passwordConfirmationInputRef}
+              />
+              {eye.passwordConfirmation === "password" ? (
+                <FaEye
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordConfirmationInputRef)}
+                  title="Show password"
+                />
+              ) : (
+                <FaEyeSlash
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordConfirmationInputRef)}
+                  title="Hide password"
+                />
+              )}
+            </div>
             <p className="text-center text-red-600">
               {validationErrors.passwordConfirmation ||
                 serverValidationErrors.passwordConfirmation}
