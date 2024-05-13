@@ -21,6 +21,7 @@ import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 import { Link } from "react-router-dom";
 import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 import { extractImageFileNameFromUrl } from "../utils/utilities.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -33,6 +34,7 @@ export default function Profile() {
     username: currentUser.username,
     email: currentUser.email,
     password: "",
+    passwordConfirmation: "",
   });
   const [showUpdateSuccessMessage, setShowUpdateSuccessMessage] =
     useState(false);
@@ -40,34 +42,47 @@ export default function Profile() {
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
+  const passwordInputRef = useRef();
+  const passwordConfirmationInputRef = useRef();
+  const [eye, setEye] = useState({
+    password: "password",
+    passwordConfirmation: "password",
+  });
 
   // Validation
   const validate = (formData) => {
+    const { username, email, password, passwordConfirmation } = formData;
     const errors = {};
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
 
-    if (!formData.username) {
+    if (!username) {
       errors.username = "Please enter a valid username!";
-    } else if (formData.username.length < 5) {
+    } else if (username.length < 5) {
       errors.username = "Username must be at least 5 characters!";
-    } else if (formData.username.length > 20) {
+    } else if (username.length > 20) {
       errors.username = "Username cannot be more than 20 characters!";
     }
 
-    if (!formData.email || !emailRegex.test(formData.email)) {
+    if (!email || !emailRegex.test(email)) {
       errors.email = "Please enter a valid email!";
     }
 
-    if (!formData.password) {
+    if (!password) {
       errors.password = "Please enter your current or new password!";
-    } else if (formData.password.length < 8) {
+    } else if (password.length < 8) {
       errors.password = "Password must be at least 8 characters!";
-    } else if (formData.password.length > 16) {
+    } else if (password.length > 16) {
       errors.password = "Password cannot be more than 16 characters!";
-    } else if (!passwordRegex.test(formData.password)) {
+    } else if (!passwordRegex.test(password)) {
       errors.password =
         "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!";
+    }
+
+    if (!passwordConfirmation) {
+      errors.passwordConfirmation = "Please re-enter your password here!";
+    } else if (passwordConfirmation !== password) {
+      errors.passwordConfirmation = "Does not match password!";
     }
 
     return errors;
@@ -102,7 +117,6 @@ export default function Profile() {
       });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     fileInputRef.current.value = "";
@@ -160,6 +174,18 @@ export default function Profile() {
       }
     } catch (err) {
       dispatch(signOutFailure("Failed to handle sign out"));
+    }
+  };
+  const handleEyeClick = (inputRef) => {
+    const input = inputRef.current;
+    const { name, type } = input;
+
+    if (type === "password") {
+      input.type = "text";
+      setEye({ ...eye, [name]: "text" });
+    } else {
+      input.type = "password";
+      setEye({ ...eye, [name]: "password" });
     }
   };
 
@@ -340,19 +366,64 @@ export default function Profile() {
             <p className="text-center text-red-600">
               {validationErrors.email || serverValidationErrors.email}
             </p>
-            <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              aria-label="Password"
-              onChange={handleChange}
-              minLength="8"
-              maxLength="16"
-            />
+            <div className="relative">
+              <input
+                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                aria-label="Password"
+                onChange={handleChange}
+                minLength="8"
+                maxLength="16"
+                ref={passwordInputRef}
+              />
+              {eye.password === "password" ? (
+                <FaEye
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordInputRef)}
+                  title="Show password"
+                />
+              ) : (
+                <FaEyeSlash
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordInputRef)}
+                  title="Hide password"
+                />
+              )}
+            </div>
             <p className="text-center text-red-600">
               {validationErrors.password || serverValidationErrors.password}
+            </p>
+            <div className="relative">
+              <input
+                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                type="password"
+                id="passwordConfirmation"
+                name="passwordConfirmation"
+                placeholder="Password confirmation"
+                aria-label="Password confirmation"
+                onChange={handleChange}
+                ref={passwordConfirmationInputRef}
+              />
+              {eye.passwordConfirmation === "password" ? (
+                <FaEye
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordConfirmationInputRef)}
+                  title="Show password"
+                />
+              ) : (
+                <FaEyeSlash
+                  className="absolute inset-y-0 right-3 my-auto cursor-pointer text-lg"
+                  onClick={() => handleEyeClick(passwordConfirmationInputRef)}
+                  title="Hide password"
+                />
+              )}
+            </div>
+            <p className="text-center text-red-600">
+              {validationErrors.passwordConfirmation ||
+                serverValidationErrors.passwordConfirmation}
             </p>
             <button
               disabled={loading}

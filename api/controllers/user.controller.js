@@ -18,8 +18,9 @@ export const handleUpdateUser = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id: params.id });
+    const { passwordConfirmation, ...processedReqBody } = req.body;
 
-    for (const prop in req.body) {
+    for (const prop in processedReqBody) {
       if (prop === "password") {
         const hashedPassword = generateHashedPassword(req.body.password);
 
