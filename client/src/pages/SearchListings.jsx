@@ -26,8 +26,17 @@ export default function SearchListings() {
   // Validation
   const validate = (formData) => {
     const errors = {};
-    const { searchTerm, type, offer, parking, furnished, sort, order } =
-      formData;
+    const {
+      searchTerm,
+      type,
+      offer,
+      parking,
+      furnished,
+      minPrice,
+      maxPrice,
+      sort,
+      order,
+    } = formData;
 
     if (typeof searchTerm !== "string") {
       errors.searchTerm = "Search term must be a string!";
@@ -51,6 +60,22 @@ export default function SearchListings() {
     if (typeof furnished !== "boolean") {
       errors.furnished =
         "Invalid furnished value. Furnished can only be checked or unchecked!";
+    }
+
+    if (!Number.isInteger(minPrice)) {
+      errors.minPrice = "Please enter a min price!";
+    } else if (minPrice < 0) {
+      errors.minPrice = "Min price cannot be lower than 0!";
+    } else if (minPrice >= maxPrice) {
+      errors.minPrice = "Min price must be less than max price!";
+    }
+
+    if (!Number.isInteger(maxPrice)) {
+      errors.maxPrice = "Please enter a max price!";
+    } else if (maxPrice <= minPrice) {
+      errors.maxPrice = "Max price must be more than min price!";
+    } else if (maxPrice > 100000000) {
+      errors.maxPrice = "Max price cannot exceed 100,000,000!";
     }
 
     if (!["regularPrice", "createdAt"].includes(sort)) {
@@ -144,8 +169,8 @@ export default function SearchListings() {
     const offer = searchParams.get("offer") === "true" ? true : false;
     const parking = searchParams.get("parking") === "true" ? true : false;
     const furnished = searchParams.get("furnished") === "true" ? true : false;
-    const minPrice = searchParams.get("minPrice") || 0;
-    const maxPrice = searchParams.get("maxPrice") || 100000000;
+    const minPrice = Number(searchParams.get("minPrice")) || 0;
+    const maxPrice = Number(searchParams.get("maxPrice")) || 100000000;
     const sort = searchParams.get("sort") || "createdAt";
     const order = searchParams.get("order") || "desc";
 
@@ -372,10 +397,10 @@ export default function SearchListings() {
 
             <div className="w-full flex flex-col text-center text-red-600">
               <p>
-                {/* {validationErrors.parking || serverValidationErrors.parking} */}
+                {validationErrors.minPrice || serverValidationErrors.minPrice}
               </p>
               <p>
-                {/* {validationErrors.furnished || serverValidationErrors.furnished} */}
+                {validationErrors.maxPrice || serverValidationErrors.maxPrice}
               </p>
             </div>
 
