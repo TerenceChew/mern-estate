@@ -9,6 +9,8 @@ export default function SearchListings() {
     offer: false,
     parking: false,
     furnished: false,
+    minPrice: 0,
+    maxPrice: 100000000,
     sort: "createdAt",
     order: "desc",
   });
@@ -77,6 +79,11 @@ export default function SearchListings() {
         ...formData,
         [name]: checked,
       });
+    } else if (["minPrice", "maxPrice"].includes(name)) {
+      setFormData({
+        ...formData,
+        [name]: Number(value),
+      });
     } else if (name === "sort") {
       const sort = value.split("_")[0];
       const order = value.split("_")[1];
@@ -137,6 +144,8 @@ export default function SearchListings() {
     const offer = searchParams.get("offer") === "true" ? true : false;
     const parking = searchParams.get("parking") === "true" ? true : false;
     const furnished = searchParams.get("furnished") === "true" ? true : false;
+    const minPrice = searchParams.get("minPrice") || 0;
+    const maxPrice = searchParams.get("maxPrice") || 100000000;
     const sort = searchParams.get("sort") || "createdAt";
     const order = searchParams.get("order") || "desc";
 
@@ -146,6 +155,8 @@ export default function SearchListings() {
       offer,
       parking,
       furnished,
+      minPrice,
+      maxPrice,
       sort,
       order,
     });
@@ -336,8 +347,8 @@ export default function SearchListings() {
                   name="minPrice"
                   type="number"
                   min="0"
-                  max="100000000" // Set this to max price value
-                  // value={formData.regularPrice.toString()} // A trick to remove leading 0
+                  max={(formData.maxPrice - 1).toString()}
+                  value={formData.minPrice.toString()} // A trick to remove leading 0
                   onChange={handleChange}
                 />
               </div>
@@ -351,9 +362,9 @@ export default function SearchListings() {
                   id="maxPrice"
                   name="maxPrice"
                   type="number"
-                  min="0"
+                  min={(formData.minPrice + 1).toString()}
                   max="100000000"
-                  // value={formData.regularPrice.toString()} // A trick to remove leading 0
+                  value={formData.maxPrice.toString()} // A trick to remove leading 0
                   onChange={handleChange}
                 />
               </div>
