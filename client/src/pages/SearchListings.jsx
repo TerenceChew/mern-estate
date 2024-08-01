@@ -325,13 +325,56 @@ export default function SearchListings() {
               </p>
             </div>
 
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-3.5">
+                <label className="font-semibold" htmlFor="minPrice">
+                  Min Price:
+                </label>
+                <input
+                  className="w-40 p-2.5 rounded-lg focus:outline-gray-300"
+                  id="minPrice"
+                  name="minPrice"
+                  type="number"
+                  min="0"
+                  max="100000000" // Set this to max price value
+                  // value={formData.regularPrice.toString()} // A trick to remove leading 0
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="flex items-center gap-3.5">
+                <label className="font-semibold" htmlFor="maxPrice">
+                  Max Price:
+                </label>
+                <input
+                  className="w-40 p-2.5 rounded-lg focus:outline-gray-300"
+                  id="maxPrice"
+                  name="maxPrice"
+                  type="number"
+                  min="0"
+                  max="100000000"
+                  // value={formData.regularPrice.toString()} // A trick to remove leading 0
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>
+                {/* {validationErrors.parking || serverValidationErrors.parking} */}
+              </p>
+              <p>
+                {/* {validationErrors.furnished || serverValidationErrors.furnished} */}
+              </p>
+            </div>
+
             <div className="flex items-center gap-3.5">
               <label htmlFor="sort" className="font-semibold">
                 Sort:
               </label>
 
               <select
-                className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5"
                 id="sort"
                 name="sort"
                 onChange={handleChange}
