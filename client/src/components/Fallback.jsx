@@ -1,6 +1,6 @@
 export default function Fallback({ error, resetErrorBoundary }) {
   return (
-    <main className="h-dvh flex justify-center items-center p-5 bg-[rgb(235,240,235)]">
+    <main className="min-h-dvh flex justify-center items-center p-5 bg-[rgb(235,240,235)]">
       <article>
         <div
           className="p-5 bg-slate-200 text-center rounded-md shadow-md"
