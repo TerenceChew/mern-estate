@@ -327,6 +327,40 @@ export const validateSearchListings = [
     .withMessage(
       "Invalid offer value. Offer can only be checked or unchecked!"
     ),
+  query("minPrice")
+    .optional()
+    .isInt()
+    .withMessage("Invalid min price value. Min price must be a number!")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Min price cannot be lower than 0!")
+    .bail()
+    .custom((value, { req }) => {
+      const { maxPrice } = req.query;
+
+      if (Number(value) >= Number(maxPrice)) {
+        throw new Error("Min price must be less than max price!");
+      }
+
+      return true;
+    }),
+  query("maxPrice")
+    .optional()
+    .isInt()
+    .withMessage("Invalid max price value. Max price must be a number!")
+    .bail()
+    .isInt({ max: 100000000 })
+    .withMessage("Max price cannot be more than 100,000,000!")
+    .bail()
+    .custom((value, { req }) => {
+      const { minPrice } = req.query;
+
+      if (Number(value) <= Number(minPrice)) {
+        throw new Error("Max price must be more than min price!");
+      }
+
+      return true;
+    }),
   query("sort")
     .optional()
     .isString()

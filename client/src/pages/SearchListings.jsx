@@ -9,6 +9,8 @@ export default function SearchListings() {
     offer: false,
     parking: false,
     furnished: false,
+    minPrice: 0,
+    maxPrice: 100000000,
     sort: "createdAt",
     order: "desc",
   });
@@ -24,8 +26,17 @@ export default function SearchListings() {
   // Validation
   const validate = (formData) => {
     const errors = {};
-    const { searchTerm, type, offer, parking, furnished, sort, order } =
-      formData;
+    const {
+      searchTerm,
+      type,
+      offer,
+      parking,
+      furnished,
+      minPrice,
+      maxPrice,
+      sort,
+      order,
+    } = formData;
 
     if (typeof searchTerm !== "string") {
       errors.searchTerm = "Search term must be a string!";
@@ -49,6 +60,22 @@ export default function SearchListings() {
     if (typeof furnished !== "boolean") {
       errors.furnished =
         "Invalid furnished value. Furnished can only be checked or unchecked!";
+    }
+
+    if (!Number.isInteger(minPrice)) {
+      errors.minPrice = "Please enter a min price!";
+    } else if (minPrice < 0) {
+      errors.minPrice = "Min price cannot be lower than 0!";
+    } else if (minPrice >= maxPrice) {
+      errors.minPrice = "Min price must be less than max price!";
+    }
+
+    if (!Number.isInteger(maxPrice)) {
+      errors.maxPrice = "Please enter a max price!";
+    } else if (maxPrice <= minPrice) {
+      errors.maxPrice = "Max price must be more than min price!";
+    } else if (maxPrice > 100000000) {
+      errors.maxPrice = "Max price cannot exceed 100,000,000!";
     }
 
     if (!["regularPrice", "createdAt"].includes(sort)) {
@@ -76,6 +103,11 @@ export default function SearchListings() {
       setFormData({
         ...formData,
         [name]: checked,
+      });
+    } else if (["minPrice", "maxPrice"].includes(name)) {
+      setFormData({
+        ...formData,
+        [name]: Number(value),
       });
     } else if (name === "sort") {
       const sort = value.split("_")[0];
@@ -137,6 +169,8 @@ export default function SearchListings() {
     const offer = searchParams.get("offer") === "true" ? true : false;
     const parking = searchParams.get("parking") === "true" ? true : false;
     const furnished = searchParams.get("furnished") === "true" ? true : false;
+    const minPrice = Number(searchParams.get("minPrice")) || 0;
+    const maxPrice = Number(searchParams.get("maxPrice")) || 100000000;
     const sort = searchParams.get("sort") || "createdAt";
     const order = searchParams.get("order") || "desc";
 
@@ -146,6 +180,8 @@ export default function SearchListings() {
       offer,
       parking,
       furnished,
+      minPrice,
+      maxPrice,
       sort,
       order,
     });
@@ -325,13 +361,56 @@ export default function SearchListings() {
               </p>
             </div>
 
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-3.5">
+                <label className="font-semibold" htmlFor="minPrice">
+                  Min Price:
+                </label>
+                <input
+                  className="w-40 p-2.5 rounded-lg focus:outline-gray-300"
+                  id="minPrice"
+                  name="minPrice"
+                  type="number"
+                  min="0"
+                  max={(formData.maxPrice - 1).toString()}
+                  value={formData.minPrice.toString()} // A trick to remove leading 0
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="flex items-center gap-3.5">
+                <label className="font-semibold" htmlFor="maxPrice">
+                  Max Price:
+                </label>
+                <input
+                  className="w-40 p-2.5 rounded-lg focus:outline-gray-300"
+                  id="maxPrice"
+                  name="maxPrice"
+                  type="number"
+                  min={(formData.minPrice + 1).toString()}
+                  max="100000000"
+                  value={formData.maxPrice.toString()} // A trick to remove leading 0
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="w-full flex flex-col text-center text-red-600">
+              <p>
+                {validationErrors.minPrice || serverValidationErrors.minPrice}
+              </p>
+              <p>
+                {validationErrors.maxPrice || serverValidationErrors.maxPrice}
+              </p>
+            </div>
+
             <div className="flex items-center gap-3.5">
               <label htmlFor="sort" className="font-semibold">
                 Sort:
               </label>
 
               <select
-                className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5"
                 id="sort"
                 name="sort"
                 onChange={handleChange}

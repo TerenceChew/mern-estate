@@ -91,42 +91,68 @@ export const handleSearchListings = async (req, res, next) => {
     offer,
     sort,
     order,
+    minPrice,
+    maxPrice,
     startIndex,
   } = req.query;
   const limit = req.query.limit || 9;
   const startIdx = startIndex || 0;
-  const filterObj = {};
+  const filters = {};
+  const priceFilter = {
+    $or: [
+      {
+        discountPrice: {
+          $ne: null,
+          $gte: minPrice || 0,
+          $lte: maxPrice || 100000000,
+        },
+      },
+      {
+        discountPrice: null,
+        regularPrice: {
+          $gte: minPrice || 0,
+          $lte: maxPrice || 100000000,
+        },
+      },
+    ],
+  };
 
   // prettier-ignore
-  filterObj.type =
+  filters.type =
     type === undefined || type === "all" 
       ? { $in: ["sale", "rent"] }
       : type;
 
-  filterObj.parking =
+  filters.parking =
     parking === undefined || parking === "false"
       ? { $in: [true, false] }
       : parking;
 
-  filterObj.furnished =
+  filters.furnished =
     furnished === undefined || furnished === "false"
       ? { $in: [true, false] }
       : furnished;
 
   // prettier-ignore
-  filterObj.offer =
+  filters.offer =
     offer === undefined || offer === "false"
       ? { $in: [true, false] }
       : offer;
 
-  filterObj.title = {
+  filters.title = {
     $regex: searchTerm || "",
     $options: "i",
   };
 
   try {
-    const totalFilteredListings = await Listing.find(filterObj);
-    const listingsToDisplay = await Listing.find(filterObj)
+    const totalFilteredListings = await Listing.find({
+      ...filters,
+      ...priceFilter,
+    });
+    const listingsToDisplay = await Listing.find({
+      ...filters,
+      ...priceFilter,
+    })
       .sort({
         [sort || "createdAt"]: order || "desc",
       })
