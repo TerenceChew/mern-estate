@@ -52,7 +52,7 @@ export default function Header() {
           value={searchTerm}
           onChange={handleChange}
         />
-        <button>
+        <button aria-label="Search listings button">
           <FaSearch className="hover:cursor-pointer text-lg text-slate-700" />
         </button>
       </form>

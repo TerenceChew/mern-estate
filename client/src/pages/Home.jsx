@@ -110,14 +110,14 @@ export default function Home() {
             <br /> home with ease
           </h1>
 
-          <p className="text-sm text-gray-500 ">
+          <p className="text-sm text-gray-600">
             Mern Estate will help you find your new home fast, easy and
             comfortable.
             <br />
             We have a wide range of properties for you to choose from.
           </p>
 
-          <Link to="/search" className="w-max text-blue-600 hover:underline">
+          <Link to="/search" className="w-max text-blue-700 hover:underline">
             Let's start now!
           </Link>
         </section>
@@ -159,7 +159,7 @@ export default function Home() {
             </h2>
             <Link
               to="/search?offer=true"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-blue-700 hover:underline"
             >
               Show more offers
             </Link>
@@ -187,7 +187,7 @@ export default function Home() {
             </h2>
             <Link
               to="/search?type=rent"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-blue-700 hover:underline"
             >
               Show more places for rent
             </Link>
@@ -215,7 +215,7 @@ export default function Home() {
             </h2>
             <Link
               to="/search?type=sale"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-blue-700 hover:underline"
             >
               Show more places for sale
             </Link>
