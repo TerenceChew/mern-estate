@@ -152,88 +152,95 @@ export default function Home() {
           </Swiper>
         </section>
 
-        <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
-          <div>
-            <h2 className="text-slate-700 font-semibold text-2xl">
-              Recent offers
-            </h2>
-            <Link
-              to="/search?offer=true"
-              className="text-sm text-blue-700 hover:underline"
-            >
-              Show more offers
-            </Link>
-          </div>
+        <section
+          className="min-h-[6410px] min-[800px]:min-h-[4000px] min-[1200px]:min-h-[2795px] min-[1600px]:min-h-[2190px] flex flex-col"
+          aria-label="Listing sections container"
+        >
+          <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
+            <div>
+              <h2 className="text-slate-700 font-semibold text-2xl">
+                Recent offers
+              </h2>
+              <Link
+                to="/search?offer=true"
+                className="text-sm text-blue-700 hover:underline"
+              >
+                Show more offers
+              </Link>
+            </div>
 
-          <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
-            {error.listingsWithOffer ? (
-              <p className="text-red-600" aria-label="Error message">
-                {error.listingsWithOffer}
-              </p>
-            ) : listingsWithOffer.length ? (
-              listingsWithOffer.map((listing) => (
-                <PublicListingCard listing={listing} key={listing._id} />
-              ))
-            ) : (
-              <p className="w-[265px]">No listings with offer at the moment!</p>
-            )}
-          </div>
-        </section>
+            <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
+              {error.listingsWithOffer ? (
+                <p className="text-red-600" aria-label="Error message">
+                  {error.listingsWithOffer}
+                </p>
+              ) : listingsWithOffer.length ? (
+                listingsWithOffer.map((listing) => (
+                  <PublicListingCard listing={listing} key={listing._id} />
+                ))
+              ) : (
+                <p className="w-[265px]">
+                  No listings with offer at the moment!
+                </p>
+              )}
+            </div>
+          </section>
 
-        <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
-          <div>
-            <h2 className="text-slate-700 font-semibold text-2xl">
-              Recent places for rent
-            </h2>
-            <Link
-              to="/search?type=rent"
-              className="text-sm text-blue-700 hover:underline"
-            >
-              Show more places for rent
-            </Link>
-          </div>
+          <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
+            <div>
+              <h2 className="text-slate-700 font-semibold text-2xl">
+                Recent places for rent
+              </h2>
+              <Link
+                to="/search?type=rent"
+                className="text-sm text-blue-700 hover:underline"
+              >
+                Show more places for rent
+              </Link>
+            </div>
 
-          <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
-            {error.listingsForRent ? (
-              <p className="text-red-600" aria-label="Error message">
-                {error.listingsForRent}
-              </p>
-            ) : listingsForRent.length ? (
-              listingsForRent.map((listing) => (
-                <PublicListingCard listing={listing} key={listing._id} />
-              ))
-            ) : (
-              <p className="w-[265px]">No listings for rent at the moment!</p>
-            )}
-          </div>
-        </section>
+            <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
+              {error.listingsForRent ? (
+                <p className="text-red-600" aria-label="Error message">
+                  {error.listingsForRent}
+                </p>
+              ) : listingsForRent.length ? (
+                listingsForRent.map((listing) => (
+                  <PublicListingCard listing={listing} key={listing._id} />
+                ))
+              ) : (
+                <p className="w-[265px]">No listings for rent at the moment!</p>
+              )}
+            </div>
+          </section>
 
-        <section className="mx-auto flex flex-col gap-5 px-3.5 py-14">
-          <div>
-            <h2 className="text-slate-700 font-semibold text-2xl">
-              Recent places for sale
-            </h2>
-            <Link
-              to="/search?type=sale"
-              className="text-sm text-blue-700 hover:underline"
-            >
-              Show more places for sale
-            </Link>
-          </div>
+          <section className="mx-auto flex flex-col gap-5 px-3.5 py-14">
+            <div>
+              <h2 className="text-slate-700 font-semibold text-2xl">
+                Recent places for sale
+              </h2>
+              <Link
+                to="/search?type=sale"
+                className="text-sm text-blue-700 hover:underline"
+              >
+                Show more places for sale
+              </Link>
+            </div>
 
-          <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
-            {error.listingsForSale ? (
-              <p className="text-red-600" aria-label="Error message">
-                {error.listingsForSale}
-              </p>
-            ) : listingsForSale.length ? (
-              listingsForSale.map((listing) => (
-                <PublicListingCard listing={listing} key={listing._id} />
-              ))
-            ) : (
-              <p className="w-[265px]">No listings for sale at the moment!</p>
-            )}
-          </div>
+            <div className="grid grid-cols-1 min-[800px]:grid-cols-2 min-[1200px]:grid-cols-3 min-[1600px]:grid-cols-4 gap-6">
+              {error.listingsForSale ? (
+                <p className="text-red-600" aria-label="Error message">
+                  {error.listingsForSale}
+                </p>
+              ) : listingsForSale.length ? (
+                listingsForSale.map((listing) => (
+                  <PublicListingCard listing={listing} key={listing._id} />
+                ))
+              ) : (
+                <p className="w-[265px]">No listings for sale at the moment!</p>
+              )}
+            </div>
+          </section>
         </section>
       </article>
     </main>
