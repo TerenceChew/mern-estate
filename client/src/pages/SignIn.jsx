@@ -144,9 +144,7 @@ export default function SignIn() {
         <div className="flex gap-2">
           <p>Don&apos;t have an account?</p>
           <Link to="/sign-up">
-            <span className="text-blue-500 hover:text-blue-600 hover:cursor-pointer">
-              Sign up
-            </span>
+            <span className="text-blue-700 hover:underline">Sign up</span>
           </Link>
         </div>
 

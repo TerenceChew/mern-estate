@@ -13,7 +13,7 @@ export default function Fallback({ error, resetErrorBoundary }) {
           <p>
             Try{" "}
             <button
-              className="text-blue-600 hover:underline"
+              className="text-blue-700 hover:underline"
               onClick={resetErrorBoundary}
             >
               reloading
