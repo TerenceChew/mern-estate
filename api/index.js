@@ -6,7 +6,6 @@ import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
-import compression from "compression";
 
 const app = express();
 const __dirname = path.resolve();
@@ -27,7 +26,6 @@ mongoose
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(compression({ level: 6 }));
 app.use("/api/static", express.static("api/public"));
 app.use(express.static("client/dist"));
 

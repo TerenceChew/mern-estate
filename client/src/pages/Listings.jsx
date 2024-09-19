@@ -86,7 +86,7 @@ export default function Listings() {
 
     getListingsData();
   }, []);
-
+  
   return (
     <>
       <main
@@ -117,7 +117,9 @@ export default function Listings() {
                 <p className="">
                   No listings. Create your first listing{" "}
                   <Link to="/create-listing">
-                    <span className="text-blue-700 hover:underline">here</span>
+                    <span className="text-blue-500 hover:text-blue-600 hover:underline">
+                      here
+                    </span>
                   </Link>
                   !
                 </p>

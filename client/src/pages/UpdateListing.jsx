@@ -299,7 +299,7 @@ export default function UpdateListing() {
               Back to{" "}
               <Link
                 to={`/listings/${currentUser._id}`}
-                className="text-blue-700 hover:underline"
+                className="text-blue-500 hover:text-blue-600 hover:underline"
               >
                 listings
               </Link>
