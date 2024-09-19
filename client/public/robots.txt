@@ -1,0 +1,3 @@
+# To ensure all areas of the site are accessible to all search engines and crawlers
+User-agent: *
+Disallow:
