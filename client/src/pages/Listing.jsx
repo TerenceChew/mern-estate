@@ -146,7 +146,11 @@ export default function Listing() {
                 </span>
                 {!!listing.discountPrice && (
                   <span className="bg-green-700 rounded-md px-4 py-1.5">
-                    ${listing.regularPrice - listing.discountPrice} Discount
+                    $
+                    {formatNumberWithCommas(
+                      listing.regularPrice - listing.discountPrice
+                    )}{" "}
+                    Discount
                   </span>
                 )}
               </div>
