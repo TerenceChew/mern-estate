@@ -461,7 +461,7 @@ export default function SearchListings() {
 
           {showMore && (
             <button
-              className="text-center text-green-600 hover:underline"
+              className="self-center text-blue-700 hover:underline"
               onClick={handleShowMoreClick}
             >
               Show more listings
