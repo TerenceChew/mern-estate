@@ -289,7 +289,7 @@ export default function Profile() {
   return (
     <>
       <main
-        className={`bg-[#ebf0eb] min-h-dvh flex justify-center py-10 ${
+        className={`min-h-dvh flex justify-center py-10 ${
           deleteRequested ? "pointer-events-none brightness-[.65] blur-sm" : ""
         }`}
       >
