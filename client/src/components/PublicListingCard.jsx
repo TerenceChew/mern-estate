@@ -25,7 +25,7 @@ export default function PublicListingCard({ listing }) {
 
   return (
     <Link to={`/listing/${_id}`} className="w-full sm:w-auto">
-      <div className="sm:w-[360px] flex flex-col items-center gap-5 pb-5 bg-white rounded-md shadow-lg shadow-slate-300 text-slate-700">
+      <div className="sm:w-[360px] flex flex-col items-center gap-5 pb-5 bg-white rounded-md shadow-[0_0_8px_0_rgba(0,0,0,.2)] hover:shadow-[0_0_8px_0_rgba(0,0,0,.25)] text-slate-700 hover:-translate-y-1 transition-transform duration-300">
         <div className="w-full h-80 sm:h-[235px] rounded-tl-md rounded-tr-md shadow-md shadow-slate-400 overflow-hidden">
           <img
             className="h-full w-full object-cover rounded-tl-md rounded-tr-md hover:scale-105 duration-300"
