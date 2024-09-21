@@ -507,9 +507,9 @@ export default function CreateListing() {
               />
 
               <button
-                className={`w-28 self-center sm:self-stretch border border-solid border-green-600 text-green-600 hover:bg-green-600 hover:text-white duration-500 rounded-lg p-2.5 ${
+                className={`w-28 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg p-2.5 ${
                   isUploadingFiles
-                    ? "w-32 bg-green-600 text-white pointer-events-none"
+                    ? "w-32 bg-blue-700 text-white pointer-events-none"
                     : ""
                 }`}
                 type="button"
