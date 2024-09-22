@@ -248,7 +248,7 @@ export default function CreateListing() {
   }, [formData.imageUrls]);
 
   return (
-    <main className="flex justify-center py-10">
+    <main className="min-h-dvh flex justify-center py-10 bg-gray-50">
       <article className="w-64 xs:w-full xs:max-w-72 sm:max-w-md xl:max-w-5xl flex flex-col items-center gap-8">
         <h1 className="font-semibold text-2xl sm:text-3xl">Create a Listing</h1>
 
@@ -258,7 +258,7 @@ export default function CreateListing() {
         >
           <div className="flex flex-col flex-1 gap-2">
             <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="text"
               id="title"
               name="title"
@@ -274,7 +274,7 @@ export default function CreateListing() {
               {validationErrors.title || serverValidationErrors.title}
             </p>
             <textarea
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3"
               id="description"
               name="description"
               aria-label="Description"
@@ -288,7 +288,7 @@ export default function CreateListing() {
                 serverValidationErrors.description}
             </p>
             <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="text"
               id="address"
               name="address"
@@ -390,7 +390,7 @@ export default function CreateListing() {
             <div className="flex flex-wrap items-center gap-5">
               <div className="flex items-center gap-2.5">
                 <input
-                  className="w-16 p-2 rounded-lg focus:outline-gray-300"
+                  className="w-16 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
                   id="bedrooms"
                   name="bedrooms"
                   type="number"
@@ -407,7 +407,7 @@ export default function CreateListing() {
 
               <div className="flex items-center gap-2.5">
                 <input
-                  className="w-16 p-2 rounded-lg focus:outline-gray-300"
+                  className="w-16 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
                   id="bathrooms"
                   name="bathrooms"
                   type="number"
@@ -435,7 +435,7 @@ export default function CreateListing() {
             <div className="flex flex-wrap items-center gap-5">
               <div className="flex items-center gap-2.5">
                 <input
-                  className="w-24 p-2 rounded-lg focus:outline-gray-300"
+                  className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
                   id="regularPrice"
                   name="regularPrice"
                   type="number"
@@ -455,7 +455,7 @@ export default function CreateListing() {
               {formData.offer && (
                 <div className="flex items-center gap-2.5">
                   <input
-                    className="w-24 p-2 rounded-lg focus:outline-gray-300"
+                    className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
                     id="discountPrice"
                     name="discountPrice"
                     type="number"
