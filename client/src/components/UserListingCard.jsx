@@ -78,7 +78,7 @@ export default function UserListingCard({ listing, handleDeleteListingClick }) {
 
         <div className="w-5/6 xs:w-2/3 sm:w-5/6 flex gap-5 mt-2">
           <button
-            className="flex-1 border border-solid border-green-600 hover:bg-green-600 text-green-600 hover:text-white duration-500 rounded-lg py-1.5"
+            className="flex-1 border border-solid border-blue-700 hover:bg-blue-700 text-blue-700 hover:text-white duration-500 rounded-lg py-1.5"
             aria-label="Edit listing"
             onClick={(e) => {
               e.preventDefault();
