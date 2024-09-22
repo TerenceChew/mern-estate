@@ -104,22 +104,27 @@ export default function Home() {
   return (
     <main>
       <article className="flex flex-col">
-        <section className="max-w-4xl mx-auto flex flex-col gap-4 px-3.5 sm:px-7 py-14 sm:py-24">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-slate-700">
-            Find your next <span className="text-slate-500">perfect</span>
-            <br /> home with ease
-          </h1>
+        <section
+          className="flex justify-center items-center bg-gray-50"
+          aria-label="Hero section"
+        >
+          <div className="flex flex-col gap-4 px-3.5 sm:px-7 py-14 sm:py-24">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-slate-700">
+              Find your next <span className="text-slate-500">perfect</span>
+              <br /> home with ease
+            </h1>
 
-          <p className="text-sm text-gray-600">
-            Mern Estate will help you find your new home fast, easy and
-            comfortable.
-            <br />
-            We have a wide range of properties for you to choose from.
-          </p>
+            <p className="text-sm text-gray-600">
+              Mern Estate will help you find your new home fast, easy and
+              comfortable.
+              <br />
+              We have a wide range of properties for you to choose from.
+            </p>
 
-          <Link to="/search" className="w-max text-blue-700 hover:underline">
-            Let's start now!
-          </Link>
+            <Link to="/search" className="w-max text-blue-700 hover:underline">
+              Let's start now!
+            </Link>
+          </div>
         </section>
 
         <section>
