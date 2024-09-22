@@ -45,11 +45,11 @@ export default function Header() {
       </Link>
 
       <form
-        className="w-64 sm:w-[220px] md:w-72 lg:w-96 flex justify-between items-center border-solid border-b-[1px] border-slate-700"
+        className="w-60 xs:w-[265px] sm:w-[240px] md:w-72 lg:w-96 flex justify-between items-center border-solid border-[1px] border-slate-100 rounded-lg p-0.5 md:p-1 bg-slate-100"
         onSubmit={handleSubmit}
       >
         <input
-          className="bg-transparent autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)] w-[85%] lg:w-[90%] focus:outline-none px-2"
+          className="bg-transparent autofill:shadow-[inset_0_0_0px_1000px_rgb(241,245,249)] w-[85%] lg:w-[90%] focus:outline-none px-2"
           type="text"
           placeholder="Search listings"
           aria-label="Search listings"
