@@ -102,10 +102,10 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="bg-gray-50">
       <article className="flex flex-col">
         <section
-          className="flex justify-center items-center bg-gray-50"
+          className="flex justify-center items-center"
           aria-label="Hero section"
         >
           <div className="flex flex-col gap-4 px-3.5 sm:px-7 py-14 sm:py-24">
