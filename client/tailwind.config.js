@@ -12,6 +12,7 @@ export default {
     fontFamily: {
       ...defaultTheme.fontFamily,
       poppins: ["Poppins", "Roboto", "ui-sans-serif", "system-ui"],
+      roboto: ["Roboto", "ui-sans-serif", "system-ui"],
     },
   },
   plugins: [require("tailwindcss"), require("autoprefixer")],

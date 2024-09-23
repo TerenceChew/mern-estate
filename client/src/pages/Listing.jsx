@@ -5,10 +5,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { FaBath, FaBed, FaShare } from "react-icons/fa6";
-import { IoLocationSharp } from "react-icons/io5";
-import { LuParkingCircle, LuParkingCircleOff } from "react-icons/lu";
-import { GiSofa } from "react-icons/gi";
+import { IoLocationSharp, IoBedOutline } from "react-icons/io5";
+import { LuParkingCircle, LuParkingCircleOff, LuBath } from "react-icons/lu";
+import { PiArmchair, PiShareNetwork } from "react-icons/pi";
 import { formatNumberWithCommas } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import ContactLandlord from "../components/ContactLandlord";
@@ -76,27 +75,30 @@ export default function Listing() {
   };
 
   return (
-    <main>
+    <main className="min-h-dvh bg-gray-50 font-poppins">
       <article className="flex justify-center">
         {loading ? (
-          <p>Loading ...</p>
+          <p className="mt-3">Loading ...</p>
         ) : error ? (
-          <p className="text-red-600 text-center" aria-label="Error message">
+          <p
+            className="text-red-600 text-center mt-3"
+            aria-label="Error message"
+          >
             {error}
           </p>
         ) : listing ? (
           <div className="w-full max-w-screen-xl flex flex-col items-center relative">
             <button
-              className="w-9 sm:w-10 md:w-11 h-9 sm:h-10 md:h-11 flex justify-center items-center absolute top-5 sm:top-7 lg:top-9 right-5 sm:right-7 lg:right-9 z-10 border-none rounded-full bg-slate-200 bg-opacity-80 cursor-pointer hover:-translate-y-1 duration-300 outline-none"
+              className="w-9 md:w-10 h-9 md:h-10 flex justify-center items-center absolute top-5 right-5 z-10 border-none rounded-xl bg-gray-900 bg-opacity-80 cursor-pointer hover:-translate-y-1 duration-300 outline-none"
               aria-label="Share listing"
               title="Share listing"
               onClick={handleShareListingClick}
             >
-              <FaShare className="text-slate-700 text-sm md:text-base" />
+              <PiShareNetwork className="text-white text-[22px] md:text-[26px]" />
             </button>
 
             <span
-              className={`absolute z-10 border rounded-md px-3 sm:px-[1.15rem] py-1.5 sm:py-2 sm:text-lg bg-slate-200 text-slate-700 duration-700 transition-all opacity-0 ${
+              className={`absolute z-10 border rounded-md px-3 sm:px-[1.15rem] py-1.5 sm:py-2 sm:text-lg bg-white text-gray-700 duration-700 transition-all opacity-0 ${
                 linkCopied ? "translate-y-2/4 opacity-100" : ""
               }`}
             >
@@ -125,62 +127,76 @@ export default function Listing() {
             </Swiper>
 
             <div className="w-full max-w-5xl flex flex-col gap-5 pt-6 pb-8 px-5 xs:px-7 md:px-9">
-              <h1 className="text-2xl font-semibold">
-                {listing.title} - $
-                {listing.discountPrice
-                  ? formatNumberWithCommas(listing.discountPrice)
-                  : formatNumberWithCommas(listing.regularPrice)}{" "}
-                {listing.type === "rent" ? "/ month" : ""}
+              <h1 className="text-2xl md:text-3xl font-semibold">
+                {listing.title}
               </h1>
 
-              <div className="w-full flex items-center gap-1.5">
-                <IoLocationSharp className="text-2xl shrink-0 text-green-700" />
-                <p className="text-sm sm:text-base font-semibold text-slate-700 line-clamp-2">
+              <div className="w-full flex items-center gap-1">
+                <IoLocationSharp className="text-2xl text-green-600 shrink-0 ml-[-4px]" />
+                <p className="text-sm md:text-base text-gray-600 font-roboto font-normal line-clamp-2">
                   {listing.address}
                 </p>
               </div>
 
               <div className="flex items-center gap-4 text-white">
-                <span className="bg-slate-700 rounded-md px-4 py-1.5">
+                <span className="text-sm bg-blue-600 rounded-md px-2.5 py-1">
                   {listing.type === "rent" ? "For Rent" : "For Sale"}
                 </span>
                 {!!listing.discountPrice && (
-                  <span className="bg-green-700 rounded-md px-4 py-1.5">
-                    ${listing.regularPrice - listing.discountPrice} Discount
+                  <span className="text-sm text-white bg-red-600 rounded-md px-2.5 py-1">
+                    RM
+                    {formatNumberWithCommas(
+                      listing.regularPrice - listing.discountPrice
+                    )}{" "}
+                    Discount
                   </span>
                 )}
               </div>
 
-              <p>
-                <span className="font-semibold">Description - </span>
-                <span className="text-slate-700">{listing.description}</span>
-              </p>
+              <hr className="border-gray-300" />
 
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5 text-green-700">
-                <div className="flex items-center gap-1.5">
-                  <FaBed className="text-xl" />
-                  <p className="font-semibold">{listing.bedrooms} Beds</p>
+              <h2 className="text-2xl md:text-3xl font-semibold mt-4 mb-3">
+                <sup className="text-sm md:text-lg font-normal mr-1">RM</sup>
+                {listing.discountPrice
+                  ? formatNumberWithCommas(listing.discountPrice)
+                  : formatNumberWithCommas(listing.regularPrice)}{" "}
+                {listing.type === "rent" ? "/month" : ""}
+              </h2>
+
+              <div className="max-w-[280px] min-[515px]:max-w-fit flex flex-wrap items-center gap-x-[55px] min-[515px]:gap-x-[35px] gap-y-12 text-gray-600 font-normal mb-4">
+                <div className="w-[85px] flex flex-col gap-2">
+                  <IoBedOutline className="text-[26px] leading-8" />
+                  <p className="text-sm">{listing.bedrooms} Bed(s)</p>
                 </div>
-                <div className="flex items-center gap-1.5 ">
-                  <FaBath className="text-lg" />
-                  <p className="font-semibold">{listing.bathrooms} Baths</p>
+                <div className="w-[85px] flex flex-col gap-2.5">
+                  <LuBath className="text-2xl" />
+                  <p className="text-sm">{listing.bathrooms} Bath(s)</p>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="w-[85px] flex flex-col gap-2.5">
                   {listing.parking ? (
-                    <LuParkingCircle className="text-xl" />
+                    <LuParkingCircle className="text-2xl" />
                   ) : (
-                    <LuParkingCircleOff className="text-xl" />
+                    <LuParkingCircleOff className="text-2xl" />
                   )}
-                  <p className="font-semibold">
+                  <p className="text-sm">
                     {listing.parking ? "Parking" : "No Parking"}
                   </p>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <GiSofa className="text-xl" />
-                  <p className="font-semibold">
+                <div className="w-[85px] flex flex-col gap-2">
+                  <PiArmchair className="text-[27px] leading-8" />
+                  <p className="text-sm">
                     {listing.furnished ? "Furnished" : "Unfurnished"}
                   </p>
                 </div>
+              </div>
+
+              <hr className="border-gray-300" />
+
+              <div>
+                <h2 className="text-2xl md:text-3xl font-medium mt-4 mb-3">
+                  Description
+                </h2>
+                <p className="text-base text-gray-600">{listing.description}</p>
               </div>
 
               {currentUser &&
@@ -198,7 +214,7 @@ export default function Listing() {
             </div>
           </div>
         ) : (
-          <p>This is a fallback. Listing can't be loaded!</p>
+          <p className="mt-3">This is a fallback. Listing can't be loaded!</p>
         )}
       </article>
     </main>
