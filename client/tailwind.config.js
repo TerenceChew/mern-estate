@@ -6,8 +6,12 @@ export default {
   theme: {
     extend: {},
     screens: {
-      xs: "480px",
       ...defaultTheme.screens,
+      xs: "480px",
+    },
+    fontFamily: {
+      ...defaultTheme.fontFamily,
+      poppins: ["Poppins", "Roboto", "ui-sans-serif", "system-ui"],
     },
   },
   plugins: [require("tailwindcss"), require("autoprefixer")],
