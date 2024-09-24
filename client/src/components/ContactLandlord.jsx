@@ -35,7 +35,7 @@ export default function ContactLandlord({ listing }) {
   }, []);
 
   return (
-    <div>
+    <div className="mt-3">
       {error ? (
         <p className="text-red-600 text-center" aria-label="Error message">
           {error} Landlord may have deleted his/her account!
@@ -43,15 +43,16 @@ export default function ContactLandlord({ listing }) {
       ) : (
         <div className="w-full flex flex-col gap-1">
           <p>
-            Contact{" "}
+            <span className="text-gray-600">Contact </span>
             <span className="font-semibold">
               {landlord ? landlord.username : ""}
-            </span>{" "}
-            for <span className="font-semibold">{title}</span>
+            </span>
+            <span className="text-gray-600"> for </span>
+            <span className="font-semibold">{title}</span>
           </p>
 
           <textarea
-            className="min-h-20 rounded-lg border border-gray-200 focus:outline-gray-300 p-1.5"
+            className="min-h-20 rounded-lg border border-gray-300 focus:outline-gray-400 p-1.5"
             name="user message"
             placeholder="Enter your message here"
             aria-label="Enter your message here"
