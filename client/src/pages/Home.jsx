@@ -10,7 +10,10 @@ import defaultListingImg2 from "../assets/defaultListingImg2.jpeg";
 import PublicListingCard from "../components/PublicListingCard";
 
 export default function Home() {
-  const [swiperImgs, setSwiperImgs] = useState([]);
+  const [swiperImgs, setSwiperImgs] = useState([
+    defaultListingImg1,
+    defaultListingImg2,
+  ]);
   const [listingsWithOffer, setListingsWithOffer] = useState([]);
   const [listingsForRent, setListingsForRent] = useState([]);
   const [listingsForSale, setListingsForSale] = useState([]);
@@ -135,25 +138,15 @@ export default function Home() {
             pagination={{ clickable: true }}
             style={swiperStyle}
           >
-            {swiperImgs.length
-              ? swiperImgs.map((imgUrl) => (
-                  <SwiperSlide key={imgUrl}>
-                    <img
-                      src={imgUrl}
-                      alt="Listing image"
-                      className="w-full h-[450px] md:h-[500px] lg:h-[650px] object-cover"
-                    />
-                  </SwiperSlide>
-                ))
-              : [defaultListingImg1, defaultListingImg2].map((imgUrl) => (
-                  <SwiperSlide key={imgUrl}>
-                    <img
-                      src={imgUrl}
-                      alt="Default listing image"
-                      className="w-full h-[450px] md:h-[500px] lg:h-[650px] object-cover"
-                    />
-                  </SwiperSlide>
-                ))}
+            {swiperImgs.map((imgUrl) => (
+              <SwiperSlide key={imgUrl}>
+                <img
+                  src={imgUrl}
+                  alt="Listing image"
+                  className="w-full h-[450px] md:h-[500px] lg:h-[650px] object-cover"
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </section>
 
