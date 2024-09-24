@@ -69,7 +69,15 @@ export const validateImages = (imgUrlsArr) => {
       .then((result) => {
         const allConcepts = result.outputs[0].data.concepts;
         const filteredConcepts = allConcepts.filter(
-          (concept) => concept.name === "house" || concept.name === "home"
+          (concept) =>
+            concept.name === "house" ||
+            concept.name === "home" ||
+            concept.name === "apartment" ||
+            concept.name === "indoors" ||
+            concept.name === "interior design" ||
+            concept.name === "room" ||
+            concept.name === "villa" ||
+            concept.name === "dining room"
         );
 
         return filteredConcepts.some((concept) => concept.value > 0.9)
