@@ -158,7 +158,7 @@ export default function Home() {
         </section>
 
         <section
-          className="min-h-[6410px] min-[800px]:min-h-[4000px] min-[1200px]:min-h-[2795px] min-[1600px]:min-h-[2190px] flex flex-col"
+          className="min-h-[8930px] xs:min-h-[8645px] min-[800px]:min-h-[4000px] min-[1600px]:min-h-[2195px] flex flex-col"
           aria-label="Listing sections container"
         >
           <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">
