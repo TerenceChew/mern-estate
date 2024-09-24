@@ -105,7 +105,7 @@ export default function SignIn() {
 
         <form className="w-full flex flex-col gap-2" onSubmit={handleSubmit}>
           <input
-            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+            className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
             type="email"
             id="email"
             name="email"
@@ -119,7 +119,7 @@ export default function SignIn() {
             {validationErrors.email || serverValidationErrors.email}
           </p>
           <input
-            className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+            className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3"
             type="password"
             id="password"
             name="password"
