@@ -234,7 +234,7 @@ export default function SearchListings() {
   }, [validationErrors]);
 
   return (
-    <main>
+    <main className="bg-gray-50">
       <article className="md:min-h-screen flex flex-col md:flex-row">
         <div className="md:max-w-[415px] border-b md:border-b-0 md:border-r border-gray-300 px-5 xs:px-7 py-8">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -243,7 +243,7 @@ export default function SearchListings() {
                 Search:
               </label>
               <input
-                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+                className="w-full border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
                 id="searchTerm"
                 name="searchTerm"
                 type="text"
@@ -367,7 +367,7 @@ export default function SearchListings() {
                   Min Price:
                 </label>
                 <input
-                  className="w-40 p-2.5 rounded-lg focus:outline-gray-300"
+                  className="w-40 p-2.5 rounded-lg border border-gray-300 focus:outline-gray-400"
                   id="minPrice"
                   name="minPrice"
                   type="number"
@@ -383,7 +383,7 @@ export default function SearchListings() {
                   Max Price:
                 </label>
                 <input
-                  className="w-40 p-2.5 rounded-lg focus:outline-gray-300"
+                  className="w-40 p-2.5 rounded-lg border border-gray-300 focus:outline-gray-400"
                   id="maxPrice"
                   name="maxPrice"
                   type="number"
@@ -410,7 +410,7 @@ export default function SearchListings() {
               </label>
 
               <select
-                className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5"
+                className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5"
                 id="sort"
                 name="sort"
                 onChange={handleChange}
@@ -461,7 +461,7 @@ export default function SearchListings() {
 
           {showMore && (
             <button
-              className="text-center text-green-600 hover:underline"
+              className="self-center text-blue-700 hover:underline"
               onClick={handleShowMoreClick}
             >
               Show more listings

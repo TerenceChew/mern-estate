@@ -10,7 +10,10 @@ import defaultListingImg2 from "../assets/defaultListingImg2.jpeg";
 import PublicListingCard from "../components/PublicListingCard";
 
 export default function Home() {
-  const [swiperImgs, setSwiperImgs] = useState([]);
+  const [swiperImgs, setSwiperImgs] = useState([
+    defaultListingImg1,
+    defaultListingImg2,
+  ]);
   const [listingsWithOffer, setListingsWithOffer] = useState([]);
   const [listingsForRent, setListingsForRent] = useState([]);
   const [listingsForSale, setListingsForSale] = useState([]);
@@ -102,24 +105,29 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main className="bg-gray-50">
       <article className="flex flex-col">
-        <section className="max-w-4xl mx-auto flex flex-col gap-4 px-3.5 sm:px-7 py-14 sm:py-24">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-slate-700">
-            Find your next <span className="text-slate-500">perfect</span>
-            <br /> home with ease
-          </h1>
+        <section
+          className="flex justify-center items-center"
+          aria-label="Hero section"
+        >
+          <div className="flex flex-col gap-4 px-3.5 sm:px-7 py-14 sm:py-24">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-slate-700">
+              Find your next <span className="text-slate-500">perfect</span>
+              <br /> home with ease
+            </h1>
 
-          <p className="text-sm text-gray-600">
-            Mern Estate will help you find your new home fast, easy and
-            comfortable.
-            <br />
-            We have a wide range of properties for you to choose from.
-          </p>
+            <p className="text-sm text-gray-600">
+              Mern Estate will help you find your new home fast, easy and
+              comfortable.
+              <br />
+              We have a wide range of properties for you to choose from.
+            </p>
 
-          <Link to="/search" className="w-max text-blue-700 hover:underline">
-            Let's start now!
-          </Link>
+            <Link to="/search" className="w-max text-blue-700 hover:underline">
+              Let's start now!
+            </Link>
+          </div>
         </section>
 
         <section>
@@ -130,30 +138,20 @@ export default function Home() {
             pagination={{ clickable: true }}
             style={swiperStyle}
           >
-            {swiperImgs.length
-              ? swiperImgs.map((imgUrl) => (
-                  <SwiperSlide key={imgUrl}>
-                    <img
-                      src={imgUrl}
-                      alt="Listing image"
-                      className="w-full h-[450px] md:h-[500px] lg:h-[650px] object-cover"
-                    />
-                  </SwiperSlide>
-                ))
-              : [defaultListingImg1, defaultListingImg2].map((imgUrl) => (
-                  <SwiperSlide key={imgUrl}>
-                    <img
-                      src={imgUrl}
-                      alt="Default listing image"
-                      className="w-full h-[450px] md:h-[500px] lg:h-[650px] object-cover"
-                    />
-                  </SwiperSlide>
-                ))}
+            {swiperImgs.map((imgUrl) => (
+              <SwiperSlide key={imgUrl}>
+                <img
+                  src={imgUrl}
+                  alt="Listing image"
+                  className="w-full h-[450px] md:h-[500px] lg:h-[650px] object-cover"
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </section>
 
         <section
-          className="min-h-[6410px] min-[800px]:min-h-[4000px] min-[1200px]:min-h-[2795px] min-[1600px]:min-h-[2190px] flex flex-col"
+          className="min-h-[8930px] xs:min-h-[8645px] min-[800px]:min-h-[4000px] min-[1600px]:min-h-[2195px] flex flex-col"
           aria-label="Listing sections container"
         >
           <section className="mx-auto flex flex-col gap-5 px-3.5 pt-14">

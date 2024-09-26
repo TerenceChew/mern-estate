@@ -26,7 +26,7 @@ export default function UserListingCard({ listing, handleDeleteListingClick }) {
 
   return (
     <Link to={`/listing/${_id}`} className="w-full sm:w-auto">
-      <div className="sm:w-[360px] flex flex-col items-center gap-5 pb-5 bg-white rounded-md shadow-lg shadow-slate-300 text-slate-700">
+      <div className="sm:w-[360px] flex flex-col items-center gap-5 pb-5 bg-white rounded-md shadow-[0_0_8px_0_rgba(0,0,0,.2)] hover:shadow-[0_0_8px_0_rgba(0,0,0,.25)] text-slate-700 hover:-translate-y-1 transition-transform duration-300">
         <div className="w-full h-80 sm:h-[235px] rounded-tl-md rounded-tr-md shadow-md shadow-slate-400 overflow-hidden">
           <img
             className="h-full w-full object-cover rounded-tl-md rounded-tr-md hover:scale-105 duration-300"
@@ -78,7 +78,7 @@ export default function UserListingCard({ listing, handleDeleteListingClick }) {
 
         <div className="w-5/6 xs:w-2/3 sm:w-5/6 flex gap-5 mt-2">
           <button
-            className="flex-1 border border-solid border-green-600 hover:bg-green-600 text-green-600 hover:text-white duration-500 rounded-lg py-1.5"
+            className="flex-1 border border-solid border-blue-700 hover:bg-blue-700 text-blue-700 hover:text-white duration-500 rounded-lg py-1.5"
             aria-label="Edit listing"
             onClick={(e) => {
               e.preventDefault();

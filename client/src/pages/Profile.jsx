@@ -289,7 +289,7 @@ export default function Profile() {
   return (
     <>
       <main
-        className={`bg-[#ebf0eb] min-h-dvh flex justify-center py-10 ${
+        className={`min-h-dvh flex justify-center py-10 bg-gray-50 ${
           deleteRequested ? "pointer-events-none brightness-[.65] blur-sm" : ""
         }`}
       >
@@ -337,7 +337,7 @@ export default function Profile() {
               </p>
             )}
             <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="text"
               id="username"
               name="username"
@@ -353,7 +353,7 @@ export default function Profile() {
               {validationErrors.username || serverValidationErrors.username}
             </p>
             <input
-              className="border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
               type="email"
               id="email"
               name="email"
@@ -368,7 +368,7 @@ export default function Profile() {
             </p>
             <div className="relative">
               <input
-                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                className="w-full border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3"
                 type="password"
                 id="password"
                 name="password"
@@ -398,7 +398,7 @@ export default function Profile() {
             </p>
             <div className="relative">
               <input
-                className="w-full border border-gray-200 focus:outline-gray-300 rounded-lg p-2.5 sm:p-3"
+                className="w-full border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3"
                 type="password"
                 id="passwordConfirmation"
                 name="passwordConfirmation"
