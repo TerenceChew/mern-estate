@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import mernEstateIcon from "../../public/home.png";
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
@@ -34,8 +35,8 @@ export default function Header() {
     <header className="h-[150px] sm:h-[90px] flex flex-col sm:flex-row justify-between items-center px-1 sm:px-4 lg:px-6 pt-4 pb-3 bg-white shadow-[0_2px_5px_0_rgba(44,44,44,0.08)] relative z-20">
       <Link to="/" className="flex items-center gap-3">
         <img
-          src="../../public/home.png"
-          alt="Mern Estate Logo"
+          src={mernEstateIcon}
+          alt="Mern Estate icon"
           className="w-7 h-7 hover:rotate-[-10deg] transition-transform duration-300"
         />
         <h1 className="font-bold text-xl">
