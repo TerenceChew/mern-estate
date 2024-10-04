@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateError } from "../utils/error.js";
+import { generateError } from "../utils/errorHandler.js";
 import {
   generateDefaultPassword,
   generateUniqueUsername,
