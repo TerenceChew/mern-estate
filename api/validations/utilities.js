@@ -11,27 +11,29 @@ const validationResultHandler = (req, res, next) => {
   next();
 };
 
+const isValidListingImg = (concept) => {
+  const validConcepts = [
+    "house",
+    "home",
+    "apartment",
+    "indoors",
+    "interior design",
+    "room",
+    "villa",
+    "dining room",
+  ];
+
+  return validConcepts.includes(concept.name) && concept.value > 0.9;
+};
+
 const validateListingImages = (imgUrlsArr) => {
   const validatedImgUrls = imgUrlsArr.map((imgUrl) => {
     return performImageRecognition(imgUrl)
       .then((response) => response.json())
       .then((result) => {
         const allConcepts = result.outputs[0].data.concepts;
-        const filteredConcepts = allConcepts.filter(
-          (concept) =>
-            concept.name === "house" ||
-            concept.name === "home" ||
-            concept.name === "apartment" ||
-            concept.name === "indoors" ||
-            concept.name === "interior design" ||
-            concept.name === "room" ||
-            concept.name === "villa" ||
-            concept.name === "dining room"
-        );
 
-        return filteredConcepts.some((concept) => concept.value > 0.9)
-          ? "Valid"
-          : "Invalid";
+        return allConcepts.some(isValidListingImg) ? "Valid" : "Invalid";
       })
       .catch((error) => {
         console.log(error);
