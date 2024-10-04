@@ -4,12 +4,6 @@ import { generateError } from "../utils/errorHandler.js";
 import { generateHashedPassword } from "../utils/utilities.js";
 import mongoose from "mongoose";
 
-export const handleTest = (req, res) => {
-  res.json({
-    message: "Test success!",
-  });
-};
-
 export const handleUpdateUser = async (req, res, next) => {
   const { decodedUser, params } = req;
 

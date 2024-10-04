@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  handleTest,
   handleUpdateUser,
   handleDeleteUser,
   handleGetUserListings,
@@ -11,7 +10,6 @@ import { verifyJwtToken } from "../utils/verifyUser.js";
 
 const router = express.Router();
 
-router.get("/test", handleTest);
 router.patch(
   "/update/:id",
   validateUpdateUser,
