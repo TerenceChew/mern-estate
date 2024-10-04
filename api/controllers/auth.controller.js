@@ -62,7 +62,7 @@ export const handleGoogleSignIn = async (req, res, next) => {
 
     if (user) {
       const token = generateJwtToken(user._id);
-      const { password: pass, ...rest } = user._doc;
+      const { password, ...rest } = user._doc;
 
       res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
     } else {
@@ -79,7 +79,7 @@ export const handleGoogleSignIn = async (req, res, next) => {
       await newUser.save();
 
       const token = generateJwtToken(newUser._id);
-      const { password: pass, ...rest } = newUser._doc;
+      const { password, ...rest } = newUser._doc;
 
       res.cookie("jwt", token, { httpOnly: true }).status(200).json(rest);
     }
