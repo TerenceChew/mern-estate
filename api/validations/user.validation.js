@@ -1,4 +1,5 @@
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
+import { validationResultHandler } from "./utilities.js";
 
 export const validateUpdateUser = [
   body("username")
@@ -63,13 +64,5 @@ export const validateUpdateUser = [
 
       return true;
     }),
-  (req, res, next) => {
-    const result = validationResult(req);
-
-    if (!result.isEmpty()) {
-      return res.status(422).json({ errors: result.array() });
-    }
-
-    next();
-  },
+  validationResultHandler,
 ];

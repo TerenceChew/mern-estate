@@ -1,15 +1,6 @@
-import { body, query, validationResult } from "express-validator";
+import { body, query } from "express-validator";
 import mongoose from "mongoose";
-
-const validationResultHandler = (req, res, next) => {
-  const result = validationResult(req);
-
-  if (!result.isEmpty()) {
-    return res.status(422).json({ errors: result.array() });
-  }
-
-  next();
-};
+import { validationResultHandler } from "./utilities.js";
 
 export const validateImages = (imgUrlsArr) => {
   const makeClarifaiApiCall = (imgUrl) => {
