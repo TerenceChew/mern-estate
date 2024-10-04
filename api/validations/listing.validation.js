@@ -1,97 +1,6 @@
 import { body, query } from "express-validator";
 import mongoose from "mongoose";
-import { validationResultHandler } from "./utilities.js";
-
-export const validateImages = (imgUrlsArr) => {
-  const makeClarifaiApiCall = (imgUrl) => {
-    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-    const PAT = process.env.CLARIFAI_PAT;
-    // Specify the correct user_id/app_id pairings
-    // Since you're making inferences outside your app's scope
-    const USER_ID = "clarifai";
-    const APP_ID = "main";
-    // Change these to whatever model and image URL you want to use
-    const MODEL_ID = "general-image-recognition";
-    const MODEL_VERSION_ID = "aa7f35c01e0642fda5cf400f543e7c40";
-    const IMAGE_URL = imgUrl;
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    // YOU DO NOT NEED TO CHANGE ANYTHING BELOW THIS LINE TO RUN THIS EXAMPLE
-    ///////////////////////////////////////////////////////////////////////////////////
-
-    const raw = JSON.stringify({
-      user_app_id: {
-        user_id: USER_ID,
-        app_id: APP_ID,
-      },
-      inputs: [
-        {
-          data: {
-            image: {
-              url: IMAGE_URL,
-            },
-          },
-        },
-      ],
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: "Key " + PAT,
-      },
-      body: raw,
-    };
-
-    // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
-    // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
-    // this will default to the latest version_id
-
-    return fetch(
-      "https://api.clarifai.com/v2/models/" +
-        MODEL_ID +
-        "/versions/" +
-        MODEL_VERSION_ID +
-        "/outputs",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        const allConcepts = result.outputs[0].data.concepts;
-        const filteredConcepts = allConcepts.filter(
-          (concept) =>
-            concept.name === "house" ||
-            concept.name === "home" ||
-            concept.name === "apartment" ||
-            concept.name === "indoors" ||
-            concept.name === "interior design" ||
-            concept.name === "room" ||
-            concept.name === "villa" ||
-            concept.name === "dining room"
-        );
-
-        return filteredConcepts.some((concept) => concept.value > 0.9)
-          ? "Valid"
-          : "Invalid";
-      })
-      .catch((error) => {
-        console.log(error);
-
-        return "Invalid";
-      });
-  };
-
-  const validatedImgUrls = [];
-
-  imgUrlsArr.forEach((imgUrl) => {
-    validatedImgUrls.push(makeClarifaiApiCall(imgUrl));
-  });
-
-  return Promise.all(validatedImgUrls).then((results) => {
-    return results.every((result) => result === "Valid") ? "Valid" : "Invalid";
-  });
-};
+import { validationResultHandler, validateListingImages } from "./utilities.js";
 
 const validateCreateOrUpdateListing = [
   body("title")
@@ -213,20 +122,20 @@ const validateCreateOrUpdateListing = [
     .isArray({ max: 6 })
     .withMessage("A listing can only have a maximum of 6 images!")
     .bail()
-    .custom((value) => {
+    .custom((imgUrls) => {
       const urlRegex =
         /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
       const isValidUrl = (url) => urlRegex.test(url);
 
-      if (!value.every(isValidUrl)) {
+      if (!imgUrls.every(isValidUrl)) {
         throw new Error("Invalid image URL(s) found!");
       }
 
       return true;
     })
     .bail()
-    .custom(async (value) => {
-      const result = await validateImages(value);
+    .custom(async (imgUrls) => {
+      const result = await validateListingImages(imgUrls);
 
       if (result === "Invalid") {
         throw new Error(
