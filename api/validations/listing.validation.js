@@ -1,6 +1,10 @@
 import { body, query } from "express-validator";
 import mongoose from "mongoose";
-import { validationResultHandler, validateListingImages } from "./utilities.js";
+import {
+  validationResultHandler,
+  isValidUrl,
+  validateListingImages,
+} from "./utilities.js";
 
 const validateCreateOrUpdateListing = [
   body("title")
@@ -123,10 +127,6 @@ const validateCreateOrUpdateListing = [
     .withMessage("A listing can only have a maximum of 6 images!")
     .bail()
     .custom((imgUrls) => {
-      const urlRegex =
-        /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-      const isValidUrl = (url) => urlRegex.test(url);
-
       if (!imgUrls.every(isValidUrl)) {
         throw new Error("Invalid image URL(s) found!");
       }
