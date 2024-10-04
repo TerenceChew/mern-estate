@@ -147,7 +147,7 @@ export default function SearchListings() {
 
         if (res.ok) {
           setListings([...listings, ...data.listings]);
-          setShowMore(data.remainingListings > 0);
+          setShowMore(data.numOfRemainingListings > 0);
         } else {
           setError(data.message);
           setListings([]);
@@ -196,7 +196,7 @@ export default function SearchListings() {
 
         if (res.ok) {
           setListings(data.listings);
-          setShowMore(data.remainingListings > 0);
+          setShowMore(data.numOfRemainingListings > 0);
         } else if (res.status === 422) {
           const errors = {};
 
