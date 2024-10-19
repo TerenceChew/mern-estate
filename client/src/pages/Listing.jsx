@@ -60,7 +60,7 @@ export default function Listing() {
     };
 
     getListingData();
-  }, []);
+  }, [id]);
 
   // Swiper
   const swiperStyle = {
