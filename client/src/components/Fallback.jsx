@@ -1,6 +1,8 @@
 import propTypes from "prop-types";
 
 export default function Fallback({ error, resetErrorBoundary }) {
+  console.error(error);
+
   return (
     <main className="min-h-dvh flex justify-center items-center p-5 bg-gray-50">
       <article>
