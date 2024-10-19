@@ -85,7 +85,7 @@ export default function Listings() {
     };
 
     getListingsData();
-  }, []);
+  }, [id]);
 
   return (
     <>
