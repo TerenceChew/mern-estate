@@ -125,7 +125,7 @@ export default function Home() {
             </p>
 
             <Link to="/search" className="w-max text-blue-700 hover:underline">
-              Let's start now!
+              Let&apos;s start now!
             </Link>
           </div>
         </section>
