@@ -1,3 +1,5 @@
+import propTypes from "prop-types";
+
 export default function Fallback({ error, resetErrorBoundary }) {
   return (
     <main className="min-h-dvh flex justify-center items-center p-5 bg-gray-50">
@@ -25,3 +27,8 @@ export default function Fallback({ error, resetErrorBoundary }) {
     </main>
   );
 }
+
+Fallback.propTypes = {
+  error: propTypes.instanceOf(Error).isRequired,
+  resetErrorBoundary: propTypes.func.isRequired,
+};
