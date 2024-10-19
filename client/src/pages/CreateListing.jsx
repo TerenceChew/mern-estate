@@ -192,7 +192,7 @@ export default function CreateListing() {
         setSubmitError("Failed to handle submit for create listing");
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, currentUser._id, formData, submitRequested, navigate]);
 
   useEffect(() => {
     const checkAndHandleImagesValidity = async () => {
@@ -245,7 +245,13 @@ export default function CreateListing() {
     if (shouldValidateImages && formData.imageUrls.length) {
       checkAndHandleImagesValidity();
     }
-  }, [formData.imageUrls]);
+  }, [
+    formData.imageUrls,
+    formData,
+    imageFileNames,
+    newImageUrls,
+    shouldValidateImages,
+  ]);
 
   return (
     <main className="min-h-dvh flex justify-center py-10 bg-gray-50">
