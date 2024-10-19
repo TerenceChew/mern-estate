@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { generateEmailHref } from "../utils/utilities";
+import PropTypes from "prop-types";
 
 export default function ContactLandlord({ listing }) {
   const { title, userRef } = listing;
@@ -75,3 +76,7 @@ export default function ContactLandlord({ listing }) {
     </div>
   );
 }
+
+ContactLandlord.propTypes = {
+  listing: PropTypes.object.isRequired,
+};
