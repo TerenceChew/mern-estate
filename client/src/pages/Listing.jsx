@@ -115,7 +115,7 @@ export default function Listing() {
             >
               {listing.imageUrls.map((url) => (
                 <SwiperSlide key={url}>
-                  <a href={url} target="_blank">
+                  <a href={url} target="_blank" rel="noreferrer">
                     <img
                       className="w-full h-[265px] xs:h-[345px] sm:h-[425px] md:h-[550px] object-cover"
                       src={url}
@@ -214,7 +214,9 @@ export default function Listing() {
             </div>
           </div>
         ) : (
-          <p className="mt-3">This is a fallback. Listing can't be loaded!</p>
+          <p className="mt-3">
+            This is a fallback. Listing can&apos;t be loaded!
+          </p>
         )}
       </article>
     </main>
