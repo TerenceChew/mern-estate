@@ -33,7 +33,7 @@ export default function ContactLandlord({ listing }) {
     };
 
     getLandlord();
-  }, []);
+  }, [userRef]);
 
   return (
     <div className="mt-3">
