@@ -29,7 +29,7 @@ export default function Header() {
     const searchTermFromParams = searchParams.get("searchTerm");
 
     setSearchTerm(searchTermFromParams || "");
-  }, [location.search]);
+  }, []);
 
   return (
     <header className="h-[150px] sm:h-[90px] flex flex-col sm:flex-row justify-between items-center px-1 sm:px-4 lg:px-6 pt-4 pb-3 bg-white shadow-[0_2px_5px_0_rgba(44,44,44,0.08)] relative z-20">
