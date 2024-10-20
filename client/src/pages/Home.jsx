@@ -90,7 +90,7 @@ export default function Home() {
     fetchListingsWithOffer();
     fetchListingsForRent();
     fetchListingsForSale();
-  }, [error]);
+  }, []);
 
   // Swiper
   const swiperStyle = {
