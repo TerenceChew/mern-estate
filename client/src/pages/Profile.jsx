@@ -107,6 +107,7 @@ export default function Profile() {
     if (imageFileTypeRegex.test(type)) {
       setImageFile(e.target.files[0]);
 
+      // eslint-disable-next-line no-unused-vars
       const { imageFile, ...otherErrors } = validationErrors;
 
       setValidationErrors(otherErrors);
