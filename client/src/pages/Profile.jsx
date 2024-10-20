@@ -195,10 +195,10 @@ export default function Profile() {
           setFileUploadPercentage
         );
 
-        setFormData({
+        setFormData((formData) => ({
           ...formData,
           photoURL: imageUrl,
-        });
+        }));
       } catch (err) {
         console.error(err);
 
