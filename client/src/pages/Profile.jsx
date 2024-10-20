@@ -1,14 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
-import { generateUniqueFileName } from "../utils/utilities.js";
-import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
@@ -22,6 +14,7 @@ import { Link } from "react-router-dom";
 import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 import { extractImageFileNameFromUrl } from "../utils/utilities.js";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { uploadImageFileToFirebase } from "../utils/firebase.storage.js";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -190,57 +183,31 @@ export default function Profile() {
     }
   };
 
-  // For uploading image file
-  const uploadImageFile = (imageFile) => {
-    const storage = getStorage(app);
-    const uniqueFileName = generateUniqueFileName(imageFile.name); // To prevent errors in case user uploads new file with same name
-    const newImageFileRef = ref(storage, uniqueFileName);
+  // Side effects
+  useEffect(() => {
+    const uploadImageFile = async (imageFile) => {
+      setFileUploadError(null);
+      setFileUploadPercentage(0);
 
-    setFileUploadError(null);
-    setFileUploadPercentage(0);
-
-    // Upload the file
-    const uploadTask = uploadBytesResumable(newImageFileRef, imageFile);
-
-    // Register three observers:
-    // 1. 'state_changed' observer, called any time the state changes
-    // 2. Error observer, called on failure
-    // 3. Completion observer, called on successful completion
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      try {
+        const imageUrl = await uploadImageFileToFirebase(
+          imageFile,
+          setFileUploadPercentage
         );
-        setFileUploadPercentage(progress);
-      },
-      (err) => {
-        // Handle unsuccessful uploads
-        console.log(err);
+
+        setFormData({
+          ...formData,
+          photoURL: imageUrl,
+        });
+      } catch (err) {
+        console.error(err);
+
         setFileUploadError(
           "Failed to upload! Make sure image is less than 2MB"
         );
-      },
-      async () => {
-        // Handle successful uploads on complete
-        try {
-          const downloadURL = await getDownloadURL(newImageFileRef);
-
-          setFormData({
-            ...formData,
-            photoURL: downloadURL,
-          });
-        } catch (err) {
-          console.log(err);
-        }
       }
-    );
-  };
+    };
 
-  // Side effects
-  useEffect(() => {
     if (imageFile) {
       uploadImageFile(imageFile);
     }
