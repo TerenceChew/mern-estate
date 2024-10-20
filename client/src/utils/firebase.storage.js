@@ -22,7 +22,7 @@ export const deleteImageFileFromFirebase = (fileName) => {
     });
 };
 
-export const uploadImageFileToFirebase = (imageFile) => {
+export const uploadImageFileToFirebase = (imageFile, onProgressCb = null) => {
   return new Promise((resolve, reject) => {
     const storage = getStorage(app);
     const uniqueFileName = generateUniqueFileName(imageFile.name); // To prevent naming conflicts in case user uploads file(s) with same name
@@ -41,7 +41,12 @@ export const uploadImageFileToFirebase = (imageFile) => {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
+
         console.log("File upload is " + progress + "% complete");
+
+        if (onProgressCb) {
+          onProgressCb(progress);
+        }
       },
       (err) => {
         // Handle unsuccessful uploads
