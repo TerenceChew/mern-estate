@@ -66,9 +66,9 @@ export default function CreateListing() {
       const fileNames = [];
 
       imageFiles.forEach((file) => {
-        const uniqueFileName = generateUniqueFileName(file.name); // To prevent errors in case user uploads new file with same name
+        const uniqueFileName = generateUniqueFileName(file.name); // To prevent naming conflicts in case user uploads file(s) with same name
 
-        promises.push(uploadImageFileToFirebase(file, uniqueFileName));
+        promises.push(uploadImageFileToFirebase(file));
         fileNames.push(uniqueFileName);
       });
 

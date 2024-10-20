@@ -6,6 +6,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import { app } from "../firebase.js";
+import { generateUniqueFileName } from "../utils/utilities.js";
 
 export const deleteImageFileFromFirebase = (fileName) => {
   const storage = getStorage(app);
@@ -21,9 +22,10 @@ export const deleteImageFileFromFirebase = (fileName) => {
     });
 };
 
-export const uploadImageFileToFirebase = (imageFile, uniqueFileName) => {
+export const uploadImageFileToFirebase = (imageFile) => {
   return new Promise((resolve, reject) => {
     const storage = getStorage(app);
+    const uniqueFileName = generateUniqueFileName(imageFile.name); // To prevent naming conflicts in case user uploads file(s) with same name
     const newImageFileRef = ref(storage, uniqueFileName);
     const uploadTask = uploadBytesResumable(newImageFileRef, imageFile);
 
