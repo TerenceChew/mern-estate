@@ -252,7 +252,7 @@ export default function Profile() {
         setShowUpdateSuccessMessage(false);
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, currentUser._id, dispatch]);
 
   return (
     <>
