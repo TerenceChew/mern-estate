@@ -232,7 +232,7 @@ export default function UpdateListing() {
         setSubmitError("Failed to handle submit for update listing");
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, deletedImageFileNames, id, navigate]);
 
   useEffect(() => {
     const checkAndHandleImagesValidity = async () => {
