@@ -252,6 +252,8 @@ export default function Profile() {
         dispatch(updateUserFailure("Failed to handle submit for update"));
         setShowUpdateSuccessMessage(false);
       }
+    } else {
+      setShowUpdateSuccessMessage(false);
     }
   }, [validationErrors, submitRequested, currentUser._id, dispatch]);
 
