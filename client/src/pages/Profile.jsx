@@ -29,6 +29,7 @@ export default function Profile() {
     password: "",
     passwordConfirmation: "",
   });
+  const formDataRef = useRef(formData);
   const [showUpdateSuccessMessage, setShowUpdateSuccessMessage] =
     useState(false);
   const [deleteRequested, setDeleteRequested] = useState(false);
@@ -220,7 +221,7 @@ export default function Profile() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataRef.current),
       });
       const data = await res.json();
 
@@ -253,6 +254,10 @@ export default function Profile() {
       }
     }
   }, [validationErrors, submitRequested, currentUser._id, dispatch]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <>
