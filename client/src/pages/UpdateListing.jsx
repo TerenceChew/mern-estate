@@ -186,7 +186,7 @@ export default function UpdateListing() {
     };
 
     getListing();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const makeUpdateListingRequest = async () => {
