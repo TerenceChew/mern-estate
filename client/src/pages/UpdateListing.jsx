@@ -29,6 +29,7 @@ export default function UpdateListing() {
     discountPrice: null,
     imageUrls: [],
   });
+  const formDataRef = useRef(formData);
   const [isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [submitError, setSubmitError] = useState(null);
@@ -195,7 +196,7 @@ export default function UpdateListing() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataRef.current),
       });
       const data = await res.json();
 
@@ -233,6 +234,10 @@ export default function UpdateListing() {
       }
     }
   }, [validationErrors, submitRequested, deletedImageFileNames, id, navigate]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   useEffect(() => {
     const checkAndHandleImagesValidity = async () => {
