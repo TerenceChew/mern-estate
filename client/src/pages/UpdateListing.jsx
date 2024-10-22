@@ -169,6 +169,7 @@ export default function UpdateListing() {
         const data = await res.json();
 
         if (res.ok) {
+          // eslint-disable-next-line no-unused-vars
           const { updatedAt, createdAt, __v, _id, userRef, ...rest } = data;
           const processedListing = rest;
 
