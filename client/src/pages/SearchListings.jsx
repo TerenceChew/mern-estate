@@ -218,7 +218,7 @@ export default function SearchListings() {
     };
 
     getListingsData();
-  }, [location.search]);
+  }, []);
 
   useEffect(() => {
     if (submitRequested && !Object.keys(validationErrors).length) {
