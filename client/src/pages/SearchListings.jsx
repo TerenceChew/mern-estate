@@ -231,7 +231,7 @@ export default function SearchListings() {
 
       navigate(`/search?${newQueryString}`);
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, navigate]);
 
   return (
     <main className="bg-gray-50">
