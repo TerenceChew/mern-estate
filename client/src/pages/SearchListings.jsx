@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicListingCard from "../components/PublicListingCard";
 
@@ -14,6 +14,7 @@ export default function SearchListings() {
     sort: "createdAt",
     order: "desc",
   });
+  const formDataRef = useRef(formData);
   const [listings, setListings] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -223,8 +224,8 @@ export default function SearchListings() {
   useEffect(() => {
     if (submitRequested && !Object.keys(validationErrors).length) {
       const searchParams = new URLSearchParams();
-      for (const prop in formData) {
-        searchParams.set(prop, formData[prop]);
+      for (const prop in formDataRef.current) {
+        searchParams.set(prop, formDataRef.current[prop]);
       }
       searchParams.set("startIndex", 0);
       const newQueryString = searchParams.toString();
@@ -232,6 +233,10 @@ export default function SearchListings() {
       navigate(`/search?${newQueryString}`);
     }
   }, [validationErrors, submitRequested, navigate]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <main className="bg-gray-50">
