@@ -57,7 +57,7 @@ export default function SignIn() {
   // Side effects
   useEffect(() => {
     dispatch(resetUser());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const makeSignInRequest = async () => {
@@ -96,7 +96,7 @@ export default function SignIn() {
         dispatch(signInFailure("Failed to handle submit for sign in"));
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, dispatch, navigate]);
 
   return (
     <main className="flex justify-center py-10">
