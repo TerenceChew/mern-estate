@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   resetUser,
@@ -14,6 +14,7 @@ export default function SignUp() {
     email: "",
     password: "",
   });
+  const formDataRef = useRef(formData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.user);
@@ -82,7 +83,7 @@ export default function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataRef.current),
       });
 
       if (res.ok) {
@@ -118,6 +119,10 @@ export default function SignUp() {
       }
     }
   }, [validationErrors, submitRequested, dispatch, navigate]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <main className="flex justify-center py-10">
