@@ -300,8 +300,7 @@ export default function UpdateListing() {
 
         {getListingError ? (
           <p className="text-red-600 text-center" aria-label="Error message">
-            {getListingError}
-            {". "}
+            {getListingError}{" "}
             <span className="text-black">
               Back to{" "}
               <Link
