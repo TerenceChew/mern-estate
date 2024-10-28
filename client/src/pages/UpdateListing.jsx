@@ -237,10 +237,6 @@ export default function UpdateListing() {
   }, [validationErrors, submitRequested, deletedImageFileNames, id, navigate]);
 
   useEffect(() => {
-    formDataRef.current = formData;
-  }, [formData]);
-
-  useEffect(() => {
     const checkAndHandleImagesValidity = async () => {
       setIsValidatingImages(true);
       setImagesValidationError(null);
@@ -249,7 +245,8 @@ export default function UpdateListing() {
         const result = await validateImages(newImageUrls);
 
         if (result.includes("Invalid")) {
-          const validImagesLength = formData.imageUrls.length - result.length;
+          const validImagesLength =
+            formDataRef.current.imageUrls.length - result.length;
 
           result.forEach((res, idx) => {
             if (res === "Invalid") {
@@ -262,14 +259,14 @@ export default function UpdateListing() {
           setImagesValidationError(
             "Failed to upload! Make sure each file is an appropriate property image!"
           );
-          setFormData({
+          setFormData((formData) => ({
             ...formData,
             imageUrls: formData.imageUrls.filter(
               (_, idx) =>
                 idx < validImagesLength ||
                 result[idx - validImagesLength] === "Valid"
             ),
-          });
+          }));
           setImageFileNames(
             imageFileNames.filter(
               (_, idx) =>
@@ -287,10 +284,14 @@ export default function UpdateListing() {
       setShouldValidateImages(false);
     };
 
-    if (shouldValidateImages && formData.imageUrls.length) {
+    if (shouldValidateImages && formDataRef.current.imageUrls.length) {
       checkAndHandleImagesValidity();
     }
-  }, [formData.imageUrls]);
+  }, [shouldValidateImages, newImageUrls, imageFileNames]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <main className="min-h-dvh flex justify-center py-10 bg-gray-50">
