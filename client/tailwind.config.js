@@ -15,5 +15,5 @@ export default {
       roboto: ["Roboto", "ui-sans-serif", "system-ui"],
     },
   },
-  plugins: [require("tailwindcss"), require("autoprefixer")],
+  plugins: [],
 };
