@@ -15,10 +15,10 @@ export const deleteImageFileFromFirebase = (fileName) => {
 
   deleteObject(imgRef)
     .then(() => {
-      console.log("Image file deleted successfully!");
+      console.log("Image file deleted successfully from Firebase!");
     })
     .catch((err) => {
-      console.log("Failed to delete image file!");
+      console.error("Failed to delete image file from Firebase!", err);
     });
 };
 
