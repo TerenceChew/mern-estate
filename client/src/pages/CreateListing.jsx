@@ -25,6 +25,7 @@ export default function CreateListing() {
     discountPrice: null,
     imageUrls: [],
   });
+  const formDataRef = useRef(formData);
   const [isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [submitError, setSubmitError] = useState(null);
@@ -162,7 +163,10 @@ export default function CreateListing() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+        body: JSON.stringify({
+          ...formDataRef.current,
+          userRef: currentUser._id,
+        }),
       });
       const data = await res.json();
 
@@ -192,7 +196,7 @@ export default function CreateListing() {
         setSubmitError("Failed to handle submit for create listing");
       }
     }
-  }, [validationErrors, currentUser._id, formData, submitRequested, navigate]);
+  }, [validationErrors, currentUser._id, submitRequested, navigate]);
 
   useEffect(() => {
     const checkAndHandleImagesValidity = async () => {
@@ -203,7 +207,8 @@ export default function CreateListing() {
         const result = await validateImages(newImageUrls);
 
         if (result.includes("Invalid")) {
-          const validImagesLength = formData.imageUrls.length - result.length;
+          const validImagesLength =
+            formDataRef.current.imageUrls.length - result.length;
 
           result.forEach((res, idx) => {
             if (res === "Invalid") {
@@ -217,14 +222,14 @@ export default function CreateListing() {
             "Failed to upload! Make sure each file is an appropriate property image!"
           );
 
-          setFormData({
+          setFormData((formData) => ({
             ...formData,
             imageUrls: formData.imageUrls.filter(
               (_, idx) =>
                 idx < validImagesLength ||
                 result[idx - validImagesLength] === "Valid"
             ),
-          });
+          }));
           setImageFileNames(
             imageFileNames.filter(
               (_, idx) =>
@@ -242,10 +247,10 @@ export default function CreateListing() {
       setShouldValidateImages(false);
     };
 
-    if (shouldValidateImages && formData.imageUrls.length) {
+    if (shouldValidateImages && formDataRef.current.imageUrls.length) {
       checkAndHandleImagesValidity();
     }
-  }, [formData, imageFileNames, newImageUrls, shouldValidateImages]);
+  }, [imageFileNames, newImageUrls, shouldValidateImages]);
 
   return (
     <main className="min-h-dvh flex justify-center py-10 bg-gray-50">
