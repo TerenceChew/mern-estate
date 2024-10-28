@@ -34,10 +34,12 @@ export default function OAuth() {
         navigate("/");
         return;
       } else {
-        dispatch(signInFailure(data.message));
+        dispatch(
+          signInFailure(data.message || "Failed to sign in with Google!")
+        );
       }
     } catch (err) {
-      dispatch(signInFailure("Failed to sign in with Google"));
+      dispatch(signInFailure("Failed to sign in with Google!"));
     }
   };
 
