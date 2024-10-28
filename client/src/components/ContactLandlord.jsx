@@ -23,7 +23,7 @@ export default function ContactLandlord({ listing }) {
         if (res.ok) {
           setLandlord(data);
         } else {
-          setError(data.message);
+          setError(data.message || "Failed to get landlord data!");
           setLandlord(null);
         }
       } catch (err) {
