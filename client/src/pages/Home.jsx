@@ -36,13 +36,14 @@ export default function Home() {
         } else {
           setError((error) => ({
             ...error,
-            listingsWithOffer: data.message,
+            listingsWithOffer:
+              data.message || "Failed to fetch listings with offer",
           }));
         }
       } catch (err) {
         setError((error) => ({
           ...error,
-          listingsWithOffer: "Failed to fetch listings with offer data",
+          listingsWithOffer: "Failed to fetch listings with offer",
         }));
       }
     };
@@ -56,13 +57,14 @@ export default function Home() {
         } else {
           setError((error) => ({
             ...error,
-            listingsForRent: data.message,
+            listingsForRent:
+              data.message || "Failed to fetch listings for rent",
           }));
         }
       } catch (err) {
         setError((error) => ({
           ...error,
-          listingsForRent: "Failed to fetch listings for rent data",
+          listingsForRent: "Failed to fetch listings for rent",
         }));
       }
     };
@@ -76,13 +78,14 @@ export default function Home() {
         } else {
           setError((error) => ({
             ...error,
-            listingsForSale: data.message,
+            listingsForSale:
+              data.message || "Failed to fetch listings for sale",
           }));
         }
       } catch (err) {
         setError((error) => ({
           ...error,
-          listingsForSale: "Failed to fetch listings for sale data",
+          listingsForSale: "Failed to fetch listings for sale",
         }));
       }
     };
