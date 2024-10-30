@@ -48,7 +48,7 @@ export default function Listing() {
         if (res.ok) {
           setListing(data);
         } else {
-          setError(data.message);
+          setError(data.message || "Failed to get listing data");
           setListing(null);
         }
       } catch (err) {
