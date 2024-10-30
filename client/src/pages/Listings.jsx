@@ -45,10 +45,10 @@ export default function Listings() {
 
         setListings(data);
       } else {
-        setError(data.message);
+        setError(data.message || "Failed to delete listing");
       }
     } catch (err) {
-      setError("Failed to handle delete listing");
+      setError("Failed to delete listing");
     }
 
     setDeleteRequest({
@@ -75,7 +75,7 @@ export default function Listings() {
         if (res.ok) {
           setListings(data);
         } else {
-          setError(data.message);
+          setError(data.message || "Failed to get listings data");
           setListings([]);
         }
       } catch (err) {
