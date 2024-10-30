@@ -182,7 +182,7 @@ export default function CreateListing() {
 
         setServerValidationErrors(errors);
       } else {
-        setSubmitError(data.message);
+        setSubmitError(data.message || "Failed to create listing!");
       }
 
       setLoading(false);
@@ -193,7 +193,7 @@ export default function CreateListing() {
         setLoading(true);
         makeCreateListingRequest();
       } catch (err) {
-        setSubmitError("Failed to handle submit for create listing");
+        setSubmitError("Failed to create listing!");
       }
     }
   }, [validationErrors, currentUser._id, submitRequested, navigate]);
@@ -240,7 +240,7 @@ export default function CreateListing() {
         }
         setNewImageUrls([]);
       } catch (err) {
-        console.log("Failed to check and handle images validity!");
+        console.error("Failed to check and handle images validity!");
       }
 
       setIsValidatingImages(false);
