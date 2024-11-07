@@ -1,4 +1,4 @@
-const validateCreateListing = (formData) => {
+const validateCreateOrUpdateListing = (formData) => {
   const errors = {};
   const urlRegex =
     /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,10}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
@@ -254,4 +254,8 @@ const validateSearchListings = (formData) => {
   return errors;
 };
 
-export { validateCreateListing, validateListingImages, validateSearchListings };
+export {
+  validateCreateOrUpdateListing,
+  validateListingImages,
+  validateSearchListings,
+};

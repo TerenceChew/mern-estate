@@ -3,7 +3,7 @@ import { generateUniqueFileName } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  validateCreateListing,
+  validateCreateOrUpdateListing,
   validateListingImages,
 } from "../validations/listing.validation.js";
 import {
@@ -154,7 +154,7 @@ export default function CreateListing() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validateCreateListing(formData));
+    setValidationErrors(validateCreateOrUpdateListing(formData));
     setSubmitRequested(true);
   };
 
