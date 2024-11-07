@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicListingCard from "../components/PublicListingCard";
+import { validateSearchListings } from "../validations/listing.validation.js";
 
 export default function SearchListings() {
   const [formData, setFormData] = useState({
@@ -23,73 +24,6 @@ export default function SearchListings() {
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const navigate = useNavigate();
-
-  // Validation
-  const validate = (formData) => {
-    const errors = {};
-    const {
-      searchTerm,
-      type,
-      offer,
-      parking,
-      furnished,
-      minPrice,
-      maxPrice,
-      sort,
-      order,
-    } = formData;
-
-    if (typeof searchTerm !== "string") {
-      errors.searchTerm = "Search term must be a string!";
-    }
-
-    if (!["all", "sale", "rent"].includes(type)) {
-      errors.type =
-        "Invalid type value. Type must be 'all', 'sale', or 'rent'!";
-    }
-
-    if (typeof offer !== "boolean") {
-      errors.offer =
-        "Invalid offer value. Offer can only be checked or unchecked!";
-    }
-
-    if (typeof parking !== "boolean") {
-      errors.parking =
-        "Invalid parking value. Parking can only be checked or unchecked!";
-    }
-
-    if (typeof furnished !== "boolean") {
-      errors.furnished =
-        "Invalid furnished value. Furnished can only be checked or unchecked!";
-    }
-
-    if (!Number.isInteger(minPrice)) {
-      errors.minPrice = "Please enter a min price!";
-    } else if (minPrice < 0) {
-      errors.minPrice = "Min price cannot be lower than 0!";
-    } else if (minPrice >= maxPrice) {
-      errors.minPrice = "Min price must be less than max price!";
-    }
-
-    if (!Number.isInteger(maxPrice)) {
-      errors.maxPrice = "Please enter a max price!";
-    } else if (maxPrice <= minPrice) {
-      errors.maxPrice = "Max price must be more than min price!";
-    } else if (maxPrice > 100000000) {
-      errors.maxPrice = "Max price cannot exceed 100,000,000!";
-    }
-
-    if (!["regularPrice", "createdAt"].includes(sort)) {
-      errors.sort =
-        "Invalid sort value. Sort must be 'regularPrice' or 'createdAt'!";
-    }
-
-    if (!["asc", "desc"].includes(order)) {
-      errors.order = "Invalid order value. Order must be 'asc' or 'desc'!";
-    }
-
-    return errors;
-  };
 
   // Handler functions
   const handleChange = (e) => {
@@ -130,7 +64,7 @@ export default function SearchListings() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateSearchListings(formData));
     setSubmitRequested(true);
   };
   const handleShowMoreClick = () => {
