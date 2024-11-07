@@ -8,6 +8,7 @@ import {
   signInFailure,
 } from "../redux/user/userSlice.js";
 import OAuth from "../components/OAuth.jsx";
+import { validateSignIn } from "../validations/auth.validation.js";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -22,22 +23,6 @@ export default function SignIn() {
   const { error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  // Validation
-  const validate = (formData) => {
-    const errors = {};
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-    if (!formData.email || !emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email!";
-    }
-
-    if (!formData.password) {
-      errors.password = "Please enter your password!";
-    }
-
-    return errors;
-  };
-
   // Handler functions
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -51,7 +36,7 @@ export default function SignIn() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateSignIn(formData));
     setSubmitRequested(true);
   };
 
