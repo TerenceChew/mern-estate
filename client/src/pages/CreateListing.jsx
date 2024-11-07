@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { generateUniqueFileName } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { validate, validateImages } from "../validations/listing.validation.js";
+import {
+  validateCreateListing,
+  validateListingImages,
+} from "../validations/listing.validation.js";
 import {
   uploadImageFileToFirebase,
   deleteImageFileFromFirebase,
@@ -151,7 +154,7 @@ export default function CreateListing() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateCreateListing(formData));
     setSubmitRequested(true);
   };
 
@@ -204,7 +207,7 @@ export default function CreateListing() {
       setImagesValidationError(null);
 
       try {
-        const result = await validateImages(newImageUrls);
+        const result = await validateListingImages(newImageUrls);
 
         if (result.includes("Invalid")) {
           const validImagesLength =
