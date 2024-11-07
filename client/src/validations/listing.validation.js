@@ -1,4 +1,4 @@
-export const validate = (formData) => {
+const validateCreateListing = (formData) => {
   const errors = {};
   const urlRegex =
     /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,10}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
@@ -100,7 +100,7 @@ export const validate = (formData) => {
   return errors;
 };
 
-export const validateImages = (imgUrlsArr) => {
+const validateListingImages = (imgUrlsArr) => {
   const makeClarifaiApiCall = (imgUrl) => {
     // Your PAT (Personal Access Token) can be found in the portal under Authentification
     const PAT = import.meta.env.VITE_CLARIFAI_PAT;
@@ -188,3 +188,5 @@ export const validateImages = (imgUrlsArr) => {
 
   return Promise.all(validatedImgUrls).then((results) => results);
 };
+
+export { validateCreateListing, validateListingImages };
