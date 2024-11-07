@@ -1,4 +1,4 @@
-const validate = (formData) => {
+const validateUpdateUser = (formData) => {
   const { username, email, password, passwordConfirmation } = formData;
   const errors = {};
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -36,4 +36,4 @@ const validate = (formData) => {
   return errors;
 };
 
-export { validate };
+export { validateUpdateUser };

@@ -15,7 +15,7 @@ import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 import { extractImageFileNameFromUrl } from "../utils/utilities.js";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { uploadImageFileToFirebase } from "../utils/firebase.storage.js";
-import { validate } from "../validations/user.validation.js";
+import { validateUpdateUser } from "../validations/user.validation.js";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -80,7 +80,7 @@ export default function Profile() {
 
     setServerValidationErrors({});
     setDeleteRequested(false);
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateUpdateUser(formData));
     setSubmitRequested(true);
   };
   const handleDeleteAccountClick = () => {
