@@ -160,6 +160,10 @@ export default function CreateListing() {
 
   // Side effects
   useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
+  useEffect(() => {
     const makeCreateListingRequest = async () => {
       const res = await fetch("/api/listing/create", {
         method: "POST",
