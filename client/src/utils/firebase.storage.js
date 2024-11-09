@@ -22,11 +22,17 @@ export const deleteImageFileFromFirebase = (fileName) => {
     });
 };
 
-export const uploadImageFileToFirebase = (imageFile, onProgressCb = null) => {
+export const uploadImageFileToFirebase = (
+  imageFile,
+  uniqueFileName = null,
+  onProgressCb = null
+) => {
   return new Promise((resolve, reject) => {
     const storage = getStorage(app);
-    const uniqueFileName = generateUniqueFileName(imageFile.name); // To prevent naming conflicts in case user uploads file(s) with same name
-    const newImageFileRef = ref(storage, uniqueFileName);
+    const newImageFileRef = ref(
+      storage,
+      uniqueFileName || generateUniqueFileName(imageFile.name)
+    );
     const uploadTask = uploadBytesResumable(newImageFileRef, imageFile);
 
     // Register three observers
