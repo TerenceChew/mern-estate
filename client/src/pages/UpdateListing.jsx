@@ -70,8 +70,6 @@ export default function UpdateListing() {
       imageFiles.length > 0 &&
       imageFiles.length + formData.imageUrls.length < 7
     ) {
-      setShouldValidateImages(true);
-
       const promises = [];
       const fileNames = [];
 
@@ -85,6 +83,7 @@ export default function UpdateListing() {
       try {
         const imageUrls = await Promise.all(promises);
 
+        setShouldValidateImages(true);
         setNewImageUrls(imageUrls);
         setFormData({
           ...formData,
@@ -165,6 +164,10 @@ export default function UpdateListing() {
   };
 
   // Side effects
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
   useEffect(() => {
     const getListing = async () => {
       try {
@@ -280,21 +283,17 @@ export default function UpdateListing() {
         }
         setNewImageUrls([]);
       } catch (err) {
-        console.log("Failed to check and handle images validity!");
+        console.error("Failed to check and handle images validity!");
       }
 
       setIsValidatingImages(false);
       setShouldValidateImages(false);
     };
 
-    if (shouldValidateImages && formDataRef.current.imageUrls.length) {
+    if (shouldValidateImages && newImageUrls.length) {
       checkAndHandleImagesValidity();
     }
   }, [shouldValidateImages, newImageUrls, imageFileNames]);
-
-  useEffect(() => {
-    formDataRef.current = formData;
-  }, [formData]);
 
   return (
     <main className="min-h-dvh flex justify-center py-10 bg-gray-50">
