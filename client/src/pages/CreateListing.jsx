@@ -64,8 +64,6 @@ export default function CreateListing() {
       imageFiles.length > 0 &&
       imageFiles.length + formData.imageUrls.length < 7
     ) {
-      setShouldValidateImages(true);
-
       const promises = [];
       const fileNames = [];
 
@@ -79,6 +77,7 @@ export default function CreateListing() {
       try {
         const imageUrls = await Promise.all(promises);
 
+        setShouldValidateImages(true);
         setNewImageUrls(imageUrls);
         setFormData({
           ...formData,
