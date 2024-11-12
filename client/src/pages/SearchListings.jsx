@@ -99,6 +99,10 @@ export default function SearchListings() {
 
   // Side effects
   useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
+  useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get("searchTerm") || "";
     const type = searchParams.get("type") || "all";
@@ -167,10 +171,6 @@ export default function SearchListings() {
       navigate(`/search?${newQueryString}`);
     }
   }, [validationErrors, submitRequested, navigate]);
-
-  useEffect(() => {
-    formDataRef.current = formData;
-  }, [formData]);
 
   return (
     <main className="bg-gray-50">
