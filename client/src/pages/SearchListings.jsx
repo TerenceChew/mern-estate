@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PublicListingCard from "../components/PublicListingCard";
 import { validateSearchListings } from "../validations/listing.validation.js";
 
@@ -24,6 +24,7 @@ export default function SearchListings() {
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Handler functions
   const handleChange = (e) => {
@@ -148,12 +149,11 @@ export default function SearchListings() {
         setError("Failed to get listings data");
         setListings([]);
       }
-
       setLoading(false);
     };
 
     getListingsData();
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     if (submitRequested && !Object.keys(validationErrors).length) {
