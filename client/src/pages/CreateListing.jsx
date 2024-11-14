@@ -39,10 +39,12 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const submitRequestedRef = useRef(submitRequested);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
   const [imageFileNames, setImageFileNames] = useState([]);
+  const imageFileNamesRef = useRef(imageFileNames);
   const [newImageUrls, setNewImageUrls] = useState([]);
   const [isValidatingImages, setIsValidatingImages] = useState(false);
   const [imagesValidationError, setImagesValidationError] = useState(null);
@@ -181,6 +183,21 @@ export default function CreateListing() {
   }, [formData]);
 
   useEffect(() => {
+    imageFileNamesRef.current = imageFileNames;
+    submitRequestedRef.current = submitRequested;
+  }, [imageFileNames, submitRequested]);
+
+  useEffect(() => {
+    return () => {
+      if (!submitRequestedRef.current && imageFileNamesRef.current.length > 0) {
+        imageFileNamesRef.current.forEach((fileName) => {
+          deleteImageFileFromFirebase(fileName);
+        });
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const makeCreateListingRequest = async () => {
       const res = await fetch("/api/listing/create", {
         method: "POST",
@@ -205,8 +222,10 @@ export default function CreateListing() {
         });
 
         setServerValidationErrors(errors);
+        setSubmitRequested(false);
       } else {
         setSubmitError(data.message || "Failed to create listing!");
+        setSubmitRequested(false);
       }
 
       setLoading(false);
