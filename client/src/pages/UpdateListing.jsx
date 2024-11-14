@@ -40,15 +40,19 @@ export default function UpdateListing() {
   const [getListingError, setGetListingError] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
+  const submitRequestedRef = useRef(submitRequested);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const imageFileInputRef = useRef();
   const navigate = useNavigate();
   const [imageFileNames, setImageFileNames] = useState([]);
+  const imageFileNamesRef = useRef(imageFileNames);
   const [newImageUrls, setNewImageUrls] = useState([]);
   const [isValidatingImages, setIsValidatingImages] = useState(false);
   const [imagesValidationError, setImagesValidationError] = useState(null);
   const [shouldValidateImages, setShouldValidateImages] = useState(false);
   const [deletedImageFileNames, setDeletedImageFileNames] = useState([]);
+  const deletedImageFileNamesRef = useRef(deletedImageFileNames);
+  const existingImageFileNamesRef = useRef(null);
 
   // For managing image file input
   const resetImageFileInput = () => {
@@ -169,6 +173,29 @@ export default function UpdateListing() {
   }, [formData]);
 
   useEffect(() => {
+    submitRequestedRef.current = submitRequested;
+    deletedImageFileNamesRef.current = deletedImageFileNames;
+    imageFileNamesRef.current = imageFileNames;
+  }, [submitRequested, deletedImageFileNames, imageFileNames]);
+
+  useEffect(() => {
+    return () => {
+      if (!submitRequestedRef.current) {
+        const imageFilesToDelete = [
+          ...deletedImageFileNamesRef.current,
+          ...imageFileNamesRef.current,
+        ].filter((fileName) => {
+          return !existingImageFileNamesRef.current.includes(fileName);
+        });
+
+        imageFilesToDelete.forEach((fileName) => {
+          deleteImageFileFromFirebase(fileName);
+        });
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const getListing = async () => {
       try {
         const res = await fetch(`/api/listing/get/${id}`);
@@ -178,6 +205,9 @@ export default function UpdateListing() {
           // eslint-disable-next-line no-unused-vars
           const { updatedAt, createdAt, __v, _id, userRef, ...rest } = data;
           const processedListing = rest;
+          const existingImageFileNames = processedListing.imageUrls.map((url) =>
+            extractImageFileNameFromUrl(url)
+          );
 
           setFormData(processedListing);
           setImageFileNames(
@@ -185,6 +215,7 @@ export default function UpdateListing() {
               extractImageFileNameFromUrl(url)
             )
           ); // To make sure it's in sync with formData.imageUrls
+          existingImageFileNamesRef.current = existingImageFileNames;
         } else {
           setGetListingError(data.message);
         }
@@ -225,8 +256,10 @@ export default function UpdateListing() {
         });
 
         setServerValidationErrors(errors);
+        setSubmitRequested(false);
       } else {
         setSubmitError(data.message);
+        setSubmitRequested(false);
       }
 
       setLoading(false);
