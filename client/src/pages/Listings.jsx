@@ -119,7 +119,7 @@ export default function Listings() {
               {error}
             </p>
           ) : (
-            <div className="flex flex-wrap justify-center gap-7">
+            <div className="w-full flex flex-wrap justify-center gap-7">
               {listings.length > 0 ? (
                 listings.map((listing) => (
                   <UserListingCard
