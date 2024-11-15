@@ -90,7 +90,7 @@ export default function Listings() {
   return (
     <>
       <main
-        className={`min-h-dvh flex justify-center py-10 px-5 md:px-8 bg-gray-50 ${
+        className={`min-h-dvh flex justify-center py-10 px-5 xs:px-7 md:px-8 bg-gray-50 ${
           deleteRequest.deleteRequested
             ? "pointer-events-none brightness-[.65] blur-sm"
             : ""
@@ -104,7 +104,7 @@ export default function Listings() {
               {error}
             </p>
           ) : (
-            <div className="flex flex-wrap justify-center gap-7">
+            <div className="w-full flex flex-wrap justify-center gap-7">
               {listings.length > 0 ? (
                 listings.map((listing) => (
                   <UserListingCard
