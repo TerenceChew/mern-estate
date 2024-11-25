@@ -499,7 +499,7 @@ export default function CreateListing() {
             </label>
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mt-2">
               <input
-                className="flex-1 border border-solid border-gray-300 rounded-lg p-2.5"
+                className="flex-1 border border-solid border-gray-300 rounded-lg p-2.5 min-w-0"
                 id="images"
                 name="images"
                 type="file"
@@ -512,10 +512,10 @@ export default function CreateListing() {
               />
 
               <button
-                className={`w-28 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg p-2.5 ${
-                  isUploadingFiles
-                    ? "w-32 bg-blue-700 text-white pointer-events-none"
-                    : isValidatingImages || loading
+                className={`self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg py-2.5 px-3.5 sm:px-4 ${
+                  isUploadingFiles || isValidatingImages
+                    ? "bg-blue-700 text-white pointer-events-none py-3 px-4"
+                    : loading
                     ? "pointer-events-none grayscale"
                     : ""
                 }`}
@@ -524,7 +524,11 @@ export default function CreateListing() {
                 onClick={handleUploadBtnClick}
                 disabled={isUploadingFiles || isValidatingImages || loading}
               >
-                {isUploadingFiles ? "UPLOADING..." : "UPLOAD"}
+                {isUploadingFiles
+                  ? "UPLOADING..."
+                  : isValidatingImages
+                  ? "VALIDATING..."
+                  : "UPLOAD"}
               </button>
             </div>
 
@@ -577,11 +581,7 @@ export default function CreateListing() {
               className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
               disabled={loading || isValidatingImages}
             >
-              {isValidatingImages
-                ? "VALIDATING IMAGES..."
-                : loading
-                ? "CREATING LISTING..."
-                : "CREATE LISTING"}
+              CREATE LISTING
             </button>
 
             {submitError && (
