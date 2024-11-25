@@ -256,238 +256,242 @@ export default function CreateListing() {
           className="w-full flex flex-col xl:flex-row xl:flex-wrap gap-2 xl:gap-6"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-col flex-1 gap-2">
-            <input
-              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
-              type="text"
-              id="title"
-              name="title"
-              aria-label="Title"
-              placeholder="Title"
-              minLength="20"
-              maxLength="60"
-              value={formData.title}
-              onChange={handleChange}
-              required
-            />
-            <p className="text-center text-red-600">
-              {validationErrors.title || serverValidationErrors.title}
-            </p>
-            <textarea
-              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3"
-              id="description"
-              name="description"
-              aria-label="Description"
-              placeholder="Description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-            />
-            <p className="text-center text-red-600">
-              {validationErrors.description ||
-                serverValidationErrors.description}
-            </p>
-            <input
-              className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
-              type="text"
-              id="address"
-              name="address"
-              aria-label="Address"
-              placeholder="Address"
-              minLength="15"
-              maxLength="60"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-            <p className="text-center text-red-600">
-              {validationErrors.address || serverValidationErrors.address}
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3.5 xl:gap-5">
-              <div className="flex items-center gap-2">
-                <input
-                  className="w-4 h-4 cursor-pointer"
-                  id="sale"
-                  name="sale"
-                  type="checkbox"
-                  checked={formData.type === "sale"}
-                  onChange={handleChange}
-                />
-                <label className="font-semibold" htmlFor="sale">
-                  Sale
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  className="w-4 h-4 cursor-pointer"
-                  id="rent"
-                  name="rent"
-                  type="checkbox"
-                  checked={formData.type === "rent"}
-                  onChange={handleChange}
-                />
-                <label className="font-semibold" htmlFor="rent">
-                  Rent
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  className="w-4 h-4 cursor-pointer"
-                  id="parking"
-                  name="parking"
-                  type="checkbox"
-                  checked={formData.parking}
-                  onChange={handleChange}
-                />
-                <label className="font-semibold" htmlFor="parking">
-                  Parking
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  className="w-4 h-4 cursor-pointer"
-                  id="furnished"
-                  name="furnished"
-                  type="checkbox"
-                  checked={formData.furnished}
-                  onChange={handleChange}
-                />
-                <label className="font-semibold" htmlFor="furnished">
-                  Furnished
-                </label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <input
-                  className="w-4 h-4 cursor-pointer"
-                  id="offer"
-                  name="offer"
-                  type="checkbox"
-                  checked={formData.offer}
-                  onChange={handleChange}
-                />
-                <label className="font-semibold" htmlFor="offer">
-                  Offer
-                </label>
-              </div>
-            </div>
-
-            <div className="w-full flex flex-col text-center text-red-600">
-              <p>{validationErrors.type || serverValidationErrors.type}</p>
-              <p>
-                {validationErrors.parking || serverValidationErrors.parking}
+          <fieldset disabled={loading}>
+            <div className="flex flex-col flex-1 gap-2">
+              <input
+                className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+                type="text"
+                id="title"
+                name="title"
+                aria-label="Title"
+                placeholder="Title"
+                minLength="20"
+                maxLength="60"
+                value={formData.title}
+                onChange={handleChange}
+                required
+              />
+              <p className="text-center text-red-600">
+                {validationErrors.title || serverValidationErrors.title}
               </p>
-              <p>
-                {validationErrors.furnished || serverValidationErrors.furnished}
+              <textarea
+                className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3"
+                id="description"
+                name="description"
+                aria-label="Description"
+                placeholder="Description"
+                value={formData.description}
+                onChange={handleChange}
+                required
+              />
+              <p className="text-center text-red-600">
+                {validationErrors.description ||
+                  serverValidationErrors.description}
               </p>
-              <p>{validationErrors.offer || serverValidationErrors.offer}</p>
-            </div>
+              <input
+                className="border border-gray-300 focus:outline-gray-400 rounded-lg p-2.5 sm:p-3 autofill:shadow-[inset_0_0_0px_1000px_rgb(255,255,255)]"
+                type="text"
+                id="address"
+                name="address"
+                aria-label="Address"
+                placeholder="Address"
+                minLength="15"
+                maxLength="60"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+              <p className="text-center text-red-600">
+                {validationErrors.address || serverValidationErrors.address}
+              </p>
 
-            <div className="flex flex-wrap items-center gap-5">
-              <div className="flex items-center gap-2.5">
-                <input
-                  className="w-16 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
-                  id="bedrooms"
-                  name="bedrooms"
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={formData.bedrooms.toString()} // A trick to remove leading 0
-                  onChange={handleChange}
-                  required
-                />
-                <label className="font-semibold" htmlFor="bedrooms">
-                  Beds
-                </label>
+              <div className="flex flex-wrap items-center gap-3.5 xl:gap-5">
+                <div className="flex items-center gap-2">
+                  <input
+                    className="w-4 h-4 cursor-pointer"
+                    id="sale"
+                    name="sale"
+                    type="checkbox"
+                    checked={formData.type === "sale"}
+                    onChange={handleChange}
+                  />
+                  <label className="font-semibold" htmlFor="sale">
+                    Sale
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    className="w-4 h-4 cursor-pointer"
+                    id="rent"
+                    name="rent"
+                    type="checkbox"
+                    checked={formData.type === "rent"}
+                    onChange={handleChange}
+                  />
+                  <label className="font-semibold" htmlFor="rent">
+                    Rent
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    className="w-4 h-4 cursor-pointer"
+                    id="parking"
+                    name="parking"
+                    type="checkbox"
+                    checked={formData.parking}
+                    onChange={handleChange}
+                  />
+                  <label className="font-semibold" htmlFor="parking">
+                    Parking
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    className="w-4 h-4 cursor-pointer"
+                    id="furnished"
+                    name="furnished"
+                    type="checkbox"
+                    checked={formData.furnished}
+                    onChange={handleChange}
+                  />
+                  <label className="font-semibold" htmlFor="furnished">
+                    Furnished
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    className="w-4 h-4 cursor-pointer"
+                    id="offer"
+                    name="offer"
+                    type="checkbox"
+                    checked={formData.offer}
+                    onChange={handleChange}
+                  />
+                  <label className="font-semibold" htmlFor="offer">
+                    Offer
+                  </label>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2.5">
-                <input
-                  className="w-16 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
-                  id="bathrooms"
-                  name="bathrooms"
-                  type="number"
-                  min="1"
-                  max="20"
-                  value={formData.bathrooms.toString()} // A trick to remove leading 0
-                  onChange={handleChange}
-                  required
-                />
-                <label className="font-semibold" htmlFor="bathrooms">
-                  Baths
-                </label>
-              </div>
-            </div>
-
-            <div className="w-full flex flex-col text-center text-red-600">
-              <p>
-                {validationErrors.bedrooms || serverValidationErrors.bedrooms}
-              </p>
-              <p>
-                {validationErrors.bathrooms || serverValidationErrors.bathrooms}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-5">
-              <div className="flex items-center gap-2.5">
-                <input
-                  className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
-                  id="regularPrice"
-                  name="regularPrice"
-                  type="number"
-                  min="50"
-                  max="100000000"
-                  value={formData.regularPrice.toString()} // A trick to remove leading 0
-                  onChange={handleChange}
-                  required
-                />
-                <label className="font-semibold" htmlFor="regularPrice">
-                  {`Regular price ${
-                    formData.type === "rent" ? "($/Month)" : ""
-                  }`}
-                </label>
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>{validationErrors.type || serverValidationErrors.type}</p>
+                <p>
+                  {validationErrors.parking || serverValidationErrors.parking}
+                </p>
+                <p>
+                  {validationErrors.furnished ||
+                    serverValidationErrors.furnished}
+                </p>
+                <p>{validationErrors.offer || serverValidationErrors.offer}</p>
               </div>
 
-              {formData.offer && (
+              <div className="flex flex-wrap items-center gap-5">
+                <div className="flex items-center gap-2.5">
+                  <input
+                    className="w-16 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
+                    id="bedrooms"
+                    name="bedrooms"
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={formData.bedrooms.toString()} // A trick to remove leading 0
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className="font-semibold" htmlFor="bedrooms">
+                    Beds
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2.5">
+                  <input
+                    className="w-16 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
+                    id="bathrooms"
+                    name="bathrooms"
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={formData.bathrooms.toString()} // A trick to remove leading 0
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className="font-semibold" htmlFor="bathrooms">
+                    Baths
+                  </label>
+                </div>
+              </div>
+
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>
+                  {validationErrors.bedrooms || serverValidationErrors.bedrooms}
+                </p>
+                <p>
+                  {validationErrors.bathrooms ||
+                    serverValidationErrors.bathrooms}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-5">
                 <div className="flex items-center gap-2.5">
                   <input
                     className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
-                    id="discountPrice"
-                    name="discountPrice"
+                    id="regularPrice"
+                    name="regularPrice"
                     type="number"
-                    min="0"
-                    max={(formData.regularPrice - 1).toString()}
-                    value={
-                      formData.discountPrice
-                        ? formData.discountPrice.toString()
-                        : "0"
-                    } // A trick to remove leading 0
+                    min="50"
+                    max="100000000"
+                    value={formData.regularPrice.toString()} // A trick to remove leading 0
                     onChange={handleChange}
+                    required
                   />
-                  <label className="font-semibold" htmlFor="discountPrice">
-                    {`Discount price ${
+                  <label className="font-semibold" htmlFor="regularPrice">
+                    {`Regular price ${
                       formData.type === "rent" ? "($/Month)" : ""
                     }`}
                   </label>
                 </div>
-              )}
-            </div>
 
-            <div className="w-full flex flex-col text-center text-red-600">
-              <p>
-                {validationErrors.regularPrice ||
-                  serverValidationErrors.regularPrice}
-              </p>
-              <p>
-                {validationErrors.discountPrice ||
-                  serverValidationErrors.discountPrice}
-              </p>
+                {formData.offer && (
+                  <div className="flex items-center gap-2.5">
+                    <input
+                      className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
+                      id="discountPrice"
+                      name="discountPrice"
+                      type="number"
+                      min="0"
+                      max={(formData.regularPrice - 1).toString()}
+                      value={
+                        formData.discountPrice
+                          ? formData.discountPrice.toString()
+                          : "0"
+                      } // A trick to remove leading 0
+                      onChange={handleChange}
+                    />
+                    <label className="font-semibold" htmlFor="discountPrice">
+                      {`Discount price ${
+                        formData.type === "rent" ? "($/Month)" : ""
+                      }`}
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              <div className="w-full flex flex-col text-center text-red-600">
+                <p>
+                  {validationErrors.regularPrice ||
+                    serverValidationErrors.regularPrice}
+                </p>
+                <p>
+                  {validationErrors.discountPrice ||
+                    serverValidationErrors.discountPrice}
+                </p>
+              </div>
             </div>
-          </div>
+          </fieldset>
 
           <div className="flex flex-col flex-1 gap-2">
             <label htmlFor="images">
@@ -504,17 +508,21 @@ export default function CreateListing() {
                 aria-label="Select images to upload"
                 onChange={handleFileInputChange}
                 ref={imageFileInputRef}
+                disabled={isUploadingFiles || loading}
               />
 
               <button
                 className={`w-28 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg p-2.5 ${
                   isUploadingFiles
                     ? "w-32 bg-blue-700 text-white pointer-events-none"
+                    : isValidatingImages || loading
+                    ? "pointer-events-none grayscale"
                     : ""
                 }`}
                 type="button"
                 aria-label="Upload images"
                 onClick={handleUploadBtnClick}
+                disabled={isUploadingFiles || isValidatingImages || loading}
               >
                 {isUploadingFiles ? "UPLOADING..." : "UPLOAD"}
               </button>
@@ -547,9 +555,16 @@ export default function CreateListing() {
                       alt={`Listing image ${index + 1}`}
                     />
                     <button
-                      className="w-full text-red-600 hover:text-white border border-solid border-red-600 hover:bg-red-600 rounded-lg p-1.5 duration-500"
+                      className={`w-full text-red-600 hover:text-white border border-solid border-red-600 hover:bg-red-600 rounded-lg p-1.5 duration-500 ${
+                        isUploadingFiles || isValidatingImages || loading
+                          ? "pointer-events-none grayscale"
+                          : ""
+                      }`}
                       type="button"
                       onClick={() => handleDeleteImage(index)}
+                      disabled={
+                        isUploadingFiles || isValidatingImages || loading
+                      }
                     >
                       DELETE
                     </button>
