@@ -638,7 +638,7 @@ export default function UpdateListing() {
 
               <button
                 className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
-                disabled={loading || isValidatingImages}
+                disabled={isUploadingFiles || isValidatingImages || loading}
               >
                 UPDATE LISTING
               </button>
