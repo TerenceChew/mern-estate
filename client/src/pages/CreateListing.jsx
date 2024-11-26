@@ -513,11 +513,11 @@ export default function CreateListing() {
               />
 
               <button
-                className={`flex justify-center items-center gap-2.5 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-500 rounded-lg py-2.5 ${
+                className={`flex justify-center items-center gap-2.5 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-500 rounded-lg py-2.5 disabled:pointer-events-none ${
                   isUploadingFiles || isValidatingImages
-                    ? "bg-blue-700 text-white pointer-events-none py-3 px-3.5"
+                    ? "bg-blue-700 text-white py-3 px-3.5"
                     : loading
-                    ? "pointer-events-none grayscale px-4 sm:px-5"
+                    ? "grayscale px-4 sm:px-5"
                     : "px-4 sm:px-5"
                 }`}
                 type="button"
@@ -563,11 +563,7 @@ export default function CreateListing() {
                       alt={`Listing image ${index + 1}`}
                     />
                     <button
-                      className={`w-full text-red-600 hover:text-white border border-solid border-red-600 hover:bg-red-600 rounded-lg p-1.5 duration-500 ${
-                        isUploadingFiles || isValidatingImages || loading
-                          ? "pointer-events-none grayscale"
-                          : ""
-                      }`}
+                      className="w-full text-red-600 hover:text-white border border-solid border-red-600 hover:bg-red-600 rounded-lg p-1.5 duration-500 disabled:grayscale disabled:pointer-events-none"
                       type="button"
                       onClick={() => handleDeleteImage(index)}
                       disabled={
