@@ -512,9 +512,9 @@ export default function CreateListing() {
               />
 
               <button
-                className={`self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg py-2.5 px-3.5 sm:px-4 ${
+                className={`self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg py-2.5 px-4 ${
                   isUploadingFiles || isValidatingImages
-                    ? "bg-blue-700 text-white pointer-events-none py-3 px-4"
+                    ? "bg-blue-700 text-white pointer-events-none py-3"
                     : loading
                     ? "pointer-events-none grayscale"
                     : ""
