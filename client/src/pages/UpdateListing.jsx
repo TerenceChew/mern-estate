@@ -640,7 +640,7 @@ export default function UpdateListing() {
                 className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
                 disabled={isUploadingFiles || isValidatingImages || loading}
               >
-                UPDATE LISTING
+                {loading ? "UPDATING LISTING..." : "UPDATE LISTING"}
               </button>
 
               {submitError && (
