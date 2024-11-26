@@ -557,7 +557,7 @@ export default function UpdateListing() {
               </label>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mt-2">
                 <input
-                  className="flex-1 border border-solid border-gray-300 rounded-lg p-2.5"
+                  className="flex-1 border border-solid border-gray-300 rounded-lg p-2.5 min-w-0"
                   id="images"
                   name="images"
                   type="file"
@@ -566,14 +566,14 @@ export default function UpdateListing() {
                   aria-label="Select images to upload"
                   onChange={handleFileInputChange}
                   ref={imageFileInputRef}
-                  disabled={loading}
+                  disabled={isUploadingFiles || loading}
                 />
 
                 <button
-                  className={`w-28 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg p-2.5 ${
-                    isUploadingFiles
-                      ? "w-32 bg-blue-700 text-white pointer-events-none"
-                      : isValidatingImages || loading
+                  className={`self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg py-2.5 px-4 ${
+                    isUploadingFiles || isValidatingImages
+                      ? "bg-blue-700 text-white pointer-events-none py-3"
+                      : loading
                       ? "pointer-events-none grayscale"
                       : ""
                   }`}
@@ -582,7 +582,11 @@ export default function UpdateListing() {
                   onClick={handleUploadBtnClick}
                   disabled={isUploadingFiles || isValidatingImages || loading}
                 >
-                  {isUploadingFiles ? "UPLOADING..." : "UPLOAD"}
+                  {isUploadingFiles
+                    ? "UPLOADING..."
+                    : isValidatingImages
+                    ? "VALIDATING..."
+                    : "UPLOAD"}
                 </button>
               </div>
 
@@ -615,13 +619,15 @@ export default function UpdateListing() {
                       />
                       <button
                         className={`w-full text-red-600 hover:text-white border border-solid border-red-600 hover:bg-red-600 rounded-lg p-1.5 duration-500 ${
-                          isValidatingImages || loading
+                          isUploadingFiles || isValidatingImages || loading
                             ? "pointer-events-none grayscale"
                             : ""
                         }`}
                         type="button"
                         onClick={() => handleDeleteImage(index)}
-                        disabled={isValidatingImages || loading}
+                        disabled={
+                          isUploadingFiles || isValidatingImages || loading
+                        }
                       >
                         DELETE
                       </button>
@@ -634,11 +640,7 @@ export default function UpdateListing() {
                 className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
                 disabled={loading || isValidatingImages}
               >
-                {isValidatingImages
-                  ? "VALIDATING IMAGES..."
-                  : loading
-                  ? "UPDATING LISTING..."
-                  : "UPDATE LISTING"}
+                UPDATE LISTING
               </button>
 
               {submitError && (
