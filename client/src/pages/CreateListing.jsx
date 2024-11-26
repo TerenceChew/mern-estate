@@ -578,7 +578,9 @@ export default function CreateListing() {
             )}
 
             <button
-              className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+              className={`bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:pointer-events-none ${
+                isUploadingFiles || isValidatingImages ? "opacity-80" : ""
+              }`}
               disabled={isUploadingFiles || isValidatingImages || loading}
             >
               {loading ? "CREATING LISTING..." : "CREATE LISTING"}
