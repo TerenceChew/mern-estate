@@ -7,6 +7,7 @@ import {
   uploadImageFileToFirebase,
   deleteImageFileFromFirebase,
 } from "../utils/firebase.storage.js";
+import { CgSpinner } from "react-icons/cg";
 
 export default function CreateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -512,18 +513,21 @@ export default function CreateListing() {
               />
 
               <button
-                className={`self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white duration-500 rounded-lg py-2.5 px-4 ${
+                className={`flex justify-center items-center gap-2.5 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-500 rounded-lg py-2.5 ${
                   isUploadingFiles || isValidatingImages
-                    ? "bg-blue-700 text-white pointer-events-none py-3"
+                    ? "bg-blue-700 text-white pointer-events-none py-3 px-3.5"
                     : loading
-                    ? "pointer-events-none grayscale"
-                    : ""
+                    ? "pointer-events-none grayscale px-4 sm:px-5"
+                    : "px-4 sm:px-5"
                 }`}
                 type="button"
                 aria-label="Upload images"
                 onClick={handleUploadBtnClick}
                 disabled={isUploadingFiles || isValidatingImages || loading}
               >
+                {(isUploadingFiles || isValidatingImages) && (
+                  <CgSpinner className="animate-spin text-2xl" />
+                )}
                 {isUploadingFiles
                   ? "UPLOADING..."
                   : isValidatingImages
