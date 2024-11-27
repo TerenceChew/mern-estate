@@ -571,7 +571,7 @@ export default function UpdateListing() {
                 />
 
                 <button
-                  className={`flex justify-center items-center gap-2.5 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-500 rounded-lg py-2.5 disabled:pointer-events-none ${
+                  className={`flex justify-center items-center gap-2.5 self-center sm:self-stretch border border-solid border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white transition-colors duration-300 rounded-lg py-2.5 disabled:pointer-events-none ${
                     isUploadingFiles || isValidatingImages
                       ? "bg-blue-700 text-white py-3 px-3.5"
                       : loading
@@ -637,11 +637,12 @@ export default function UpdateListing() {
               )}
 
               <button
-                className={`bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:pointer-events-none ${
+                className={`flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-3 disabled:pointer-events-none ${
                   isUploadingFiles || isValidatingImages ? "opacity-80" : ""
                 }`}
                 disabled={isUploadingFiles || isValidatingImages || loading}
               >
+                {loading && <CgSpinner className="animate-spin text-2xl" />}
                 {loading ? "UPDATING LISTING..." : "UPDATE LISTING"}
               </button>
 
