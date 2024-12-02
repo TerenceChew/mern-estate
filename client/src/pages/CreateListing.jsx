@@ -219,7 +219,7 @@ export default function CreateListing() {
           });
 
           setImagesValidationError(
-            "Failed to upload! Make sure each file is an appropriate property image!"
+            "Invalid image(s) found! Make sure each file is an appropriate property image!"
           );
 
           setFormData({
