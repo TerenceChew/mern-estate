@@ -55,6 +55,8 @@ export default function CreateListing() {
   };
   const handleUploadBtnClick = async () => {
     setFileUploadError(null);
+    setImagesValidationError(null);
+    setValidationErrors({ ...validationErrors, imageUrls: "" });
     setIsUploadingFiles(true);
 
     if (
@@ -151,6 +153,8 @@ export default function CreateListing() {
     e.preventDefault();
 
     setServerValidationErrors({});
+    setImagesValidationError(null);
+    setFileUploadError(null);
     setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
