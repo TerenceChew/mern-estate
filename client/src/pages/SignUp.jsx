@@ -174,7 +174,7 @@ export default function SignUp() {
           </p>
           <button
             disabled={loading}
-            className="flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:pointer-events-none"
+            className="flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-3 disabled:pointer-events-none"
           >
             {loading && <CgSpinner className="animate-spin text-2xl" />}
             {loading ? "SIGNING UP..." : "SIGN UP"}
