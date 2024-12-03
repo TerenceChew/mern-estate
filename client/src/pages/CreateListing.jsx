@@ -440,10 +440,10 @@ export default function CreateListing() {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-5">
+              <div className="max-w-[250px] flex flex-wrap items-center gap-5">
                 <div className="flex items-center gap-2.5">
                   <input
-                    className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
+                    className="w-32 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
                     id="regularPrice"
                     name="regularPrice"
                     type="number"
@@ -463,7 +463,7 @@ export default function CreateListing() {
                 {formData.offer && (
                   <div className="flex items-center gap-2.5">
                     <input
-                      className="w-24 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
+                      className="w-32 p-2 rounded-lg border border-gray-300 focus:outline-gray-400"
                       id="discountPrice"
                       name="discountPrice"
                       type="number"
