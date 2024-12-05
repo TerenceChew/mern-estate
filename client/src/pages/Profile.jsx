@@ -368,14 +368,12 @@ export default function Profile() {
             >
               {loading ? "LOADING..." : "UPDATE"}
             </button>
-            <Link to="/create-listing">
-              <button
-                type="button"
-                className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg p-2.5 sm:p-3"
-                aria-label="Go to create listing page"
-              >
-                CREATE LISTING
-              </button>
+            <Link
+              to="/create-listing"
+              className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg p-2.5 sm:p-3 text-center"
+              aria-label="Go to create listing page"
+            >
+              CREATE LISTING
             </Link>
           </form>
 

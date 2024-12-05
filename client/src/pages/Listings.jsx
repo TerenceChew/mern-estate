@@ -116,8 +116,11 @@ export default function Listings() {
               ) : (
                 <p className="">
                   No listings. Create your first listing{" "}
-                  <Link to="/create-listing">
-                    <span className="text-blue-700 hover:underline">here</span>
+                  <Link
+                    to="/create-listing"
+                    className="text-blue-700 hover:underline"
+                  >
+                    here
                   </Link>
                   !
                 </p>
