@@ -69,8 +69,6 @@ export default function UpdateListing() {
       imageFiles.length > 0 &&
       imageFiles.length + formData.imageUrls.length < 7
     ) {
-      setShouldValidateImages(true);
-
       const promises = [];
       const fileNames = [];
 
@@ -82,18 +80,29 @@ export default function UpdateListing() {
       });
 
       try {
-        const imageUrls = await Promise.all(promises);
+        const results = await Promise.allSettled(promises);
+        const validImageUrls = results
+          .filter((obj) => obj.status === "fulfilled")
+          .map((obj) => obj.value);
+        const validFileNames = validImageUrls.map((url) =>
+          extractImageFileNameFromUrl(url)
+        );
 
-        setNewImageUrls(imageUrls);
+        setShouldValidateImages(true);
+        setNewImageUrls(validImageUrls);
         setFormData({
           ...formData,
-          imageUrls: formData.imageUrls.concat(imageUrls),
+          imageUrls: formData.imageUrls.concat(validImageUrls),
         });
-        setImageFileNames([...imageFileNames, ...fileNames]);
-        setFileUploadError(null);
+        setImageFileNames([...imageFileNames, ...validFileNames]);
+        setFileUploadError(
+          validFileNames.length !== fileNames.length
+            ? "Invalid image(s) found! Make sure each image is less than 2MB!"
+            : null
+        );
       } catch (err) {
         setFileUploadError(
-          "Failed to upload! Make sure each image is less than 2MB!"
+          "An error has occurred! Upload might not be complete!"
         );
       }
     } else {
