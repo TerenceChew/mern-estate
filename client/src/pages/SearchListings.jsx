@@ -372,7 +372,7 @@ export default function SearchListings() {
                   name="minPrice"
                   type="number"
                   min="0"
-                  max={(formData.maxPrice - 1).toString()}
+                  max={Math.max(0, formData.maxPrice - 1).toString()}
                   value={formData.minPrice.toString()} // A trick to remove leading 0
                   onChange={handleChange}
                 />
