@@ -18,10 +18,10 @@ import {
   signOutFailure,
 } from "../redux/user/userSlice";
 import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
-import { Link } from "react-router-dom";
 import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 import { extractImageFileNameFromUrl } from "../utils/utilities.js";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { CgSpinner } from "react-icons/cg";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -427,19 +427,11 @@ export default function Profile() {
             </p>
             <button
               disabled={loading}
-              className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none mb-2"
+              className="flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-3 disabled:pointer-events-none"
             >
-              {loading ? "LOADING..." : "UPDATE"}
+              {loading && <CgSpinner className="animate-spin text-2xl" />}
+              {loading ? "UPDATING..." : "UPDATE"}
             </button>
-            <Link to="/create-listing">
-              <button
-                type="button"
-                className="w-full bg-green-700 hover:bg-green-800 text-white rounded-lg p-2.5 sm:p-3"
-                aria-label="Go to create listing page"
-              >
-                CREATE LISTING
-              </button>
-            </Link>
           </form>
 
           <div className="w-full flex justify-between">

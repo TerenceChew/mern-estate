@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicListingCard from "../components/PublicListingCard";
+import { CgSpinner } from "react-icons/cg";
 
 export default function SearchListings() {
   const [formData, setFormData] = useState({
@@ -431,9 +432,10 @@ export default function SearchListings() {
 
             <button
               disabled={loading}
-              className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+              className="flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-3 disabled:pointer-events-none"
             >
-              {loading ? "LOADING..." : "SEARCH"}
+              {loading && <CgSpinner className="animate-spin text-2xl" />}
+              {loading ? "SEARCHING..." : "SEARCH"}
             </button>
           </form>
         </div>
