@@ -9,7 +9,7 @@ const generateEmailHref = (email, subject, message) => {
 };
 
 const extractImageFileNameFromUrl = (url) => {
-  const fileNameRegex = /[^\/]+(?=\?[^\/]*$)/;
+  const fileNameRegex = /([\w-]+)(\.[\w-]+)+(?!.*\/)/;
 
   return url.match(fileNameRegex)[0];
 };
