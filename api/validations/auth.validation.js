@@ -12,10 +12,10 @@ const validationResultHandler = (req, res, next) => {
 
 export const validateSignUp = [
   body("username")
+    .trim()
     .isString()
     .withMessage("Username must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Username cannot be empty!")
     .bail()
@@ -25,20 +25,20 @@ export const validateSignUp = [
     .isLength({ max: 20 })
     .withMessage("Username cannot be more than 20 characters!"),
   body("email")
+    .trim()
     .isString()
     .withMessage("Email must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Email cannot be empty!")
     .bail()
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
+    .trim()
     .isString()
     .withMessage("Password must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Password cannot be empty!")
     .bail()
@@ -57,20 +57,20 @@ export const validateSignUp = [
 
 export const validateSignIn = [
   body("email")
+    .trim()
     .isString()
     .withMessage("Email must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Email cannot be empty!")
     .bail()
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
+    .trim()
     .isString()
     .withMessage("Password must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Password cannot be empty!"),
   validationResultHandler,
