@@ -2,10 +2,10 @@ import { body, validationResult } from "express-validator";
 
 export const validateUpdateUser = [
   body("username")
+    .trim()
     .isString()
     .withMessage("Username must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Username cannot be empty!")
     .bail()
@@ -15,20 +15,20 @@ export const validateUpdateUser = [
     .isLength({ max: 20 })
     .withMessage("Username cannot be more than 20 characters!"),
   body("email")
+    .trim()
     .isString()
     .withMessage("Email must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Email cannot be empty!")
     .bail()
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
+    .trim()
     .isString()
     .withMessage("Password must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Password cannot be empty!")
     .bail()
@@ -43,10 +43,10 @@ export const validateUpdateUser = [
       "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!"
     ),
   body("passwordConfirmation")
+    .trim()
     .isString()
     .withMessage("Password confirmation must be a string!")
     .bail()
-    .trim()
     .notEmpty()
     .withMessage("Password confirmation cannot be empty!")
     .bail()
