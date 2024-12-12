@@ -333,6 +333,9 @@ export const validateSearchListings = [
     .isInt({ min: 0 })
     .withMessage("Min price cannot be lower than 0!")
     .bail()
+    .isInt({ max: 100000000 })
+    .withMessage("Min price cannot be more than 100,000,000!")
+    .bail()
     .custom((value, { req }) => {
       const { maxPrice } = req.query;
 
@@ -346,6 +349,9 @@ export const validateSearchListings = [
     .optional()
     .isInt()
     .withMessage("Invalid max price value. Max price must be a number!")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Max price cannot be lower than 0!")
     .bail()
     .isInt({ max: 100000000 })
     .withMessage("Max price cannot be more than 100,000,000!")
