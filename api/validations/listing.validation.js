@@ -125,7 +125,10 @@ const validateCreateOrUpdateListing = [
     .withMessage("Description cannot be empty!")
     .bail()
     .isLength({ min: 50 })
-    .withMessage("Description must be at least 50 characters!"),
+    .withMessage("Description must be at least 50 characters!")
+    .bail()
+    .isLength({ max: 2000 })
+    .withMessage("Description cannot be more than 2,000 characters!"),
   body("address")
     .trim()
     .isString()
