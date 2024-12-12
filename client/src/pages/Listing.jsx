@@ -196,7 +196,9 @@ export default function Listing() {
                 <h2 className="text-2xl md:text-3xl font-medium mt-4 mb-3">
                   Description
                 </h2>
-                <p className="text-base text-gray-600">{listing.description}</p>
+                <p className="text-base text-gray-600 whitespace-pre-wrap">
+                  {listing.description}
+                </p>
               </div>
 
               {currentUser &&
