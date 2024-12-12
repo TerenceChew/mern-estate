@@ -274,7 +274,9 @@ export const validateSearchListings = [
     .trim()
     .isString()
     .withMessage("Search term must be a string!")
-    .bail(),
+    .bail()
+    .isLength({ max: 100 })
+    .withMessage("Search term cannot be more than 100 characters!"),
   query("type")
     .optional()
     .trim()
