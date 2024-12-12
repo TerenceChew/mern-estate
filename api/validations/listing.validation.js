@@ -327,6 +327,7 @@ export const validateSearchListings = [
     ),
   query("minPrice")
     .optional()
+    .trim()
     .isInt()
     .withMessage("Invalid min price value. Min price must be a number!")
     .bail()
@@ -347,6 +348,7 @@ export const validateSearchListings = [
     }),
   query("maxPrice")
     .optional()
+    .trim()
     .isInt()
     .withMessage("Invalid max price value. Max price must be a number!")
     .bail()
@@ -392,15 +394,16 @@ export const validateSearchListings = [
   query("startIndex")
     .optional()
     .trim()
-    .isString()
-    .withMessage("Start index must be a string!")
+    .isInt()
+    .withMessage("Invalid start index value. Start index must be a number!")
+    .bail()
+    .isInt({ min: 0 })
+    .withMessage("Start index cannot be lower than 0!")
+    .bail()
+    .isInt({ max: 10000 })
+    .withMessage("Start index cannot be more than 10,000!")
     .bail()
     .notEmpty()
-    .withMessage("Start index cannot be empty!")
-    .bail()
-    .isInt()
-    .withMessage(
-      "Invalid start index value. Start index can only contain numbers!"
-    ),
+    .withMessage("Start index cannot be empty!"),
   validationResultHandler,
 ];
