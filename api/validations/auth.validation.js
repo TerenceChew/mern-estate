@@ -35,7 +35,6 @@ export const validateSignUp = [
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
-    .trim()
     .isString()
     .withMessage("Password must be a string!")
     .bail()
@@ -48,7 +47,15 @@ export const validateSignUp = [
     .isLength({ max: 16 })
     .withMessage("Password cannot be more than 16 characters!")
     .bail()
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/)
+    .custom((value) => {
+      if (value.match(/\s+/g)) {
+        throw new Error("Password cannot contain spaces!");
+      }
+
+      return true;
+    })
+    .bail()
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[^ \s]{8,16}$/)
     .withMessage(
       "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!"
     ),
