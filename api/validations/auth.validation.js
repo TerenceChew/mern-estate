@@ -72,6 +72,9 @@ export const validateSignIn = [
     .withMessage("Password must be a string!")
     .bail()
     .notEmpty()
-    .withMessage("Password cannot be empty!"),
+    .withMessage("Password cannot be empty!")
+    .bail()
+    .isLength({ max: 16 })
+    .withMessage("Password cannot be more than 16 characters!"),
   validationResultHandler,
 ];
