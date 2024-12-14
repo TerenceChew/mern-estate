@@ -74,7 +74,6 @@ export const validateSignIn = [
     .isEmail()
     .withMessage("Please enter a valid email!"),
   body("password")
-    .trim()
     .isString()
     .withMessage("Password must be a string!")
     .bail()
