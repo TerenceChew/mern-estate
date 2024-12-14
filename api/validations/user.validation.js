@@ -50,7 +50,6 @@ export const validateUpdateUser = [
       "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!"
     ),
   body("passwordConfirmation")
-    .trim()
     .isString()
     .withMessage("Password confirmation must be a string!")
     .bail()
