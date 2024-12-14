@@ -57,6 +57,9 @@ export const validateUpdateUser = [
     .notEmpty()
     .withMessage("Password confirmation cannot be empty!")
     .bail()
+    .isLength({ max: 16 })
+    .withMessage("Password cannot be more than 16 characters!")
+    .bail()
     .custom((value, { req }) => {
       const { password } = req.body;
 
