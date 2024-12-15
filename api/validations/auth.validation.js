@@ -3,11 +3,10 @@ import { validationResultHandler } from "./utilities.js";
 
 export const validateSignUp = [
   body("username")
+    .trim()
     .isString()
     .withMessage("Username must be a string!")
     .bail()
-    .trim()
-    .escape()
     .notEmpty()
     .withMessage("Username cannot be empty!")
     .bail()
@@ -17,11 +16,10 @@ export const validateSignUp = [
     .isLength({ max: 20 })
     .withMessage("Username cannot be more than 20 characters!"),
   body("email")
+    .trim()
     .isString()
     .withMessage("Email must be a string!")
     .bail()
-    .trim()
-    .escape()
     .notEmpty()
     .withMessage("Email cannot be empty!")
     .bail()
@@ -31,8 +29,6 @@ export const validateSignUp = [
     .isString()
     .withMessage("Password must be a string!")
     .bail()
-    .trim()
-    .escape()
     .notEmpty()
     .withMessage("Password cannot be empty!")
     .bail()
@@ -42,7 +38,15 @@ export const validateSignUp = [
     .isLength({ max: 16 })
     .withMessage("Password cannot be more than 16 characters!")
     .bail()
-    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/)
+    .custom((value) => {
+      if (value.match(/\s+/g)) {
+        throw new Error("Password cannot contain spaces!");
+      }
+
+      return true;
+    })
+    .bail()
+    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[^ \s]{8,16}$/)
     .withMessage(
       "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!"
     ),
@@ -51,11 +55,10 @@ export const validateSignUp = [
 
 export const validateSignIn = [
   body("email")
+    .trim()
     .isString()
     .withMessage("Email must be a string!")
     .bail()
-    .trim()
-    .escape()
     .notEmpty()
     .withMessage("Email cannot be empty!")
     .bail()
@@ -65,9 +68,10 @@ export const validateSignIn = [
     .isString()
     .withMessage("Password must be a string!")
     .bail()
-    .trim()
-    .escape()
     .notEmpty()
-    .withMessage("Password cannot be empty!"),
+    .withMessage("Password cannot be empty!")
+    .bail()
+    .isLength({ max: 16 })
+    .withMessage("Password cannot be more than 16 characters!"),
   validationResultHandler,
 ];

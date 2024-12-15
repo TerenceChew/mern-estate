@@ -9,6 +9,7 @@ import {
 } from "../redux/user/userSlice.js";
 import OAuth from "../components/OAuth.jsx";
 import { validateSignIn } from "../validations/auth.validation.js";
+import { CgSpinner } from "react-icons/cg";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -124,17 +125,18 @@ export default function SignIn() {
           </p>
           <button
             disabled={loading}
-            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none mb-2"
+            className="flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-3 disabled:pointer-events-none mb-2"
           >
-            {loading ? "LOADING..." : "SIGN IN"}
+            {loading && <CgSpinner className="animate-spin text-2xl" />}
+            {loading ? "SIGNING IN..." : "SIGN IN"}
           </button>
           <OAuth />
         </form>
 
         <div className="flex gap-2">
           <p>Don&apos;t have an account?</p>
-          <Link to="/sign-up">
-            <span className="text-blue-700 hover:underline">Sign up</span>
+          <Link to="/sign-up" className="text-blue-700 hover:underline">
+            Sign up
           </Link>
         </div>
 
