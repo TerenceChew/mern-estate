@@ -32,6 +32,8 @@ export const handleDeleteListing = async (req, res, next) => {
 
     const remainingListings = await Listing.find({
       userRef: listingToDelete.userRef,
+    }).sort({
+      updatedAt: "desc",
     });
 
     res.status(200).json(remainingListings);

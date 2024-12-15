@@ -8,6 +8,7 @@ import {
 } from "../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { validateSignUp } from "../validations/auth.validation.js";
+import { CgSpinner } from "react-icons/cg";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -147,9 +148,10 @@ export default function SignUp() {
           </p>
           <button
             disabled={loading}
-            className="bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-2.5 sm:p-3 disabled:opacity-80 disabled:pointer-events-none"
+            className="flex justify-center items-center gap-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-lg p-3 disabled:pointer-events-none"
           >
-            {loading ? "LOADING..." : "SIGN UP"}
+            {loading && <CgSpinner className="animate-spin text-2xl" />}
+            {loading ? "SIGNING UP..." : "SIGN UP"}
           </button>
         </form>
 
