@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { generateEmailHref } from "../utils/utilities";
+import PropTypes from "prop-types";
 
 export default function ContactLandlord({ listing }) {
   const { title, userRef } = listing;
@@ -22,7 +23,7 @@ export default function ContactLandlord({ listing }) {
         if (res.ok) {
           setLandlord(data);
         } else {
-          setError(data.message);
+          setError(data.message || "Failed to get landlord data!");
           setLandlord(null);
         }
       } catch (err) {
@@ -32,7 +33,7 @@ export default function ContactLandlord({ listing }) {
     };
 
     getLandlord();
-  }, []);
+  }, [userRef]);
 
   return (
     <div className="mt-3">
@@ -75,3 +76,7 @@ export default function ContactLandlord({ listing }) {
     </div>
   );
 }
+
+ContactLandlord.propTypes = {
+  listing: PropTypes.object.isRequired,
+};

@@ -47,10 +47,10 @@ export default function Listings() {
 
         setListings(data);
       } else {
-        setError(data.message);
+        setError(data.message || "Failed to delete listing");
       }
     } catch (err) {
-      setError("Failed to handle delete listing");
+      setError("Failed to delete listing");
     }
 
     setDeleteRequest({
@@ -77,7 +77,7 @@ export default function Listings() {
         if (res.ok) {
           setListings(data);
         } else {
-          setError(data.message);
+          setError(data.message || "Failed to get listings data");
           setListings([]);
         }
       } catch (err) {
@@ -87,7 +87,7 @@ export default function Listings() {
     };
 
     getListingsData();
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -131,8 +131,11 @@ export default function Listings() {
               ) : (
                 <p className="">
                   No listings. Create your first listing{" "}
-                  <Link to="/create-listing">
-                    <span className="text-blue-700 hover:underline">here</span>
+                  <Link
+                    to="/create-listing"
+                    className="text-blue-700 hover:underline"
+                  >
+                    here
                   </Link>
                   !
                 </p>

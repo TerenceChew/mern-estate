@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import PublicListingCard from "../components/PublicListingCard";
+import { validateSearchListings } from "../validations/listing.validation.js";
 import { CgSpinner } from "react-icons/cg";
 
 export default function SearchListings() {
@@ -15,6 +16,7 @@ export default function SearchListings() {
     sort: "createdAt",
     order: "desc",
   });
+  const formDataRef = useRef(formData);
   const [listings, setListings] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -23,73 +25,7 @@ export default function SearchListings() {
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const navigate = useNavigate();
-
-  // Validation
-  const validate = (formData) => {
-    const errors = {};
-    const {
-      searchTerm,
-      type,
-      offer,
-      parking,
-      furnished,
-      minPrice,
-      maxPrice,
-      sort,
-      order,
-    } = formData;
-
-    if (typeof searchTerm !== "string") {
-      errors.searchTerm = "Search term must be a string!";
-    }
-
-    if (!["all", "sale", "rent"].includes(type)) {
-      errors.type =
-        "Invalid type value. Type must be 'all', 'sale', or 'rent'!";
-    }
-
-    if (typeof offer !== "boolean") {
-      errors.offer =
-        "Invalid offer value. Offer can only be checked or unchecked!";
-    }
-
-    if (typeof parking !== "boolean") {
-      errors.parking =
-        "Invalid parking value. Parking can only be checked or unchecked!";
-    }
-
-    if (typeof furnished !== "boolean") {
-      errors.furnished =
-        "Invalid furnished value. Furnished can only be checked or unchecked!";
-    }
-
-    if (!Number.isInteger(minPrice)) {
-      errors.minPrice = "Please enter a min price!";
-    } else if (minPrice < 0) {
-      errors.minPrice = "Min price cannot be lower than 0!";
-    } else if (minPrice >= maxPrice) {
-      errors.minPrice = "Min price must be less than max price!";
-    }
-
-    if (!Number.isInteger(maxPrice)) {
-      errors.maxPrice = "Please enter a max price!";
-    } else if (maxPrice <= minPrice) {
-      errors.maxPrice = "Max price must be more than min price!";
-    } else if (maxPrice > 100000000) {
-      errors.maxPrice = "Max price cannot exceed 100,000,000!";
-    }
-
-    if (!["regularPrice", "createdAt"].includes(sort)) {
-      errors.sort =
-        "Invalid sort value. Sort must be 'regularPrice' or 'createdAt'!";
-    }
-
-    if (!["asc", "desc"].includes(order)) {
-      errors.order = "Invalid order value. Order must be 'asc' or 'desc'!";
-    }
-
-    return errors;
-  };
+  const location = useLocation();
 
   // Handler functions
   const handleChange = (e) => {
@@ -130,7 +66,7 @@ export default function SearchListings() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateSearchListings(formData));
     setSubmitRequested(true);
   };
   const handleShowMoreClick = () => {
@@ -148,7 +84,7 @@ export default function SearchListings() {
 
         if (res.ok) {
           setListings([...listings, ...data.listings]);
-          setShowMore(data.remainingListings > 0);
+          setShowMore(data.numOfRemainingListings > 0);
         } else {
           setError(data.message);
           setListings([]);
@@ -163,6 +99,10 @@ export default function SearchListings() {
   };
 
   // Side effects
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get("searchTerm") || "";
@@ -197,7 +137,7 @@ export default function SearchListings() {
 
         if (res.ok) {
           setListings(data.listings);
-          setShowMore(data.remainingListings > 0);
+          setShowMore(data.numOfRemainingListings > 0);
         } else if (res.status === 422) {
           const errors = {};
 
@@ -214,7 +154,6 @@ export default function SearchListings() {
         setError("Failed to get listings data");
         setListings([]);
       }
-
       setLoading(false);
     };
 
@@ -224,15 +163,15 @@ export default function SearchListings() {
   useEffect(() => {
     if (submitRequested && !Object.keys(validationErrors).length) {
       const searchParams = new URLSearchParams();
-      for (const prop in formData) {
-        searchParams.set(prop, formData[prop]);
+      for (const prop in formDataRef.current) {
+        searchParams.set(prop, formDataRef.current[prop]);
       }
       searchParams.set("startIndex", 0);
       const newQueryString = searchParams.toString();
 
       navigate(`/search?${newQueryString}`);
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, navigate]);
 
   return (
     <main className="bg-gray-50">

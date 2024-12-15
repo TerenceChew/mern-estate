@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   resetUser,
@@ -7,6 +7,7 @@ import {
   signUpFailure,
 } from "../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { validateSignUp } from "../validations/auth.validation.js";
 import { CgSpinner } from "react-icons/cg";
 
 export default function SignUp() {
@@ -15,44 +16,13 @@ export default function SignUp() {
     email: "",
     password: "",
   });
+  const formDataRef = useRef(formData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.user);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
-
-  // Validation
-  const validate = (formData) => {
-    const errors = {};
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
-
-    if (!formData.username) {
-      errors.username = "Please enter a valid username!";
-    } else if (formData.username.length < 5) {
-      errors.username = "Username must be at least 5 characters!";
-    } else if (formData.username.length > 20) {
-      errors.username = "Username cannot be more than 20 characters!";
-    }
-
-    if (!formData.email || !emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email!";
-    }
-
-    if (!formData.password) {
-      errors.password = "Please enter a valid password!";
-    } else if (formData.password.length < 8) {
-      errors.password = "Password must be at least 8 characters!";
-    } else if (formData.password.length > 16) {
-      errors.password = "Password cannot be more than 16 characters!";
-    } else if (!passwordRegex.test(formData.password)) {
-      errors.password =
-        "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!";
-    }
-
-    return errors;
-  };
 
   // Handler functions
   const handleChange = (e) => {
@@ -67,14 +37,14 @@ export default function SignUp() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateSignUp(formData));
     setSubmitRequested(true);
   };
 
   // Side effects
   useEffect(() => {
     dispatch(resetUser());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const makeSignUpRequest = async () => {
@@ -83,7 +53,7 @@ export default function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataRef.current),
       });
 
       if (res.ok) {
@@ -118,7 +88,11 @@ export default function SignUp() {
         dispatch(signUpFailure("Failed to handle submit for sign up"));
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, dispatch, navigate]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <main className="flex justify-center py-10">
@@ -183,8 +157,8 @@ export default function SignUp() {
 
         <div className="flex gap-2">
           <p>Have an account?</p>
-          <Link to="/sign-in">
-            <span className="text-blue-700 hover:underline">Sign in</span>
+          <Link to="/sign-in" className="text-blue-700 hover:underline">
+            Sign in
           </Link>
         </div>
 

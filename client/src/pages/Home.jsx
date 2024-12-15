@@ -34,16 +34,17 @@ export default function Home() {
           );
           setSwiperImgs(coverImgs);
         } else {
-          setError({
+          setError((error) => ({
             ...error,
-            listingsWithOffer: data.message,
-          });
+            listingsWithOffer:
+              data.message || "Failed to fetch listings with offer",
+          }));
         }
       } catch (err) {
-        setError({
+        setError((error) => ({
           ...error,
-          listingsWithOffer: "Failed to fetch listings with offer data",
-        });
+          listingsWithOffer: "Failed to fetch listings with offer",
+        }));
       }
     };
     const fetchListingsForRent = async () => {
@@ -54,16 +55,17 @@ export default function Home() {
         if (res.ok) {
           setListingsForRent(data.listings);
         } else {
-          setError({
+          setError((error) => ({
             ...error,
-            listingsForRent: data.message,
-          });
+            listingsForRent:
+              data.message || "Failed to fetch listings for rent",
+          }));
         }
       } catch (err) {
-        setError({
+        setError((error) => ({
           ...error,
-          listingsForRent: "Failed to fetch listings for rent data",
-        });
+          listingsForRent: "Failed to fetch listings for rent",
+        }));
       }
     };
     const fetchListingsForSale = async () => {
@@ -74,16 +76,17 @@ export default function Home() {
         if (res.ok) {
           setListingsForSale(data.listings);
         } else {
-          setError({
+          setError((error) => ({
             ...error,
-            listingsForSale: data.message,
-          });
+            listingsForSale:
+              data.message || "Failed to fetch listings for sale",
+          }));
         }
       } catch (err) {
-        setError({
+        setError((error) => ({
           ...error,
-          listingsForSale: "Failed to fetch listings for sale data",
-        });
+          listingsForSale: "Failed to fetch listings for sale",
+        }));
       }
     };
 
@@ -125,7 +128,7 @@ export default function Home() {
             </p>
 
             <Link to="/search" className="w-max text-blue-700 hover:underline">
-              Let's start now!
+              Let&apos;s start now!
             </Link>
           </div>
         </section>

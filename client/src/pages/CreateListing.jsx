@@ -5,7 +5,10 @@ import {
 } from "../utils/utilities";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { validate, validateImages } from "../validations/listing.validation.js";
+import {
+  validateCreateOrUpdateListing,
+  validateListingImages,
+} from "../validations/listing.validation.js";
 import {
   uploadImageFileToFirebase,
   deleteImageFileFromFirebase,
@@ -29,6 +32,7 @@ export default function CreateListing() {
     discountPrice: null,
     imageUrls: [],
   });
+  const formDataRef = useRef(formData);
   const [isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [fileUploadError, setFileUploadError] = useState(null);
   const [submitError, setSubmitError] = useState(null);
@@ -164,14 +168,18 @@ export default function CreateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setValidationErrors(validateCreateOrUpdateListing(formData));
     setServerValidationErrors({});
     setImagesValidationError(null);
     setFileUploadError(null);
-    setValidationErrors(validate(formData));
     setSubmitRequested(true);
   };
 
   // Side effects
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
   useEffect(() => {
     const makeCreateListingRequest = async () => {
       const res = await fetch("/api/listing/create", {
@@ -179,7 +187,10 @@ export default function CreateListing() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+        body: JSON.stringify({
+          ...formDataRef.current,
+          userRef: currentUser._id,
+        }),
       });
       const data = await res.json();
 
@@ -195,7 +206,7 @@ export default function CreateListing() {
 
         setServerValidationErrors(errors);
       } else {
-        setSubmitError(data.message);
+        setSubmitError(data.message || "Failed to create listing!");
       }
 
       setLoading(false);
@@ -206,10 +217,10 @@ export default function CreateListing() {
         setLoading(true);
         makeCreateListingRequest();
       } catch (err) {
-        setSubmitError("Failed to handle submit for create listing");
+        setSubmitError("Failed to create listing!");
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, currentUser._id, submitRequested, navigate]);
 
   useEffect(() => {
     const checkAndHandleImagesValidity = async () => {
@@ -217,10 +228,11 @@ export default function CreateListing() {
       setImagesValidationError(null);
 
       try {
-        const result = await validateImages(newImageUrls);
+        const result = await validateListingImages(newImageUrls);
 
         if (result.includes("Invalid")) {
-          const validImagesLength = formData.imageUrls.length - result.length;
+          const validImagesLength =
+            formDataRef.current.imageUrls.length - result.length;
 
           result.forEach((res, idx) => {
             if (res === "Invalid") {
@@ -234,14 +246,14 @@ export default function CreateListing() {
             "Invalid image(s) found! Make sure each file is an appropriate property image!"
           );
 
-          setFormData({
+          setFormData((formData) => ({
             ...formData,
             imageUrls: formData.imageUrls.filter(
               (_, idx) =>
                 idx < validImagesLength ||
                 result[idx - validImagesLength] === "Valid"
             ),
-          });
+          }));
           setImageFileNames(
             imageFileNames.filter(
               (_, idx) =>
@@ -252,17 +264,17 @@ export default function CreateListing() {
         }
         setNewImageUrls([]);
       } catch (err) {
-        console.log("Failed to check and handle images validity!");
+        console.error("Failed to check and handle images validity!");
       }
 
       setIsValidatingImages(false);
       setShouldValidateImages(false);
     };
 
-    if (shouldValidateImages && formData.imageUrls.length) {
+    if (shouldValidateImages && formDataRef.current.imageUrls.length) {
       checkAndHandleImagesValidity();
     }
-  }, [formData.imageUrls]);
+  }, [imageFileNames, newImageUrls, shouldValidateImages]);
 
   return (
     <main className="min-h-dvh flex justify-center py-10 bg-gray-50">

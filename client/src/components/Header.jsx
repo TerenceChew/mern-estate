@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const location = useLocation();
 
   // Handler functions
   const handleChange = (e) => {
@@ -68,10 +69,11 @@ export default function Header() {
 
       <nav className="flex justify-between items-center gap-7 sm:gap-6 lg:gap-8 text-sm sm:text-base">
         {currentUser && (
-          <Link to={`/listings/${currentUser._id}`}>
-            <button className="text-slate-700 hover:underline">
-              My Listings
-            </button>
+          <Link
+            to={`/listings/${currentUser._id}`}
+            className="text-slate-700 hover:underline"
+          >
+            My Listings
           </Link>
         )}
 
@@ -84,8 +86,8 @@ export default function Header() {
             />
           </Link>
         ) : (
-          <Link to="/sign-in">
-            <button className="text-slate-700 hover:underline">Sign In</button>
+          <Link to="/sign-in" className="text-slate-700 hover:underline">
+            Sign In
           </Link>
         )}
       </nav>

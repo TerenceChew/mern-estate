@@ -1,7 +1,7 @@
-export const validate = (formData) => {
+const validateCreateOrUpdateListing = (formData) => {
   const errors = {};
   const urlRegex =
-    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,10}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
   const {
     title,
     description,
@@ -100,7 +100,7 @@ export const validate = (formData) => {
   return errors;
 };
 
-export const validateImages = (imgUrlsArr) => {
+const validateListingImages = (imgUrlsArr) => {
   const makeClarifaiApiCall = (imgUrl) => {
     // Your PAT (Personal Access Token) can be found in the portal under Authentification
     const PAT = import.meta.env.VITE_CLARIFAI_PAT;
@@ -187,4 +187,75 @@ export const validateImages = (imgUrlsArr) => {
   });
 
   return Promise.all(validatedImgUrls).then((results) => results);
+};
+
+const validateSearchListings = (formData) => {
+  const errors = {};
+  const {
+    searchTerm,
+    type,
+    offer,
+    parking,
+    furnished,
+    minPrice,
+    maxPrice,
+    sort,
+    order,
+  } = formData;
+
+  if (typeof searchTerm !== "string") {
+    errors.searchTerm = "Search term must be a string!";
+  }
+
+  if (!["all", "sale", "rent"].includes(type)) {
+    errors.type = "Invalid type value. Type must be 'all', 'sale', or 'rent'!";
+  }
+
+  if (typeof offer !== "boolean") {
+    errors.offer =
+      "Invalid offer value. Offer can only be checked or unchecked!";
+  }
+
+  if (typeof parking !== "boolean") {
+    errors.parking =
+      "Invalid parking value. Parking can only be checked or unchecked!";
+  }
+
+  if (typeof furnished !== "boolean") {
+    errors.furnished =
+      "Invalid furnished value. Furnished can only be checked or unchecked!";
+  }
+
+  if (!Number.isInteger(minPrice)) {
+    errors.minPrice = "Please enter a min price!";
+  } else if (minPrice < 0) {
+    errors.minPrice = "Min price cannot be lower than 0!";
+  } else if (minPrice >= maxPrice) {
+    errors.minPrice = "Min price must be less than max price!";
+  }
+
+  if (!Number.isInteger(maxPrice)) {
+    errors.maxPrice = "Please enter a max price!";
+  } else if (maxPrice <= minPrice) {
+    errors.maxPrice = "Max price must be more than min price!";
+  } else if (maxPrice > 100000000) {
+    errors.maxPrice = "Max price cannot exceed 100,000,000!";
+  }
+
+  if (!["regularPrice", "createdAt"].includes(sort)) {
+    errors.sort =
+      "Invalid sort value. Sort must be 'regularPrice' or 'createdAt'!";
+  }
+
+  if (!["asc", "desc"].includes(order)) {
+    errors.order = "Invalid order value. Order must be 'asc' or 'desc'!";
+  }
+
+  return errors;
+};
+
+export {
+  validateCreateOrUpdateListing,
+  validateListingImages,
+  validateSearchListings,
 };

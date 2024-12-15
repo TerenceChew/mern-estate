@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,6 +8,7 @@ import {
   signInFailure,
 } from "../redux/user/userSlice.js";
 import OAuth from "../components/OAuth.jsx";
+import { validateSignIn } from "../validations/auth.validation.js";
 import { CgSpinner } from "react-icons/cg";
 
 export default function SignIn() {
@@ -15,28 +16,13 @@ export default function SignIn() {
     email: "",
     password: "",
   });
+  const formDataRef = useRef(formData);
   const [validationErrors, setValidationErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
   const [serverValidationErrors, setServerValidationErrors] = useState({});
   const navigate = useNavigate();
   const { error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
-  // Validation
-  const validate = (formData) => {
-    const errors = {};
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-    if (!formData.email || !emailRegex.test(formData.email)) {
-      errors.email = "Please enter a valid email!";
-    }
-
-    if (!formData.password) {
-      errors.password = "Please enter your password!";
-    }
-
-    return errors;
-  };
 
   // Handler functions
   const handleChange = (e) => {
@@ -51,14 +37,14 @@ export default function SignIn() {
     e.preventDefault();
 
     setServerValidationErrors({});
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateSignIn(formData));
     setSubmitRequested(true);
   };
 
   // Side effects
   useEffect(() => {
     dispatch(resetUser());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const makeSignInRequest = async () => {
@@ -67,7 +53,7 @@ export default function SignIn() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataRef.current),
       });
       const data = await res.json();
 
@@ -97,7 +83,11 @@ export default function SignIn() {
         dispatch(signInFailure("Failed to handle submit for sign in"));
       }
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, dispatch, navigate]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <main className="flex justify-center py-10">
@@ -145,8 +135,8 @@ export default function SignIn() {
 
         <div className="flex gap-2">
           <p>Don&apos;t have an account?</p>
-          <Link to="/sign-up">
-            <span className="text-blue-700 hover:underline">Sign up</span>
+          <Link to="/sign-up" className="text-blue-700 hover:underline">
+            Sign up
           </Link>
         </div>
 

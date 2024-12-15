@@ -1,5 +1,5 @@
 import Listing from "../models/listing.model.js";
-import { generateError } from "../utils/error.js";
+import { generateError } from "../utils/errorHandler.js";
 
 export const handleCreateListing = async (req, res, next) => {
   try {
@@ -160,10 +160,12 @@ export const handleSearchListings = async (req, res, next) => {
       })
       .limit(limit)
       .skip(startIdx);
-    const remainingListings =
+    const numOfRemainingListings =
       totalFilteredListings.length - listingsToDisplay.length - startIdx;
 
-    res.status(200).json({ listings: listingsToDisplay, remainingListings });
+    res
+      .status(200)
+      .json({ listings: listingsToDisplay, numOfRemainingListings });
   } catch (err) {
     next(err);
   }

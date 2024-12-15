@@ -1,14 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
-import { generateUniqueFileName } from "../utils/utilities.js";
-import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
@@ -21,6 +13,8 @@ import DeleteConfirmationBox from "../components/DeleteConfirmationBox";
 import { deleteImageFileFromFirebase } from "../utils/firebase.storage";
 import { extractImageFileNameFromUrl } from "../utils/utilities.js";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { uploadImageFileToFirebase } from "../utils/firebase.storage.js";
+import { validateUpdateUser } from "../validations/user.validation.js";
 import { CgSpinner } from "react-icons/cg";
 
 export default function Profile() {
@@ -36,6 +30,7 @@ export default function Profile() {
     password: "",
     passwordConfirmation: "",
   });
+  const formDataRef = useRef(formData);
   const [showUpdateSuccessMessage, setShowUpdateSuccessMessage] =
     useState(false);
   const [deleteRequested, setDeleteRequested] = useState(false);
@@ -48,45 +43,6 @@ export default function Profile() {
     password: "password",
     passwordConfirmation: "password",
   });
-
-  // Validation
-  const validate = (formData) => {
-    const { username, email, password, passwordConfirmation } = formData;
-    const errors = {};
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
-
-    if (!username) {
-      errors.username = "Please enter a valid username!";
-    } else if (username.length < 5) {
-      errors.username = "Username must be at least 5 characters!";
-    } else if (username.length > 20) {
-      errors.username = "Username cannot be more than 20 characters!";
-    }
-
-    if (!email || !emailRegex.test(email)) {
-      errors.email = "Please enter a valid email!";
-    }
-
-    if (!password) {
-      errors.password = "Please enter your current or new password!";
-    } else if (password.length < 8) {
-      errors.password = "Password must be at least 8 characters!";
-    } else if (password.length > 16) {
-      errors.password = "Password cannot be more than 16 characters!";
-    } else if (!passwordRegex.test(password)) {
-      errors.password =
-        "Password must contain at least 1 digit, 1 uppercase and 1 lowercase letter!";
-    }
-
-    if (!passwordConfirmation) {
-      errors.passwordConfirmation = "Please re-enter your password here!";
-    } else if (passwordConfirmation !== password) {
-      errors.passwordConfirmation = "Does not match password!";
-    }
-
-    return errors;
-  };
 
   // Handler functions
   const handleImgClick = () => {
@@ -107,6 +63,7 @@ export default function Profile() {
     if (imageFileTypeRegex.test(type)) {
       setImageFile(e.target.files[0]);
 
+      // eslint-disable-next-line no-unused-vars
       const { imageFile, ...otherErrors } = validationErrors;
 
       setValidationErrors(otherErrors);
@@ -123,7 +80,7 @@ export default function Profile() {
 
     setServerValidationErrors({});
     setDeleteRequested(false);
-    setValidationErrors(validate(formData));
+    setValidationErrors(validateUpdateUser(formData));
     setSubmitRequested(true);
   };
   const handleDeleteAccountClick = () => {
@@ -189,57 +146,31 @@ export default function Profile() {
     }
   };
 
-  // For uploading image file
-  const uploadImageFile = (imageFile) => {
-    const storage = getStorage(app);
-    const uniqueFileName = generateUniqueFileName(imageFile.name); // To prevent errors in case user uploads new file with same name
-    const newImageFileRef = ref(storage, uniqueFileName);
+  // Side effects
+  useEffect(() => {
+    const uploadImageFile = async (imageFile) => {
+      setFileUploadError(null);
+      setFileUploadPercentage(0);
 
-    setFileUploadError(null);
-    setFileUploadPercentage(0);
-
-    // Upload the file
-    const uploadTask = uploadBytesResumable(newImageFileRef, imageFile);
-
-    // Register three observers:
-    // 1. 'state_changed' observer, called any time the state changes
-    // 2. Error observer, called on failure
-    // 3. Completion observer, called on successful completion
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      try {
+        const imageUrl = await uploadImageFileToFirebase(
+          imageFile,
+          setFileUploadPercentage
         );
-        setFileUploadPercentage(progress);
-      },
-      (err) => {
-        // Handle unsuccessful uploads
-        console.log(err);
+
+        setFormData((formData) => ({
+          ...formData,
+          photoURL: imageUrl,
+        }));
+      } catch (err) {
+        console.error(err);
+
         setFileUploadError(
           "Failed to upload! Make sure image is less than 2MB"
         );
-      },
-      async () => {
-        // Handle successful uploads on complete
-        try {
-          const downloadURL = await getDownloadURL(newImageFileRef);
-
-          setFormData({
-            ...formData,
-            photoURL: downloadURL,
-          });
-        } catch (err) {
-          console.log(err);
-        }
       }
-    );
-  };
+    };
 
-  // Side effects
-  useEffect(() => {
     if (imageFile) {
       uploadImageFile(imageFile);
     }
@@ -252,7 +183,7 @@ export default function Profile() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formDataRef.current),
       });
       const data = await res.json();
 
@@ -283,8 +214,14 @@ export default function Profile() {
         dispatch(updateUserFailure("Failed to handle submit for update"));
         setShowUpdateSuccessMessage(false);
       }
+    } else {
+      setShowUpdateSuccessMessage(false);
     }
-  }, [validationErrors]);
+  }, [validationErrors, submitRequested, currentUser._id, dispatch]);
+
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
 
   return (
     <>
