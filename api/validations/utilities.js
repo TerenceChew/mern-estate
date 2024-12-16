@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { performImageRecognition } from "./clarifai.js";
+import { performImageRecognition } from "../Clarifai/imageRecognition.js";
 
 const validationResultHandler = (req, res, next) => {
   const result = validationResult(req);
