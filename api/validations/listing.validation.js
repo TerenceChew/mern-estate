@@ -165,17 +165,11 @@ export const validateSearchListings = [
   query("type")
     .optional()
     .trim()
-    .notEmpty()
-    .withMessage("Type cannot be empty!")
-    .bail()
     .isIn(["all", "sale", "rent"])
     .withMessage("Invalid type value. Type must be 'all', 'sale', or 'rent'!"),
   query("parking")
     .optional()
     .trim()
-    .notEmpty()
-    .withMessage("Parking cannot be empty!")
-    .bail()
     .isIn(["true", "false"])
     .withMessage(
       "Invalid parking value. Parking can only be checked or unchecked!"
@@ -183,9 +177,6 @@ export const validateSearchListings = [
   query("furnished")
     .optional()
     .trim()
-    .notEmpty()
-    .withMessage("Furnished cannot be empty!")
-    .bail()
     .isIn(["true", "false"])
     .withMessage(
       "Invalid furnished value. Furnished can only be checked or unchecked!"
@@ -193,9 +184,6 @@ export const validateSearchListings = [
   query("offer")
     .optional()
     .trim()
-    .notEmpty()
-    .withMessage("Offer cannot be empty!")
-    .bail()
     .isIn(["true", "false"])
     .withMessage(
       "Invalid offer value. Offer can only be checked or unchecked!"
@@ -245,9 +233,6 @@ export const validateSearchListings = [
   query("sort")
     .optional()
     .trim()
-    .notEmpty()
-    .withMessage("Sort cannot be empty!")
-    .bail()
     .isIn(["regularPrice", "createdAt"])
     .withMessage(
       "Invalid sort value. Sort must be 'regularPrice' or 'createdAt'!"
@@ -255,9 +240,6 @@ export const validateSearchListings = [
   query("order")
     .optional()
     .trim()
-    .notEmpty()
-    .withMessage("Order cannot be empty!")
-    .bail()
     .isIn(["asc", "desc"])
     .withMessage("Invalid order value. Order must be 'asc' or 'desc'!"),
   query("startIndex")
@@ -270,9 +252,6 @@ export const validateSearchListings = [
     .withMessage("Start index cannot be lower than 0!")
     .bail()
     .isInt({ max: 10000 })
-    .withMessage("Start index cannot be more than 10,000!")
-    .bail()
-    .notEmpty()
-    .withMessage("Start index cannot be empty!"),
+    .withMessage("Start index cannot be more than 10,000!"),
   validationResultHandler,
 ];
