@@ -1,9 +1,12 @@
 import { body } from "express-validator";
 import { validationResultHandler } from "./utilities.js";
+import striptags from "striptags";
 
 export const validateSignUp = [
   body("username")
     .trim()
+    .customSanitizer((value) => striptags(value)) // Remove HTML tags
+    .customSanitizer((value) => value.replace(/\s+/g, " ")) // Normalize whitespace
     .notEmpty()
     .withMessage("Username cannot be empty!")
     .bail()
