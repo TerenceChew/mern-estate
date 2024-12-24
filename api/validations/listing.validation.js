@@ -5,10 +5,13 @@ import {
   isValidUrl,
   validateListingImages,
 } from "./utilities.js";
+import striptags from "striptags";
 
 const validateCreateOrUpdateListing = [
   body("title")
     .trim()
+    .customSanitizer((value) => striptags(value)) // Remove HTML tags
+    .customSanitizer((value) => value.replace(/\s+/g, " ")) // Normalize whitespace
     .notEmpty()
     .withMessage("Title cannot be empty!")
     .bail()
@@ -19,6 +22,8 @@ const validateCreateOrUpdateListing = [
     .withMessage("Title cannot be more than 60 characters!"),
   body("description")
     .trim()
+    .customSanitizer((value) => striptags(value))
+    .customSanitizer((value) => value.replace(/\s+/g, " "))
     .notEmpty()
     .withMessage("Description cannot be empty!")
     .bail()
@@ -29,6 +34,8 @@ const validateCreateOrUpdateListing = [
     .withMessage("Description cannot be more than 2,000 characters!"),
   body("address")
     .trim()
+    .customSanitizer((value) => striptags(value))
+    .customSanitizer((value) => value.replace(/\s+/g, " "))
     .notEmpty()
     .withMessage("Address cannot be empty!")
     .bail()
@@ -160,6 +167,8 @@ export const validateSearchListings = [
   query("searchTerm")
     .optional()
     .trim()
+    .customSanitizer((value) => striptags(value))
+    .customSanitizer((value) => value.replace(/\s+/g, " "))
     .isLength({ max: 100 })
     .withMessage("Search term cannot be more than 100 characters!"),
   query("type")
