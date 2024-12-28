@@ -18,22 +18,21 @@ const isValidUrl = (url) => {
   return urlRegex.test(url);
 };
 
-const isValidListingImg = (concept) => {
-  const validConcepts = [
-    "house",
-    "home",
-    "apartment",
-    "indoors",
-    "interior design",
-    "room",
-    "villa",
-    "dining room",
-  ];
-
-  return validConcepts.includes(concept.name) && concept.value > 0.9;
-};
-
 const validateListingImages = (imgUrlsArr) => {
+  const isValidListingImg = (concept) => {
+    const validConcepts = [
+      "house",
+      "home",
+      "apartment",
+      "indoors",
+      "interior design",
+      "room",
+      "villa",
+      "dining room",
+    ];
+
+    return validConcepts.includes(concept.name) && concept.value > 0.9;
+  };
   const validatedImgUrls = imgUrlsArr.map((imgUrl) => {
     return performImageRecognition(imgUrl)
       .then((response) => response.json())
