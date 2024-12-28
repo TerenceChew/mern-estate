@@ -123,9 +123,7 @@ const validateListingImages = (imgUrlsArr) => {
       .then((result) => {
         const allConcepts = result.outputs[0].data.concepts;
 
-        return allConcepts.some((concept) => isValidListingImg(concept))
-          ? "Valid"
-          : "Invalid";
+        return allConcepts.some(isValidListingImg) ? "Valid" : "Invalid";
       })
       .catch((error) => {
         console.log(error);
