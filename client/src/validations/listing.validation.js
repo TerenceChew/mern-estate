@@ -1,3 +1,5 @@
+import { performImageRecognition } from "../clarifai/imageRecognition";
+
 const validateCreateOrUpdateListing = (formData) => {
   const errors = {};
   const urlRegex =
@@ -101,75 +103,27 @@ const validateCreateOrUpdateListing = (formData) => {
 };
 
 const validateListingImages = (imgUrlsArr) => {
-  const makeClarifaiApiCall = (imgUrl) => {
-    // Your PAT (Personal Access Token) can be found in the portal under Authentification
-    const PAT = import.meta.env.VITE_CLARIFAI_PAT;
-    // Specify the correct user_id/app_id pairings
-    // Since you're making inferences outside your app's scope
-    const USER_ID = "clarifai";
-    const APP_ID = "main";
-    // Change these to whatever model and image URL you want to use
-    const MODEL_ID = "general-image-recognition";
-    const MODEL_VERSION_ID = "aa7f35c01e0642fda5cf400f543e7c40";
-    const IMAGE_URL = imgUrl;
+  const isValidListingImg = (concept) => {
+    const validConcepts = [
+      "house",
+      "home",
+      "apartment",
+      "indoors",
+      "interior design",
+      "room",
+      "villa",
+      "dining room",
+    ];
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    // YOU DO NOT NEED TO CHANGE ANYTHING BELOW THIS LINE TO RUN THIS EXAMPLE
-    ///////////////////////////////////////////////////////////////////////////////////
-
-    const raw = JSON.stringify({
-      user_app_id: {
-        user_id: USER_ID,
-        app_id: APP_ID,
-      },
-      inputs: [
-        {
-          data: {
-            image: {
-              url: IMAGE_URL,
-            },
-          },
-        },
-      ],
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: "Key " + PAT,
-      },
-      body: raw,
-    };
-
-    // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
-    // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
-    // this will default to the latest version_id
-
-    return fetch(
-      "https://api.clarifai.com/v2/models/" +
-        MODEL_ID +
-        "/versions/" +
-        MODEL_VERSION_ID +
-        "/outputs",
-      requestOptions
-    )
+    return validConcepts.includes(concept.name) && concept.value > 0.9;
+  };
+  const validatedImgUrls = imgUrlsArr.map((imgUrl) => {
+    return performImageRecognition(imgUrl)
       .then((response) => response.json())
       .then((result) => {
         const allConcepts = result.outputs[0].data.concepts;
-        const filteredConcepts = allConcepts.filter(
-          (concept) =>
-            concept.name === "house" ||
-            concept.name === "home" ||
-            concept.name === "apartment" ||
-            concept.name === "indoors" ||
-            concept.name === "interior design" ||
-            concept.name === "room" ||
-            concept.name === "villa" ||
-            concept.name === "dining room"
-        );
 
-        return filteredConcepts.some((concept) => concept.value > 0.9)
+        return allConcepts.some((concept) => isValidListingImg(concept))
           ? "Valid"
           : "Invalid";
       })
@@ -178,15 +132,9 @@ const validateListingImages = (imgUrlsArr) => {
 
         return "Invalid";
       });
-  };
-
-  const validatedImgUrls = [];
-
-  imgUrlsArr.forEach((imgUrl) => {
-    validatedImgUrls.push(makeClarifaiApiCall(imgUrl));
   });
 
-  return Promise.all(validatedImgUrls).then((results) => results);
+  return Promise.all(validatedImgUrls);
 };
 
 const validateSearchListings = (formData) => {
